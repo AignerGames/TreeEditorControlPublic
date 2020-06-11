@@ -52,6 +52,11 @@ namespace TreeEditorControl.Example.Directory
         {
             if (propertyName == nameof(IsExpanded))
             {
+                foreach (var child in _nodes)
+                {
+                    child.NodeChanged -= Child_NodeChanged;
+                }
+
                 _nodes.Clear();
 
                 if (IsExpanded)
@@ -61,6 +66,11 @@ namespace TreeEditorControl.Example.Directory
                 else
                 {
                     CreateAndAddDummyNode();
+                }
+
+                foreach(var child in _nodes)
+                {
+                    child.NodeChanged += Child_NodeChanged;
                 }
             }
 
@@ -97,6 +107,11 @@ namespace TreeEditorControl.Example.Directory
                 System.Diagnostics.Debug.WriteLine($"Directory expand error: {ex}");
                 _nodes.Add(new FileSystemNode("<No access>"));
             }
+        }
+
+        private void Child_NodeChanged(object sender, NodeChangedArgs e)
+        {
+            NodeChanged?.Invoke(this, e);
         }
     }
 }
