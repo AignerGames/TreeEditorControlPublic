@@ -7,7 +7,8 @@ but this editor can show and edit any tree nodes.
 The editor supports basic features like adding/removing nodes,
 moving node (inside their node) and undo/redo.
 
-The node "catalog" can be used to add new nodes. 
+Nodes can be added from the "node catalog" with the toolbar buttons
+or per drag & drop. 
 
 The nodes must implement a specific node interface,
 but a default implementation (which can be used as a base class) 
