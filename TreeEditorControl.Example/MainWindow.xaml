@@ -1,0 +1,192 @@
+﻿<Window x:Class="TreeEditorControl.Example.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:default="clr-namespace:TreeEditorControl.Example.Default"
+        xmlns:dialog="clr-namespace:TreeEditorControl.Example.Dialog"
+        xmlns:directory="clr-namespace:TreeEditorControl.Example.Directory"
+        xmlns:treeEditor="clr-namespace:TreeEditorControl.Controls;assembly=TreeEditorControl"
+        mc:Ignorable="d"
+        Title="TreeEditorControl Examples" Height="600" Width="800">
+    <TabControl ItemsSource="{Binding TabViewModels}" SelectedItem="{Binding SelectedTab}">
+        <TabControl.Resources>
+            <treeEditor:NameToBitmapImageConverter x:Key="NameToBitmapImageConverter">
+                <treeEditor:NameToBitmapImageConverter.BaseUri>
+                    /TreeEditorControl.Example;component/Icons/
+                </treeEditor:NameToBitmapImageConverter.BaseUri>
+                <treeEditor:NameToBitmapImageConverter.DefaultImageExtension>
+                    .png
+                </treeEditor:NameToBitmapImageConverter.DefaultImageExtension>
+            </treeEditor:NameToBitmapImageConverter>
+        </TabControl.Resources>
+        
+        <!-- Header -->
+        <TabControl.ItemTemplate>
+            <DataTemplate>
+                <TextBlock Text="{Binding Header}" FontSize="14" FontWeight="Bold"/>
+            </DataTemplate>
+        </TabControl.ItemTemplate>
+
+        <!-- Content -->
+        <TabControl.ContentTemplate>
+            <DataTemplate>
+                <ContentControl Content="{Binding}">
+                    <ContentControl.Resources>
+                        
+                        <!-- Example: Default -->
+                        <DataTemplate DataType="{x:Type default:DefaultTabViewModel}">
+                            <treeEditor:TreeEditor DataContext="{Binding EditorViewModel}">
+                            </treeEditor:TreeEditor>
+                        </DataTemplate>
+
+                        <!-- Example: Directory -->
+                        <DataTemplate DataType="{x:Type directory:DirectoryTabViewModel}">
+                            <treeEditor:TreeEditor DataContext="{Binding EditorViewModel}">
+
+                                <treeEditor:TreeEditor.TreeViewItemTemplateSelector>
+                                    <treeEditor:TreeViewItemTemplateSelector>
+                                        <treeEditor:TreeViewItemTemplateSelector.ContainerTemplate>
+                                            <HierarchicalDataTemplate ItemsSource="{Binding Nodes}">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <Image Width="18" Height="18" Stretch="UniformToFill"
+                                                           Source="{Binding IconName, Converter={StaticResource NameToBitmapImageConverter}}"/>
+                                                    
+                                                    <TextBlock Text="{Binding Header}" />
+                                                </StackPanel>
+                                            </HierarchicalDataTemplate>
+                                        </treeEditor:TreeViewItemTemplateSelector.ContainerTemplate>
+                                    </treeEditor:TreeViewItemTemplateSelector>
+                                </treeEditor:TreeEditor.TreeViewItemTemplateSelector>
+                                
+                                <treeEditor:TreeEditor.SelectedNodeInfoTemplateSelector>
+                                    <treeEditor:ExplicitTemplateSelector>
+                                        <treeEditor:ExplicitTemplateSelector.NullTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="No node selected..."/>
+                                            </DataTemplate>
+                                        </treeEditor:ExplicitTemplateSelector.NullTemplate>
+
+                                        <treeEditor:ExplicitTemplateSelector.Template>
+                                            <DataTemplate>
+                                                <StackPanel>
+                                                    <TextBlock Text="Full path: "/>
+                                                    <TextBlock Text="{Binding FullPath}"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </treeEditor:ExplicitTemplateSelector.Template>
+                                    </treeEditor:ExplicitTemplateSelector>
+                                </treeEditor:TreeEditor.SelectedNodeInfoTemplateSelector>
+
+                            </treeEditor:TreeEditor>
+                        </DataTemplate>
+
+                        <!-- Example: Dialog -->
+                        <DataTemplate DataType="{x:Type dialog:DialogTabViewModel}">
+                            <treeEditor:TreeEditor DataContext="{Binding EditorViewModel}">
+
+                                <treeEditor:TreeEditor.ToolbarCommandTemplateSelector>
+                                    <treeEditor:ExplicitTemplateSelector>
+                                        <treeEditor:ExplicitTemplateSelector.Template>
+                                            <DataTemplate>
+                                                <Button ToolTip="{Binding Tooltip}" Command="{Binding}" Margin="3">
+                                                    <Image Width="24" Height="24" Stretch="UniformToFill"
+                                                           Source="{Binding Name, Converter={StaticResource NameToBitmapImageConverter}}"/>
+                                                </Button>
+                                            </DataTemplate>
+                                        </treeEditor:ExplicitTemplateSelector.Template>
+                                    </treeEditor:ExplicitTemplateSelector>
+                                </treeEditor:TreeEditor.ToolbarCommandTemplateSelector>
+
+                                <treeEditor:TreeEditor.SelectedNodeInfoTemplateSelector>
+                                    <treeEditor:ExplicitTemplateSelector>
+                                        <treeEditor:ExplicitTemplateSelector.NullTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="No node selected."/>
+                                            </DataTemplate>
+                                        </treeEditor:ExplicitTemplateSelector.NullTemplate>
+
+                                        <treeEditor:ExplicitTemplateSelector.Template>
+                                            <DataTemplate>
+                                                <GroupBox>
+                                                    <GroupBox.Header>
+                                                        <TextBlock Text="{Binding Header}" FontWeight="Bold" FontSize="16"/>
+                                                    </GroupBox.Header>
+                                                    <ScrollViewer Margin="10">
+                                                        <ContentControl Content="{Binding}">
+                                                            <ContentControl.ContentTemplateSelector>
+                                                                <treeEditor:FallbackTemplateSelector>
+                                                                    <treeEditor:FallbackTemplateSelector.FallbackTemplate>
+                                                                        <DataTemplate>
+                                                                            <!-- Empty control -->
+                                                                        </DataTemplate>
+                                                                    </treeEditor:FallbackTemplateSelector.FallbackTemplate>
+                                                                </treeEditor:FallbackTemplateSelector>
+                                                            </ContentControl.ContentTemplateSelector>
+                                                        </ContentControl>
+                                                    </ScrollViewer>
+                                                </GroupBox>
+                                            </DataTemplate>
+                                        </treeEditor:ExplicitTemplateSelector.Template>
+                                    </treeEditor:ExplicitTemplateSelector>
+                                </treeEditor:TreeEditor.SelectedNodeInfoTemplateSelector>
+
+                                <treeEditor:TreeEditor.Resources>
+
+                                    <DataTemplate DataType="{x:Type dialog:DialogNode}">
+                                        <TextBlock Text="Dialog root node"/>
+                                    </DataTemplate>
+
+                                    <DataTemplate DataType="{x:Type dialog:ShowTextAction}">
+                                        <StackPanel>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="Text: "/>
+                                                <TextBox Text="{Binding Text}" MinWidth="500" VerticalAlignment="Stretch" AcceptsReturn="True"/>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </DataTemplate>
+
+                                    <DataTemplate DataType="{x:Type dialog:ChoiceItem}">
+                                        <StackPanel>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="Text: "/>
+                                                <TextBox Text="{Binding Text}" MinWidth="200"/>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </DataTemplate>
+
+                                    <DataTemplate DataType="{x:Type dialog:ChoiceGroup}">
+                                        <StackPanel>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="Text: "/>
+                                                <TextBox Text="{Binding Text}" MinWidth="500" VerticalAlignment="Stretch" AcceptsReturn="True"/>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </DataTemplate>
+
+
+                                    <DataTemplate DataType="{x:Type dialog:VariableCondition}">
+                                        <StackPanel>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="Variable: " Width="100"/>
+                                                <TextBox Text="{Binding Variable}" MinWidth="200"/>
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="Value: " Width="100"/>
+                                                <TextBox Text="{Binding Value}" MinWidth="200"/>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </DataTemplate>
+
+                                </treeEditor:TreeEditor.Resources>
+
+                            </treeEditor:TreeEditor>
+                        </DataTemplate>
+
+                    </ContentControl.Resources>
+                </ContentControl>
+            </DataTemplate>
+        </TabControl.ContentTemplate>
+
+    </TabControl>
+</Window>

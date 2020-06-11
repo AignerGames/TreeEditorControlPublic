@@ -1,0 +1,237 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:TreeEditorControl.Controls"
+    xmlns:commands="clr-namespace:TreeEditorControl.Commands"
+    xmlns:nodes="clr-namespace:TreeEditorControl.Nodes">
+
+    <controls:IsInstanceOfTypeConverter x:Key="IsInstanceOfTypeConverter"/>
+
+    <Style TargetType="{x:Type controls:TreeEditor}">
+
+        <Setter Property="ToolbarCommandTemplateSelector">
+            <Setter.Value>
+                <controls:ExplicitTemplateSelector>
+                    <controls:ExplicitTemplateSelector.Template>
+                        <DataTemplate>
+                            <Button Content="{Binding Name}" ToolTip="{Binding Tooltip}" Command="{Binding}" Margin="3"/>
+                        </DataTemplate>
+                    </controls:ExplicitTemplateSelector.Template>
+                </controls:ExplicitTemplateSelector>
+            </Setter.Value>
+        </Setter>
+
+        <Setter Property="CatalogItemTemplateSelector">
+            <Setter.Value>
+                <controls:ExplicitTemplateSelector>
+                    <controls:ExplicitTemplateSelector.Template>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Name}" ToolTip="{Binding Description}"/>
+                        </DataTemplate>
+                    </controls:ExplicitTemplateSelector.Template>
+                </controls:ExplicitTemplateSelector>
+            </Setter.Value>
+        </Setter>
+
+        <Setter Property="CatalogGroupStyleSelector">
+            <Setter.Value>
+                <controls:ExplicitStyleSelector>
+                    <controls:ExplicitStyleSelector.Style>
+                        <Style TargetType="{x:Type GroupItem}">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate>
+                                        <Expander IsExpanded="True">
+                                            <Expander.Header>
+                                                <TextBlock Text="{Binding Name}" FontWeight="Bold"/>
+                                            </Expander.Header>
+                                            <ItemsPresenter />
+                                        </Expander>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </controls:ExplicitStyleSelector.Style>
+                </controls:ExplicitStyleSelector>
+            </Setter.Value>
+        </Setter>
+
+        <Setter Property="TreeViewItemTemplateSelector">
+            <Setter.Value>
+                <controls:TreeViewItemTemplateSelector>
+                    <controls:TreeViewItemTemplateSelector.NodeTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Header}" />
+                        </DataTemplate>
+                    </controls:TreeViewItemTemplateSelector.NodeTemplate>
+                    <controls:TreeViewItemTemplateSelector.ContainerTemplate>
+                        <HierarchicalDataTemplate ItemsSource="{Binding Nodes}">
+                            <TextBlock Text="{Binding Header}" />
+                        </HierarchicalDataTemplate>
+                    </controls:TreeViewItemTemplateSelector.ContainerTemplate>
+                </controls:TreeViewItemTemplateSelector>
+            </Setter.Value>
+        </Setter>
+
+        <Setter Property="TreeViewItemContainerStyleSelector">
+            <Setter.Value>
+                <controls:ExplicitStyleSelector>
+                    <controls:ExplicitStyleSelector.Style>
+                        <Style TargetType="{x:Type controls:CustomTreeViewItem}">
+                            <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
+                            <Setter Property="FontWeight" Value="Normal" />
+                            <Style.Triggers>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="FontWeight" Value="Bold" />
+                                </Trigger>
+
+                                <DataTrigger Value="True">
+                                    <DataTrigger.Binding>
+                                        <Binding Converter="{StaticResource IsInstanceOfTypeConverter}" 
+                                                 ConverterParameter="{x:Type nodes:IReadableNodeContainer}"/>
+                                    </DataTrigger.Binding>
+                                    <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </controls:ExplicitStyleSelector.Style>
+                </controls:ExplicitStyleSelector>
+            </Setter.Value>
+        </Setter>
+
+        <Setter Property="SelectedNodeInfoTemplateSelector">
+            <Setter.Value>
+                <controls:FallbackTemplateSelector>
+                    <controls:FallbackTemplateSelector.NullTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="No node selected..."/>
+                        </DataTemplate>
+                    </controls:FallbackTemplateSelector.NullTemplate>
+
+                    <controls:FallbackTemplateSelector.FallbackTemplate>
+                        <DataTemplate>
+                            <StackPanel>
+                                <TextBlock Text="Fallback template for: "/>
+                                <TextBlock Text="{Binding}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </controls:FallbackTemplateSelector.FallbackTemplate>
+                </controls:FallbackTemplateSelector>
+            </Setter.Value>
+        </Setter>
+
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type controls:TreeEditor}">
+                    <Grid Background="{TemplateBinding Background}">
+                        <Grid.RowDefinitions>
+                            <!-- Toolbar -->
+                            <RowDefinition Height="Auto"/>
+
+                            <!-- Catalog / Tree  -->
+                            <RowDefinition Height="7*"/>
+
+                            <!-- Grid splitter -->
+                            <RowDefinition Height="5"/>
+
+                            <!-- Node info box -->
+                            <RowDefinition Height="3*"/>
+
+                        </Grid.RowDefinitions>
+
+                        <!-- Toolbar -->
+                        <ItemsControl Grid.Row="0" ItemsSource="{Binding Commands}" ItemTemplateSelector="{TemplateBinding ToolbarCommandTemplateSelector}"
+                                      Margin="3">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Horizontal"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                        </ItemsControl>
+
+                        <!-- Catalog / Tree  -->
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <!-- Catalog / Splitter / Tree -->
+                                <ColumnDefinition Width="5*"/>
+                                <ColumnDefinition Width="5"/>
+                                <ColumnDefinition Width="5*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Catalog -->
+                            <Border Grid.Column="0" Margin="3"
+                                      BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+                                <controls:CustomCatalogListBox ItemsSource="{Binding CatalogItems}" SelectedIndex="{Binding SelectedCatalogItemIndex}"
+                                         Background="{TemplateBinding Background}"
+                                         ItemTemplateSelector="{TemplateBinding CatalogItemTemplateSelector}"
+                                         GroupStyleSelector="{TemplateBinding CatalogGroupStyleSelectorDelegate}"
+                                         BorderThickness="0" BorderBrush="Transparent">
+                                </controls:CustomCatalogListBox>
+                            </Border>
+
+                            <!-- Grid splitter between catalog / tree view -->
+                            <GridSplitter Grid.Column="1" Width="{TemplateBinding SplitterSize}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="{TemplateBinding SplitterBrush}"/>
+
+                            <!-- TreeView -->
+                            <Border Grid.Column="2" Margin="3" Background="Transparent" Focusable="True"
+                                    BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+
+                                <controls:CustomTreeViewControl ItemsSource="{Binding RootNodes}" Background="{TemplateBinding Background}"
+                                                                     ItemTemplateSelector="{TemplateBinding TreeViewItemTemplateSelector}"
+                                                                     ItemContainerStyleSelector="{TemplateBinding TreeViewItemContainerStyleSelector}">
+
+                                    <!-- Focusable must be true (default for TreeViews), otherwise these don't work -->
+                                    <controls:CustomTreeViewControl.InputBindings>
+                                        <KeyBinding Key="Delete" Command="{Binding DeleteNodeCommand}" />
+                                        <KeyBinding Modifiers="Control" Key="X" Command="{Binding CutNodeCommand}" />
+                                        <KeyBinding Modifiers="Control" Key="C" Command="{Binding CopyNodeCommand}" />
+                                        <KeyBinding Modifiers="Control" Key="V" Command="{Binding PasteNodeCommand}" />
+                                        <KeyBinding Modifiers="Control" Key="Z" Command="{Binding UndoCommand}" />
+                                        <KeyBinding Modifiers="Control" Key="Y" Command="{Binding RedoCommand}" />
+                                    </controls:CustomTreeViewControl.InputBindings>
+
+                                    <controls:CustomTreeViewControl.ContextMenu>
+                                        <ContextMenu ItemsSource="{Binding ActiveContextMenuCommands}">
+                                            <ContextMenu.Resources>
+                                                <ControlTemplate x:Key="MenuSeparatorTemplate">
+                                                    <Separator>
+                                                        <Separator.Style>
+                                                            <Style TargetType="{x:Type Separator}" BasedOn="{StaticResource ResourceKey={x:Static MenuItem.SeparatorStyleKey}}"/>
+                                                        </Separator.Style>
+                                                    </Separator>
+                                                </ControlTemplate>
+                                                <Style TargetType="{x:Type MenuItem}">
+                                                    <Setter Property="Header" Value="{Binding Name}" />
+                                                    <Setter Property="Command" Value="{Binding}" />
+                                                    <Setter Property="ItemsSource" Value="{Binding SubCommands}" />
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding}" Value="{x:Static commands:ContextMenuCommand.Seperator}">
+                                                            <Setter Property="Template" Value="{StaticResource MenuSeparatorTemplate}" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </ContextMenu.Resources>
+                                        </ContextMenu>
+                                    </controls:CustomTreeViewControl.ContextMenu>
+                                </controls:CustomTreeViewControl>
+                            </Border>
+
+                        </Grid>
+
+                        <!-- Grid splitter between catalog / tree and node info box -->
+                        <GridSplitter Grid.Row="2" Height="{TemplateBinding SplitterSize}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="{TemplateBinding SplitterBrush}"/>
+
+                        <!-- Selected node info -->
+                        <Border Grid.Row="3" Margin="3"
+                                BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+                            <ContentControl Content="{Binding SelectedNode}" 
+                                            ContentTemplateSelector="{TemplateBinding SelectedNodeInfoTemplateSelector}"/>
+                        </Border>
+
+
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>
