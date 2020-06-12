@@ -35,6 +35,6 @@ namespace TreeEditorControl.Example.Dialog
             return new ShowTextAction(_editorEnvironment, "Hello world!");
         }
 
-        public DialogNode CreateDialogNode() => _defaultNodeFactory.CreateNode<DialogNode>();
+        public DialogRootNode CreateDialogRootNode() => _defaultNodeFactory.CreateNode<DialogRootNode>();
     }
 }

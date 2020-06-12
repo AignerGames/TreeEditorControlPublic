@@ -8,7 +8,7 @@ using TreeEditorControl.UndoRedo.Implementation;
 namespace TreeEditorControl.Example.Dialog
 {
     [NodeCatalogInfo("ChoiceItem", "Choices", "Option for a choice group")]
-    public class ChoiceItem : ReadableGroupContainerNode, IDialogNode, ICopyableNode<ChoiceItem>
+    public class ChoiceItem : DialogNode, ICopyableNode<ChoiceItem>
     {
         private UndoRedoValueWrapper<string> _textUndoRedoWrapper;
 
@@ -16,8 +16,8 @@ namespace TreeEditorControl.Example.Dialog
         {
             _textUndoRedoWrapper = CreateUndoRedoWrapper(nameof(Text), text);
 
-            Conditions = AddGroup<IDialogCondition>("Conditions");
-            Actions = AddGroup<IDialogAction>("Actions");
+            Conditions = AddGroup<DialogCondition>(nameof(Conditions));
+            Actions = AddGroup<DialogAction>(nameof(Actions));
 
             UpdateHeader();
         }
@@ -28,9 +28,9 @@ namespace TreeEditorControl.Example.Dialog
             set => _textUndoRedoWrapper.Value = value;
         }
 
-        public TreeNodeContainer<IDialogCondition> Conditions { get; }
+        public TreeNodeContainer<DialogCondition> Conditions { get; }
 
-        public TreeNodeContainer<IDialogAction> Actions { get; }
+        public TreeNodeContainer<DialogAction> Actions { get; }
 
         public ChoiceItem CreateCopy()
         {

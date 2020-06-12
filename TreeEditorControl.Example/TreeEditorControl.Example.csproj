@@ -63,11 +63,11 @@
     <Compile Include="Dialog\ChoiceItem.cs" />
     <Compile Include="Dialog\CustomNodeFactory.cs" />
     <Compile Include="Dialog\DialogHelper.cs" />
-    <Compile Include="Dialog\DialogNode.cs" />
+    <Compile Include="Dialog\DialogRootNode.cs" />
     <Compile Include="Dialog\DialogTabViewModel.cs" />
-    <Compile Include="Dialog\IDialogAction.cs" />
-    <Compile Include="Dialog\IDialogCondition.cs" />
-    <Compile Include="Dialog\IDialogNode.cs" />
+    <Compile Include="Dialog\DialogAction.cs" />
+    <Compile Include="Dialog\DialogCondition.cs" />
+    <Compile Include="Dialog\DialogNode.cs" />
     <Compile Include="Dialog\ShowTextAction.cs" />
     <Compile Include="Dialog\VariableCondition.cs" />
     <Compile Include="Directory\DirectoryTabViewModel.cs" />

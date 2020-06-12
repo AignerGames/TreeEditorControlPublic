@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 using TreeEditorControl.Environment;
@@ -7,23 +8,33 @@ using TreeEditorControl.UndoRedo.Implementation;
 
 namespace TreeEditorControl.Nodes.Implementation
 {
-    public abstract class ReadableNodeContainer<T> : TreeNode, IReadableNodeContainer where T : class, ITreeNode
+    public abstract class ReadableNodeContainer<T> : TreeNode, IReadableNodeContainer where T : TreeNode
     {
-        private bool _isExpanded;
+        /// <summary>
+        /// Empty placeholder list for the <see cref="Nodes"/> property. 
+        /// Used until the actual node collection is created
+        /// </summary>
+        private static readonly ReadOnlyObservableCollection<T> _emptyNodes = new ReadOnlyObservableCollection<T>(new ObservableCollection<T>());
 
-        private readonly UndoRedoListWrapper<T> _nodesUndoRedoWrapper;
+        /// <summary>
+        /// Lazy initialization, created when the first child is inserted
+        /// </summary>
+        private ObservableCollection<T> _nodes;
+
+        private bool _isExpanded;
 
         public ReadableNodeContainer(IEditorEnvironment editorEnvironment, string header = null) : base(editorEnvironment, header)
         {
-            var nodes = new ObservableCollection<T>();
-
-            _nodesUndoRedoWrapper = CreateUndoRedoWrapper(nodes);
-            Nodes = new ReadOnlyObservableCollection<T>(nodes);
+            Nodes = _emptyNodes;
         }
+
+        public event EventHandler<TreeNodeEventArgs> NodeAdded;
+
+        public event EventHandler<TreeNodeEventArgs> NodeRemoved;
 
         public bool IsExpanded { get => _isExpanded; set => SetAndNotify(ref _isExpanded, value); }
 
-        public IReadOnlyList<T> Nodes { get; }
+        public ReadOnlyObservableCollection<T> Nodes { get; private set; }
 
         IReadOnlyList<ITreeNode> IReadableNodeContainer.Nodes => Nodes;
 
@@ -53,23 +64,26 @@ namespace TreeEditorControl.Nodes.Implementation
 
         protected void InsertChild(T child, int index = -1)
         {
-            var undoRedoId = UndoRedoStack.StartSequence();
-
-            UndoRedoStack.ExecuteAndPush(new UndoRedoCommand(() => RegisterChild(child), () => DeregisterChild(child)));
+            AssureNodeListIsInitialized();
 
             if (index < 0)
             {
-                index = _nodesUndoRedoWrapper.Count;
+                index = _nodes.Count;
             }
 
-            _nodesUndoRedoWrapper.Insert(index, child);
-
-            UndoRedoStack.EndSequence(undoRedoId);
+            UndoRedoStack.ExecuteAndPush(new UndoRedoCommand(
+                () => InsertChildCommandAction(index, child), 
+                () => RemoveChildCommandAction(index)));
         }
 
         protected void RemoveChild(T child)
         {
-            var index = _nodesUndoRedoWrapper.IndexOf(child);
+            if(_nodes == null)
+            {
+                return;
+            }
+
+            var index = _nodes.IndexOf(child);
 
             RemoveChild(index);
         }
@@ -81,14 +95,44 @@ namespace TreeEditorControl.Nodes.Implementation
                 return;
             }
 
-            var undoRedoId = UndoRedoStack.StartSequence();
+            var child = _nodes[index];
 
-            var child = _nodesUndoRedoWrapper[index];
-            UndoRedoStack.ExecuteAndPush(new UndoRedoCommand(() => DeregisterChild(child), () => RegisterChild(child)));
+            UndoRedoStack.ExecuteAndPush(new UndoRedoCommand(
+                () => RemoveChildCommandAction(index),
+                () => InsertChildCommandAction(index, child)));
+        }
 
-            _nodesUndoRedoWrapper.RemoveAt(index);
+        /// <summary>
+        /// Handles the lazy initialization of the <see cref="_nodes"/>.
+        /// </summary>
+        private void AssureNodeListIsInitialized()
+        {
+            if(_nodes != null)
+            {
+                return;
+            }
 
-            UndoRedoStack.EndSequence(undoRedoId);
+            _nodes = new ObservableCollection<T>();
+            Nodes = new ReadOnlyObservableCollection<T>(_nodes);
+            NotifyPropertyChange(nameof(Nodes));
+        }
+
+        private void InsertChildCommandAction(int index, T chid)
+        {
+            SetChildParent(chid);
+            _nodes.Insert(index, chid);
+
+            NodeAdded?.Invoke(this, new TreeNodeEventArgs(chid));
+        }
+
+        private void RemoveChildCommandAction(int index)
+        {
+            var child = _nodes[index];
+
+            RemoveChildParent(child);
+            _nodes.RemoveAt(index);
+
+            NodeRemoved?.Invoke(this, new TreeNodeEventArgs(child));
         }
     }
 }

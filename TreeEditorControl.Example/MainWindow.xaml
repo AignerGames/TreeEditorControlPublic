@@ -133,7 +133,7 @@
 
                                 <treeEditor:TreeEditor.Resources>
 
-                                    <DataTemplate DataType="{x:Type dialog:DialogNode}">
+                                    <DataTemplate DataType="{x:Type dialog:DialogRootNode}">
                                         <TextBlock Text="Dialog root node"/>
                                     </DataTemplate>
 

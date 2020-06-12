@@ -33,33 +33,45 @@ namespace TreeEditorControl.Nodes.Implementation
             }
         }
 
-        public ITreeNode Parent { get; private set; }
+        public TreeNode Parent { get; private set; }
 
-        /// <summary>
-        /// Sets the current node as the parent of the child node
-        /// and handles the child <see cref="NodeChanged"/> event.
-        /// </summary>
-        /// <param name="child"></param>
-        protected void RegisterChild(ITreeNode child)
+        ITreeNode ITreeNode.Parent => Parent;
+
+        protected void SetChildParent(TreeNode child)
         {
-            SetChildParent(child);
-            child.NodeChanged += Child_NodeChanged;
+            if (child.Parent != null)
+            {
+                throw new InvalidOperationException("The node parent is already set");
+            }
+
+            if (this.IsDescendantOf(child))
+            {
+                throw new InvalidOperationException($"Can't add parent node to a descendant child container node.");
+            }
+
+            child.Parent = this;
+        }
+
+        protected void RemoveChildParent(TreeNode child)
+        {
+            if (child.Parent != this)
+            {
+                throw new InvalidOperationException("The node doesn't belong to this parent");
+            }
+
+            child.Parent = null;
         }
 
         /// <summary>
-        /// Removes the current node as the parent of the child node
-        /// and removes the <see cref="NodeChanged"/> handler of the child.
+        /// Invokes the <see cref="NodeChanged"/> for this node and all parent nodes.
         /// </summary>
-        /// <param name="child"></param>
-        protected void DeregisterChild(ITreeNode child)
-        {
-            child.NodeChanged -= Child_NodeChanged;
-            RemoveChildParent(child);
-        }
-
+        /// <param name="args"></param>
         protected void InvokeNodeChanged(NodeChangedArgs args)
         {
-            NodeChanged?.Invoke(this, args);
+            for(var currentNode = this; currentNode != null; currentNode = currentNode.Parent)
+            {
+                currentNode.NodeChanged?.Invoke(this, args);
+            }
         }
 
         protected override void NotifyPropertyChange(string propertyName)
@@ -75,58 +87,6 @@ namespace TreeEditorControl.Nodes.Implementation
             IsSelected = true;
 
             base.NotifyUndoRedoPropertyChange(propertyName);
-        }
-
-        private void SetChildParent(ITreeNode child)
-        {
-            if (child.Parent != null)
-            {
-                throw new InvalidOperationException("The node parent is already set");
-            }
-
-            if (this.IsDescendantOf(child))
-            {
-                throw new InvalidOperationException($"Can't add parent node to a descendant child container node.");
-            }
-
-            if (child is TreeNode childNode)
-            {
-                childNode.Parent = this;
-            }
-            else if (child is ITreeNodeParentSettable parentSettable)
-            {
-                parentSettable.SetParent(this);
-            }
-            else
-            {
-                throw new NotSupportedException($"Can't set parent for node of type: {child.GetType()}");
-            }
-        }
-
-        private void RemoveChildParent(ITreeNode child)
-        {
-            if (child.Parent != this)
-            {
-                throw new InvalidOperationException("The node doesn't belong to this parent");
-            }
-
-            if (child is TreeNode childNode)
-            {
-                childNode.Parent = null;
-            }
-            else if (child is ITreeNodeParentSettable parentSettable)
-            {
-                parentSettable.SetParent(null);
-            }
-            else
-            {
-                throw new NotSupportedException($"Can't remove parent for node of type: {child.GetType()}");
-            }
-        }
-
-        private void Child_NodeChanged(object sender, NodeChangedArgs e)
-        {
-            InvokeNodeChanged(e);
         }
 
         public override string ToString() => $"{GetType().Name}  \"{Header}\"";

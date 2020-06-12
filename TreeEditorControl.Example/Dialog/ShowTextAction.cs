@@ -8,7 +8,7 @@ using TreeEditorControl.UndoRedo.Implementation;
 namespace TreeEditorControl.Example.Dialog
 {
     [NodeCatalogInfo("ShowText", "Actions", "Shows a dialog text")]
-    public class ShowTextAction : TreeNode, IDialogAction, ICopyableNode<ShowTextAction>
+    public class ShowTextAction : DialogAction, ICopyableNode<ShowTextAction>
     {
         private UndoRedoValueWrapper<string> _textUndoRedoWrapper;
 

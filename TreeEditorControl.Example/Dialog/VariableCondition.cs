@@ -8,7 +8,7 @@ using TreeEditorControl.UndoRedo.Implementation;
 namespace TreeEditorControl.Example.Dialog
 {
     [NodeCatalogInfo("VariableCondition", "Conditions", "Checks a specific variable value")]
-    public class VariableCondition : TreeNode, IDialogCondition, ICopyableNode<VariableCondition>
+    public class VariableCondition : DialogCondition, ICopyableNode<VariableCondition>
     {
         private UndoRedoValueWrapper<string> _variableUndoRedoWrapper;
         private UndoRedoValueWrapper<int> _valueUndoRedoWrapper;

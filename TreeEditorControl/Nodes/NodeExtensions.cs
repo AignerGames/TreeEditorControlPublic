@@ -11,7 +11,7 @@ namespace TreeEditorControl.Nodes
             return container.TryInsertNode(container.Nodes.Count, node);
         }
 
-        public static void AddNodes<T>(this TreeNodeContainer<T> container, IEnumerable<T> nodes) where T : class, ITreeNode
+        public static void AddNodes<T>(this TreeNodeContainer<T> container, IEnumerable<T> nodes) where T : TreeNode
         {
             foreach(var node in nodes)
             {

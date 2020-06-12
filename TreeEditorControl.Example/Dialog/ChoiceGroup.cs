@@ -8,7 +8,7 @@ using TreeEditorControl.UndoRedo.Implementation;
 namespace TreeEditorControl.Example.Dialog
 {
     [NodeCatalogInfo("ChoiceGroup", "Choices", "Group for choice items")]
-    public class ChoiceGroup : TreeNodeContainer<ChoiceItem>, IDialogAction, ICopyableNode<ChoiceGroup>
+    public class ChoiceGroup : DialogAction, ICopyableNode<ChoiceGroup>
     {
         private UndoRedoValueWrapper<string> _textUndoRedoWrapper;
 
@@ -16,10 +16,9 @@ namespace TreeEditorControl.Example.Dialog
         {
             _textUndoRedoWrapper = CreateUndoRedoWrapper(nameof(Text), text);
 
-            UpdateHeader();
+            Choices = AddGroup<ChoiceItem>(nameof(Choices));
 
-            // TODO: Maybe it would be better to inherit from ReadableGroupContainerNode instead of TreeNodeContainer<ChoiceItem>
-            // And add a "Items" group, to make it more obvious that child items can be added.
+            UpdateHeader();
         }
 
         public string Text
@@ -28,11 +27,13 @@ namespace TreeEditorControl.Example.Dialog
             set => _textUndoRedoWrapper.Value = value;
         }
 
+        public TreeNodeContainer<ChoiceItem> Choices { get; }
+
         public ChoiceGroup CreateCopy()
         {
             var choiceCopy = new ChoiceGroup(EditorEnvironment, Text);
 
-            choiceCopy.AddNodes(GetCopyableNodeCopies());
+            choiceCopy.Choices.AddNodes(Choices.GetCopyableNodeCopies());
 
             return choiceCopy;
         }

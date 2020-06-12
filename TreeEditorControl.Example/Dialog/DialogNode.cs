@@ -1,11 +1,13 @@
-﻿using TreeEditorControl.Nodes.Implementation;
-using TreeEditorControl.Environment;
+﻿using TreeEditorControl.Environment;
+using TreeEditorControl.Nodes.Implementation;
 
 namespace TreeEditorControl.Example.Dialog
 {
-    public class DialogNode : TreeNodeContainer<IDialogAction>
+    public abstract class DialogNode : ReadableGroupContainerNode
     {
-        public DialogNode(IEditorEnvironment editorEnvironment) : base(editorEnvironment, "Dialog")
+        // Marker class
+        // Can be used for common dialog logic, for example serialization
+        protected DialogNode(IEditorEnvironment editorEnvironment) : base(editorEnvironment)
         {
 
         }

@@ -5,7 +5,7 @@ using TreeEditorControl.Nodes.Implementation;
 namespace TreeEditorControl.Example.Default
 {
     [Catalog.NodeCatalogInfo("Example container", "Nodes", "")]
-    public class DefaultContainer : TreeNodeContainer<IDefaultNode>, IDefaultNode
+    public class DefaultContainer : TreeNodeContainer<DefaultNode>, IDefaultNode
     {
         public DefaultContainer(IEditorEnvironment editorEnvironment) : base(editorEnvironment)
         {

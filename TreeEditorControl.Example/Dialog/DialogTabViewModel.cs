@@ -20,7 +20,7 @@ namespace TreeEditorControl.Example.Dialog
             EditorViewModel.AddDefaultCommands();
             EditorViewModel.AddDefaultContextMenuCommands();
 
-            EditorViewModel.CatalogItems.AddItems(NodeCatalogItem.CreateItemsForAssignableTypes(typeof(IDialogNode), Assembly.GetExecutingAssembly()));
+            EditorViewModel.CatalogItems.AddItems(NodeCatalogItem.CreateItemsForAssignableTypes(typeof(DialogNode), Assembly.GetExecutingAssembly()));
 
             EditorViewModel.CatalogItems.Add(new NodeCatalogItem(ShowTextHelloWorldCatalogName, "Actions", "ShowText with 'Hello world!'", typeof(ShowTextAction)));
 
@@ -28,9 +28,9 @@ namespace TreeEditorControl.Example.Dialog
                 () => EditorViewModel.SelectedNode is ShowTextAction, 
                 () => (EditorViewModel.SelectedNode as ShowTextAction).Text = "Hello world!"));
 
-            var containerNode = nodeFactory.CreateDialogNode();
+            var dialogRootNode = nodeFactory.CreateDialogRootNode();
 
-            EditorViewModel.AddRootNode(containerNode);
+            EditorViewModel.AddRootNode(dialogRootNode);
         }
     }
 }

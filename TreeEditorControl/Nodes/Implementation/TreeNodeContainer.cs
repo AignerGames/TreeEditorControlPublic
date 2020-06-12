@@ -4,7 +4,7 @@ using TreeEditorControl.Environment;
 
 namespace TreeEditorControl.Nodes.Implementation
 {
-    public class TreeNodeContainer<T> : ReadableNodeContainer<T>, ITreeNodeContainer where T : class, ITreeNode
+    public class TreeNodeContainer<T> : ReadableNodeContainer<T>, ITreeNodeContainer where T : TreeNode
     {
         public TreeNodeContainer(IEditorEnvironment editorEnvironment, string header = null) : base(editorEnvironment, header)
         {
