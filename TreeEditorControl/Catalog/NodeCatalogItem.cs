@@ -58,5 +58,7 @@ namespace TreeEditorControl.Catalog
 
             return catalogItems;
         }
+
+        public override string ToString() => $"{GetType().Name} {Name} {Category} {NodeType.Name}";
     }
 }

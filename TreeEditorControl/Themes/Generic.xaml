@@ -161,7 +161,7 @@
                             <!-- Catalog -->
                             <Border Grid.Column="0" Margin="3"
                                       BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
-                                <controls:CustomCatalogListBox ItemsSource="{Binding CatalogItems}" SelectedIndex="{Binding SelectedCatalogItemIndex}"
+                                <controls:CustomCatalogListBox ItemsSource="{Binding CatalogItems}" SelectedItem="{Binding SelectedCatalogItem}"
                                          Background="{TemplateBinding Background}"
                                          ItemTemplateSelector="{TemplateBinding CatalogItemTemplateSelector}"
                                          GroupStyleSelector="{TemplateBinding CatalogGroupStyleSelectorDelegate}"

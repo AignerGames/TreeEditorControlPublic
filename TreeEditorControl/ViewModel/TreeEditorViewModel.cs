@@ -23,7 +23,7 @@ namespace TreeEditorControl.ViewModel
 
         private readonly ITreeNodeFactory _nodeFactory;
 
-        private int _selectedCatalogItemIndex;
+        private NodeCatalogItem _selectedCatalogItem;
 
         private ITreeNode _selectedNode;
 
@@ -74,14 +74,8 @@ namespace TreeEditorControl.ViewModel
 
         public ReadOnlyObservableCollection<ContextMenuCommand> ActiveContextMenuCommands { get; }
 
-        public int SelectedCatalogItemIndex
-        {
-            get => _selectedCatalogItemIndex;
-            set => SetAndNotify(ref _selectedCatalogItemIndex, value);
-        }
-
-        public NodeCatalogItem SelectedCatalogItem => CatalogItems.ElementAtOrDefault(SelectedCatalogItemIndex);
-
+        public NodeCatalogItem SelectedCatalogItem { get => _selectedCatalogItem; set => SetAndNotify(ref _selectedCatalogItem, value); }
+        
         public ITreeNode SelectedNode { get => _selectedNode; private set => SetAndNotify(ref _selectedNode, value); }
 
         public ActionCommand DeleteNodeCommand { get; }
