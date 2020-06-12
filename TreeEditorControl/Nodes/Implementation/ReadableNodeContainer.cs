@@ -90,22 +90,5 @@ namespace TreeEditorControl.Nodes.Implementation
 
             UndoRedoStack.EndSequence(undoRedoId);
         }
-
-        private void RegisterChild(ITreeNode child)
-        {
-            SetChildParent(child);
-            child.NodeChanged += Child_NodeChanged;
-        }
-
-        private void DeregisterChild(ITreeNode child)
-        {
-            child.NodeChanged -= Child_NodeChanged;
-            RemoveChildParent(child);
-        }
-
-        private void Child_NodeChanged(object sender, NodeChangedArgs e)
-        {
-            InvokeNodeChanged(e);
-        }
     }
 }

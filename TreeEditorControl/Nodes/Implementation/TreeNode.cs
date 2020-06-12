@@ -35,51 +35,26 @@ namespace TreeEditorControl.Nodes.Implementation
 
         public ITreeNode Parent { get; private set; }
 
-        protected void SetChildParent(ITreeNode child)
+        /// <summary>
+        /// Sets the current node as the parent of the child node
+        /// and handles the child <see cref="NodeChanged"/> event.
+        /// </summary>
+        /// <param name="child"></param>
+        protected void RegisterChild(ITreeNode child)
         {
-            if (child.Parent != null)
-            {
-                throw new InvalidOperationException("The node parent is already set");
-            }
-
-            if(this.IsDescendantOf(child))
-            {
-                throw new InvalidOperationException($"Can't add parent node to a descendant child container node.");
-            }
-
-            if (child is TreeNode childNode)
-            {
-                childNode.Parent = this;
-            }
-            else if(child is ITreeNodeParentSettable parentSettable)
-            {
-                parentSettable.SetParent(this);
-            }
-            else
-            {
-                throw new NotSupportedException($"Can't set parent for node of type: {child.GetType()}");
-            }
+            SetChildParent(child);
+            child.NodeChanged += Child_NodeChanged;
         }
 
-        protected void RemoveChildParent(ITreeNode child)
+        /// <summary>
+        /// Removes the current node as the parent of the child node
+        /// and removes the <see cref="NodeChanged"/> handler of the child.
+        /// </summary>
+        /// <param name="child"></param>
+        protected void DeregisterChild(ITreeNode child)
         {
-            if (child.Parent != this)
-            {
-                throw new InvalidOperationException("The node doesn't belong to this parent");
-            }
-
-            if (child is TreeNode childNode)
-            {
-                childNode.Parent = null;
-            }
-            else if (child is ITreeNodeParentSettable parentSettable)
-            {
-                parentSettable.SetParent(null);
-            }
-            else
-            {
-                throw new NotSupportedException($"Can't remove parent for node of type: {child.GetType()}");
-            }
+            child.NodeChanged -= Child_NodeChanged;
+            RemoveChildParent(child);
         }
 
         protected void InvokeNodeChanged(NodeChangedArgs args)
@@ -100,6 +75,58 @@ namespace TreeEditorControl.Nodes.Implementation
             IsSelected = true;
 
             base.NotifyUndoRedoPropertyChange(propertyName);
+        }
+
+        private void SetChildParent(ITreeNode child)
+        {
+            if (child.Parent != null)
+            {
+                throw new InvalidOperationException("The node parent is already set");
+            }
+
+            if (this.IsDescendantOf(child))
+            {
+                throw new InvalidOperationException($"Can't add parent node to a descendant child container node.");
+            }
+
+            if (child is TreeNode childNode)
+            {
+                childNode.Parent = this;
+            }
+            else if (child is ITreeNodeParentSettable parentSettable)
+            {
+                parentSettable.SetParent(this);
+            }
+            else
+            {
+                throw new NotSupportedException($"Can't set parent for node of type: {child.GetType()}");
+            }
+        }
+
+        private void RemoveChildParent(ITreeNode child)
+        {
+            if (child.Parent != this)
+            {
+                throw new InvalidOperationException("The node doesn't belong to this parent");
+            }
+
+            if (child is TreeNode childNode)
+            {
+                childNode.Parent = null;
+            }
+            else if (child is ITreeNodeParentSettable parentSettable)
+            {
+                parentSettable.SetParent(null);
+            }
+            else
+            {
+                throw new NotSupportedException($"Can't remove parent for node of type: {child.GetType()}");
+            }
+        }
+
+        private void Child_NodeChanged(object sender, NodeChangedArgs e)
+        {
+            InvokeNodeChanged(e);
         }
 
         public override string ToString() => $"{GetType().Name}  \"{Header}\"";

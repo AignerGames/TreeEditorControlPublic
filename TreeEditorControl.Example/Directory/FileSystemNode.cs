@@ -54,6 +54,7 @@ namespace TreeEditorControl.Example.Directory
             {
                 foreach (var child in _nodes)
                 {
+                    child.Parent = null;
                     child.NodeChanged -= Child_NodeChanged;
                 }
 
@@ -71,6 +72,7 @@ namespace TreeEditorControl.Example.Directory
                 foreach(var child in _nodes)
                 {
                     child.NodeChanged += Child_NodeChanged;
+                    child.Parent = this;
                 }
             }
 
