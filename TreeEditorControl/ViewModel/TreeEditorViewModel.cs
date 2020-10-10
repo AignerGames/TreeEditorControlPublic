@@ -596,7 +596,7 @@ namespace TreeEditorControl.ViewModel
 
             UndoRedoStack.ExecuteAndPush(new UndoRedoCommand(() => ChangeSelectionCommandAction(newSelection), () => ChangeSelectionCommandAction(oldSelection)));
 
-            void ChangeSelectionCommandAction(ITreeNode commandNode)
+            static void ChangeSelectionCommandAction(ITreeNode commandNode)
             {
                 // The previous selection could be null if no item was selected, for example drag & drop from catalog doesn't require a selection
                 if (commandNode != null)
