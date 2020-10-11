@@ -42,7 +42,7 @@ namespace TreeEditorControl.Example.Dialog
 
         protected override void NotifyUndoRedoPropertyChange(string propertyName)
         {
-            if(propertyName == nameof(Text))
+            if (propertyName == nameof(Text) || propertyName == nameof(Actor))
             {
                 UpdateHeader();
             }
@@ -52,7 +52,7 @@ namespace TreeEditorControl.Example.Dialog
 
         private void UpdateHeader()
         {
-            Header = DialogHelper.GetHeaderString("ShowText", Text);
+            Header = DialogHelper.GetHeaderString("ShowText", $"{Actor}: {Text}");
         }
     }
 }

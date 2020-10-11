@@ -8,12 +8,14 @@ using TreeEditorControl.Commands;
 using TreeEditorControl.Example.Data;
 using System.Linq;
 using TreeEditorControl.Nodes;
+using System.Collections.ObjectModel;
 
 namespace TreeEditorControl.Example.Dialog
 {
     public class DialogTabViewModel : TabViewModel
     {
-        const string FilePath = "Data.json";
+        const string EditorDataPath = "Data.json";
+        const string GameExportPath = "GameExport.json";
 
         public const string ShowTextHelloWorldCatalogName = "ShowText HelloWorld";
 
@@ -55,18 +57,25 @@ namespace TreeEditorControl.Example.Dialog
             EditorViewModel.ContextMenuCommands.Add(ContextMenuCommand.Seperator);
             EditorViewModel.ContextMenuCommands.Add(new ContextMenuCommand("Load", LoadFile));
             EditorViewModel.ContextMenuCommands.Add(new ContextMenuCommand("Save", SaveFile));
+            EditorViewModel.ContextMenuCommands.Add(ContextMenuCommand.Seperator);
+            EditorViewModel.ContextMenuCommands.Add(new ContextMenuCommand("Reset", ResetFile));
         }
+
+
+        public ObservableCollection<StringViewModel> Actors { get; } = new ObservableCollection<StringViewModel>();
+
+        public ObservableCollection<StringViewModel> Variables { get; } = new ObservableCollection<StringViewModel>();
 
         private void LoadFile()
         {
             EditorEnvironment.UndoRedoStack.IsEnabled = false;
             EditorEnvironment.UndoRedoStack.Reset();
 
+            Actors.Clear();
+            Variables.Clear();
             EditorViewModel.ClearRootNodes();
 
-            var loadedNodes = _fileLoadHandler.Load(FilePath);
-
-            EditorViewModel.AddRootNodes(loadedNodes);
+            _fileLoadHandler.Load(EditorDataPath, this);
 
             EditorEnvironment.UndoRedoStack.IsEnabled = true;
         }
@@ -75,7 +84,7 @@ namespace TreeEditorControl.Example.Dialog
         {
             EditorEnvironment.UndoRedoStack.IsEnabled = false;
 
-            _fileSaveHandler.Save(FilePath, EditorViewModel.RootNodes.OfType<DialogRootNode>());
+            _fileSaveHandler.Save(EditorDataPath, GameExportPath, this);
 
             EditorEnvironment.UndoRedoStack.IsEnabled = true;
         }
@@ -106,6 +115,20 @@ namespace TreeEditorControl.Example.Dialog
                     }
                 }
             }
+        }
+
+        private void ResetFile()
+        {
+            EditorEnvironment.UndoRedoStack.IsEnabled = false;
+            EditorEnvironment.UndoRedoStack.Reset();
+
+            Actors.Clear();
+            Variables.Clear();
+            EditorViewModel.ClearRootNodes();
+
+            AddDialogRoot();
+
+            EditorEnvironment.UndoRedoStack.IsEnabled = true;
         }
     }
 }

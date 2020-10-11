@@ -58,6 +58,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Data\EditorData.cs" />
     <Compile Include="Data\FileSaveHandler.cs" />
     <Compile Include="Data\FileLoadHandler.cs" />
     <Compile Include="Dialog\ChoiceGroup.cs" />
@@ -75,6 +76,7 @@
     <Compile Include="Dialog\ModifyPlayerVariableAction.cs" />
     <Compile Include="Dialog\ShowTextAction.cs" />
     <Compile Include="Dialog\PlayerVariableCondition.cs" />
+    <Compile Include="StringViewModel.cs" />
     <Compile Include="TabViewModel.cs" />
     <Compile Include="ViewModel.cs" />
     <Page Include="MainWindow.xaml">

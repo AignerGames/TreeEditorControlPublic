@@ -29,11 +29,16 @@ namespace TreeEditorControl.Example.Data
             _visitor = new Visitor(_editorEnvironment);
         }
 
-        public List<DialogRootNode> Load(string path)
+        public void Load(string editorDataPath, DialogTabViewModel viewModel)
         {
-            var gameData = SerializationHelper.Load<GameData>(path, GameData.AbstractTypes);
+            var editorData = SerializationHelper.Load<EditorData>(editorDataPath, GameData.AbstractTypes);
 
-            return _visitor.CreateRootNodes(gameData);
+            editorData.Actors.ForEach(item => viewModel.Actors.Add(new StringViewModel { Value = item }));
+            editorData.Variables.ForEach(item => viewModel.Variables.Add(new StringViewModel { Value = item }));
+
+            var nodes = _visitor.CreateRootNodes(editorData.GameData);
+
+            viewModel.EditorViewModel.AddRootNodes(nodes);
         }
 
         private class Visitor :

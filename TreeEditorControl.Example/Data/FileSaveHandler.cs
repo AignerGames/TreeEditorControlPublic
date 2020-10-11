@@ -21,11 +21,17 @@ namespace TreeEditorControl.Example.Data
     {
         private readonly Visitor _visitor = new Visitor();
 
-        public void Save(string path, IEnumerable<DialogRootNode> dialogRootNodes)
+        public void Save(string editorDataPath, string gameExportPath, DialogTabViewModel viewModel)
         {
-            var gameData = _visitor.CreateGameData(dialogRootNodes);
+            var editorData = new EditorData();
 
-            SerializationHelper.Save(path, gameData, GameData.AbstractTypes);
+            editorData.Actors.AddRange(viewModel.Actors.Select(item => item.Value));
+            editorData.Variables.AddRange(viewModel.Variables.Select(item => item.Value));
+
+            editorData.GameData = _visitor.CreateGameData(viewModel.EditorViewModel.RootNodes.OfType<DialogRootNode>());
+
+            SerializationHelper.Save(editorDataPath, editorData, GameData.AbstractTypes);
+            SerializationHelper.Save(gameExportPath, editorData.GameData, GameData.AbstractTypes);
         }
 
         private class Visitor :
