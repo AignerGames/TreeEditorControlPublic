@@ -18,8 +18,8 @@ namespace TreeEditorControl.Example
             // Disable the undo/redo stack during the node initialization
             editorEnvironment.UndoRedoStack.IsEnabled = false;
 
-            AddTab(new Default.DefaultTabViewModel(editorEnvironment));
-            AddTab(new Directory.DirectoryTabViewModel(editorEnvironment));
+            //AddTab(new Default.DefaultTabViewModel(editorEnvironment));
+            //AddTab(new Directory.DirectoryTabViewModel(editorEnvironment));
             AddTab(new Dialog.DialogTabViewModel(editorEnvironment));
 
             // Enable the undo/redo stack after the node initialization

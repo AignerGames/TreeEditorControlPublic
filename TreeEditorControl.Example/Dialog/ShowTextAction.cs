@@ -10,13 +10,21 @@ namespace TreeEditorControl.Example.Dialog
     [NodeCatalogInfo("ShowText", "Actions", "Shows a dialog text")]
     public class ShowTextAction : DialogAction, ICopyableNode<ShowTextAction>
     {
+        private UndoRedoValueWrapper<string> _actorUndoRedoWrapper;
         private UndoRedoValueWrapper<string> _textUndoRedoWrapper;
 
-        public ShowTextAction(IEditorEnvironment editorEnvironment, string text = null) : base(editorEnvironment)
+        public ShowTextAction(IEditorEnvironment editorEnvironment, string actor = null, string text = null) : base(editorEnvironment)
         {
+            _actorUndoRedoWrapper = CreateUndoRedoWrapper(nameof(Actor), actor);
             _textUndoRedoWrapper = CreateUndoRedoWrapper(nameof(Text), text);
 
             UpdateHeader();
+        }
+
+        public string Actor
+        {
+            get => _actorUndoRedoWrapper.Value;
+            set => _actorUndoRedoWrapper.Value = value;
         }
 
         public string Text
@@ -29,6 +37,8 @@ namespace TreeEditorControl.Example.Dialog
         {
             return new ShowTextAction(EditorEnvironment, Text);
         }
+
+        public override T Accept<T>(IDialogActionVisitor<T> visitor) => visitor.VisitShowText(this);
 
         protected override void NotifyUndoRedoPropertyChange(string propertyName)
         {

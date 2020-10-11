@@ -3,9 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:default="clr-namespace:TreeEditorControl.Example.Default"
         xmlns:dialog="clr-namespace:TreeEditorControl.Example.Dialog"
-        xmlns:directory="clr-namespace:TreeEditorControl.Example.Directory"
         xmlns:treeEditor="clr-namespace:TreeEditorControl.Controls;assembly=TreeEditorControl"
         mc:Ignorable="d"
         Title="TreeEditorControl Examples" Height="600" Width="800">
@@ -33,54 +31,6 @@
             <DataTemplate>
                 <ContentControl Content="{Binding}">
                     <ContentControl.Resources>
-                        
-                        <!-- Example: Default -->
-                        <DataTemplate DataType="{x:Type default:DefaultTabViewModel}">
-                            <treeEditor:TreeEditor DataContext="{Binding EditorViewModel}">
-                            </treeEditor:TreeEditor>
-                        </DataTemplate>
-
-                        <!-- Example: Directory -->
-                        <DataTemplate DataType="{x:Type directory:DirectoryTabViewModel}">
-                            <treeEditor:TreeEditor DataContext="{Binding EditorViewModel}">
-
-                                <treeEditor:TreeEditor.TreeViewItemTemplateSelector>
-                                    <treeEditor:TreeViewItemTemplateSelector>
-                                        <treeEditor:TreeViewItemTemplateSelector.ContainerTemplate>
-                                            <HierarchicalDataTemplate ItemsSource="{Binding Nodes}">
-                                                <StackPanel Orientation="Horizontal">
-                                                    <Image Width="18" Height="18" Stretch="UniformToFill"
-                                                           Source="{Binding IconName, Converter={StaticResource NameToBitmapImageConverter}}"/>
-                                                    
-                                                    <TextBlock Text="{Binding Header}" />
-                                                </StackPanel>
-                                            </HierarchicalDataTemplate>
-                                        </treeEditor:TreeViewItemTemplateSelector.ContainerTemplate>
-                                    </treeEditor:TreeViewItemTemplateSelector>
-                                </treeEditor:TreeEditor.TreeViewItemTemplateSelector>
-                                
-                                <treeEditor:TreeEditor.SelectedNodeInfoTemplateSelector>
-                                    <treeEditor:ExplicitTemplateSelector>
-                                        <treeEditor:ExplicitTemplateSelector.NullTemplate>
-                                            <DataTemplate>
-                                                <TextBlock Text="No node selected..."/>
-                                            </DataTemplate>
-                                        </treeEditor:ExplicitTemplateSelector.NullTemplate>
-
-                                        <treeEditor:ExplicitTemplateSelector.Template>
-                                            <DataTemplate>
-                                                <StackPanel>
-                                                    <TextBlock Text="Full path: "/>
-                                                    <TextBlock Text="{Binding FullPath}"/>
-                                                </StackPanel>
-                                            </DataTemplate>
-                                        </treeEditor:ExplicitTemplateSelector.Template>
-                                    </treeEditor:ExplicitTemplateSelector>
-                                </treeEditor:TreeEditor.SelectedNodeInfoTemplateSelector>
-
-                            </treeEditor:TreeEditor>
-                        </DataTemplate>
-
                         <!-- Example: Dialog -->
                         <DataTemplate DataType="{x:Type dialog:DialogTabViewModel}">
                             <treeEditor:TreeEditor DataContext="{Binding EditorViewModel}">
@@ -134,11 +84,21 @@
                                 <treeEditor:TreeEditor.Resources>
 
                                     <DataTemplate DataType="{x:Type dialog:DialogRootNode}">
-                                        <TextBlock Text="Dialog root node"/>
+                                        <StackPanel>
+                                            <TextBlock Text="Dialog root node"/>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="Name: "/>
+                                                <TextBox Text="{Binding Name}" MinWidth="200" VerticalAlignment="Stretch"/>
+                                            </StackPanel>
+                                        </StackPanel>
                                     </DataTemplate>
 
                                     <DataTemplate DataType="{x:Type dialog:ShowTextAction}">
                                         <StackPanel>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="Actor: "/>
+                                                <TextBox Text="{Binding Actor}" MinWidth="200" VerticalAlignment="Stretch"/>
+                                            </StackPanel>
                                             <StackPanel Orientation="Horizontal">
                                                 <TextBlock Text="Text: "/>
                                                 <TextBox Text="{Binding Text}" MinWidth="500" VerticalAlignment="Stretch" AcceptsReturn="True"/>
@@ -158,14 +118,34 @@
                                     <DataTemplate DataType="{x:Type dialog:ChoiceGroup}">
                                         <StackPanel>
                                             <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="Actor: "/>
+                                                <TextBox Text="{Binding Actor}" MinWidth="200" VerticalAlignment="Stretch"/>
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal">
                                                 <TextBlock Text="Text: "/>
                                                 <TextBox Text="{Binding Text}" MinWidth="500" VerticalAlignment="Stretch" AcceptsReturn="True"/>
                                             </StackPanel>
                                         </StackPanel>
                                     </DataTemplate>
 
+                                    <DataTemplate DataType="{x:Type dialog:ModifyPlayerVariableAction}">
+                                        <StackPanel>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="Variable: " Width="100"/>
+                                                <TextBox Text="{Binding Variable}" MinWidth="200"/>
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="Value: " Width="100"/>
+                                                <TextBox Text="{Binding Value}" MinWidth="200"/>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </DataTemplate>
 
-                                    <DataTemplate DataType="{x:Type dialog:VariableCondition}">
+                                    <DataTemplate DataType="{x:Type dialog:ConditionalAction}">
+                                        <TextBlock Text="If / Else Action"/>
+                                    </DataTemplate>
+
+                                    <DataTemplate DataType="{x:Type dialog:PlayerVariableCondition}">
                                         <StackPanel>
                                             <StackPanel Orientation="Horizontal">
                                                 <TextBlock Text="Variable: " Width="100"/>

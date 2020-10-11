@@ -2,7 +2,7 @@
 
 namespace TreeEditorControl.Example.Dialog
 {
-    public class DialogCondition : DialogNode
+    public abstract class DialogCondition : DialogNode
     {
         // Marker class
         // Can be used for common condition logic, for example serialization
@@ -10,5 +10,7 @@ namespace TreeEditorControl.Example.Dialog
         {
 
         }
+
+        public abstract T Accept<T>(IDialogConditionVisitor<T> visitor);
     }
 }

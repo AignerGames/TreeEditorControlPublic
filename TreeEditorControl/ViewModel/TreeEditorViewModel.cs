@@ -331,12 +331,14 @@ namespace TreeEditorControl.ViewModel
                 return;
             }
 
-            var movingNode = SelectedNode;
+            var movingNode = SelectedNode;     
             var parentContainer = (ITreeNodeContainer)movingNode.Parent;
-            var currentIndex = parentContainer.IndexOf(SelectedNode);
+            var currentIndex = parentContainer.IndexOf(movingNode);
             var newIndex = currentIndex  + indexOffset;
 
             var undoRedoId = UndoRedoStack.StartSequence();
+
+            parentContainer.IsSelected = true;
 
             parentContainer.RemoveNodeAt(currentIndex);
             if(parentContainer.TryInsertNode(newIndex, movingNode))
@@ -575,6 +577,11 @@ namespace TreeEditorControl.ViewModel
             if (node != null && container.TryInsertNode(index, node))
             {
                 AddChangeNodeSelectionUndoRedoCommand(node);
+
+                if(node is IReadableNodeContainer containerNode)
+                {
+                    containerNode.IsExpanded = true;
+                }
             }
         }
 
@@ -596,7 +603,7 @@ namespace TreeEditorControl.ViewModel
 
             UndoRedoStack.ExecuteAndPush(new UndoRedoCommand(() => ChangeSelectionCommandAction(newSelection), () => ChangeSelectionCommandAction(oldSelection)));
 
-            static void ChangeSelectionCommandAction(ITreeNode commandNode)
+            void ChangeSelectionCommandAction(ITreeNode commandNode)
             {
                 // The previous selection could be null if no item was selected, for example drag & drop from catalog doesn't require a selection
                 if (commandNode != null)

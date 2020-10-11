@@ -46,6 +46,9 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
+    <Reference Include="UnityEngine">
+      <HintPath>..\..\..\..\..\..\Program Files\Unity\Hub\Editor\2019.4.1f1\Editor\Data\Managed\UnityEngine.dll</HintPath>
+    </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -55,12 +58,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Default\DefaultContainer.cs" />
-    <Compile Include="Default\DefaultNode.cs" />
-    <Compile Include="Default\DefaultTabViewModel.cs" />
-    <Compile Include="Default\IDefaultNode.cs" />
+    <Compile Include="Data\FileSaveHandler.cs" />
+    <Compile Include="Data\FileLoadHandler.cs" />
     <Compile Include="Dialog\ChoiceGroup.cs" />
     <Compile Include="Dialog\ChoiceItem.cs" />
+    <Compile Include="Dialog\ConditionalAction.cs" />
     <Compile Include="Dialog\CustomNodeFactory.cs" />
     <Compile Include="Dialog\DialogHelper.cs" />
     <Compile Include="Dialog\DialogRootNode.cs" />
@@ -68,10 +70,11 @@
     <Compile Include="Dialog\DialogAction.cs" />
     <Compile Include="Dialog\DialogCondition.cs" />
     <Compile Include="Dialog\DialogNode.cs" />
+    <Compile Include="Dialog\IDialogActionVisitor.cs" />
+    <Compile Include="Dialog\IDialogConditionVisitor.cs" />
+    <Compile Include="Dialog\ModifyPlayerVariableAction.cs" />
     <Compile Include="Dialog\ShowTextAction.cs" />
-    <Compile Include="Dialog\VariableCondition.cs" />
-    <Compile Include="Directory\DirectoryTabViewModel.cs" />
-    <Compile Include="Directory\FileSystemNode.cs" />
+    <Compile Include="Dialog\PlayerVariableCondition.cs" />
     <Compile Include="TabViewModel.cs" />
     <Compile Include="ViewModel.cs" />
     <Page Include="MainWindow.xaml">
@@ -114,6 +117,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Source\repos\StoryCreator.Common\StoryCreator.Common\StoryCreator.Common.csproj">
+      <Project>{f9bb0971-d32e-4a9e-a36b-697740edd65d}</Project>
+      <Name>StoryCreator.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TreeEditorControl\TreeEditorControl.csproj">
       <Project>{0998af8d-d44c-4ef7-ae00-7417ccfb06b2}</Project>
       <Name>TreeEditorControl</Name>

@@ -1,4 +1,9 @@
-﻿
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
 using TreeEditorControl.Catalog;
 using TreeEditorControl.Nodes;
 using TreeEditorControl.Nodes.Implementation;
@@ -7,13 +12,13 @@ using TreeEditorControl.UndoRedo.Implementation;
 
 namespace TreeEditorControl.Example.Dialog
 {
-    [NodeCatalogInfo("VariableCondition", "Conditions", "Checks a specific variable value")]
-    public class VariableCondition : DialogCondition, ICopyableNode<VariableCondition>
+    [NodeCatalogInfo("ModifyPlayerVariableAction", "Actions", "Checks a specific player variable value")]
+    public class ModifyPlayerVariableAction : DialogAction, ICopyableNode<ModifyPlayerVariableAction>
     {
         private UndoRedoValueWrapper<string> _variableUndoRedoWrapper;
         private UndoRedoValueWrapper<int> _valueUndoRedoWrapper;
 
-        public VariableCondition(IEditorEnvironment editorEnvironment, string variableName = null, int variableValue = 0) : base(editorEnvironment)
+        public ModifyPlayerVariableAction(IEditorEnvironment editorEnvironment, string variableName = null, int variableValue = 0) : base(editorEnvironment)
         {
             _variableUndoRedoWrapper = CreateUndoRedoWrapper(nameof(Variable), variableName);
             _valueUndoRedoWrapper = CreateUndoRedoWrapper(nameof(Value), variableValue);
@@ -34,10 +39,12 @@ namespace TreeEditorControl.Example.Dialog
             set => _valueUndoRedoWrapper.Value = value;
         }
 
-        public VariableCondition CreateCopy()
+        public ModifyPlayerVariableAction CreateCopy()
         {
-            return new VariableCondition(EditorEnvironment, Variable, Value);
+            return new ModifyPlayerVariableAction(EditorEnvironment, Variable, Value);
         }
+
+        public override T Accept<T>(IDialogActionVisitor<T> visitor) => visitor.VisitModifyPlayerVariable(this);
 
         protected override void NotifyUndoRedoPropertyChange(string propertyName)
         {
@@ -51,7 +58,7 @@ namespace TreeEditorControl.Example.Dialog
 
         private void UpdateHeader()
         {
-            Header = DialogHelper.GetHeaderString("VariableCondition", $"{Variable} == {Value}");
+            Header = DialogHelper.GetHeaderString("ModifyPlayerVariableAction", $"{Variable} == {Value}");
         }
     }
 }

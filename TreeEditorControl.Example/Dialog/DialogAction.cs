@@ -2,7 +2,7 @@
 
 namespace TreeEditorControl.Example.Dialog
 {
-    public class DialogAction : DialogNode
+    public abstract class DialogAction : DialogNode
     {
         // Marker class
         // Can be used for common action logic, for example serialization
@@ -10,5 +10,7 @@ namespace TreeEditorControl.Example.Dialog
         {
 
         }
+
+        public abstract T Accept<T>(IDialogActionVisitor<T> visitor);
     }
 }
