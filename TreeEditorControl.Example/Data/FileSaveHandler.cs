@@ -115,6 +115,7 @@ namespace TreeEditorControl.Example.Data
                 return new ModifyPlayerVariableInteractionCommandData
                 {
                     Variable = node.Variable,
+                    ModifyKind = node.ModifyKind,
                     Value = node.Value
                 };
             }
@@ -169,7 +170,8 @@ namespace TreeEditorControl.Example.Data
                 return new InteractionPlayerVariableConditionData
                 {
                     Variable = node.Variable,
-                    CompareValue = node.Value,
+                    CompareKind = node.CompareKind,
+                    CompareValue = node.CompareValue,
                 };
             }
         }

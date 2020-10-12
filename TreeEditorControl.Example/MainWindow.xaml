@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TreeEditorControl.Example"
         xmlns:dialog="clr-namespace:TreeEditorControl.Example.Dialog"
         xmlns:treeEditor="clr-namespace:TreeEditorControl.Controls;assembly=TreeEditorControl"
         mc:Ignorable="d"
@@ -164,6 +165,10 @@
                                                               SelectedValue="{Binding Variable}" Width="300"/>
                                                 </StackPanel>
                                                 <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="ModifyKind: " Width="100"/>
+                                                    <ComboBox ItemsSource="{x:Static local:StaticEnumCollections.ValueModifyKinds}" SelectedValue="{Binding ModifyKind}"/>
+                                                </StackPanel>
+                                                <StackPanel Orientation="Horizontal">
                                                     <TextBlock Text="Value: " Width="100"/>
                                                     <TextBox Text="{Binding Value}" MinWidth="200"/>
                                                 </StackPanel>
@@ -182,8 +187,12 @@
                                                               SelectedValue="{Binding Variable}" Width="300"/>
                                                 </StackPanel>
                                                 <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="CompareMode: " Width="100"/>
+                                                    <ComboBox ItemsSource="{x:Static local:StaticEnumCollections.ValueCompareKinds}" SelectedValue="{Binding CompareKind}"/> 
+                                                </StackPanel>
+                                                <StackPanel Orientation="Horizontal">
                                                     <TextBlock Text="Value: " Width="100"/>
-                                                    <TextBox Text="{Binding Value}" MinWidth="200"/>
+                                                    <TextBox Text="{Binding CompareValue}" MinWidth="200"/>
                                                 </StackPanel>
                                             </StackPanel>
                                         </DataTemplate>

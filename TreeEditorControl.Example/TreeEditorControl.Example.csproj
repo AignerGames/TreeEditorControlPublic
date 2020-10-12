@@ -76,6 +76,7 @@
     <Compile Include="Dialog\ModifyPlayerVariableAction.cs" />
     <Compile Include="Dialog\ShowTextAction.cs" />
     <Compile Include="Dialog\PlayerVariableCondition.cs" />
+    <Compile Include="StaticEnumCollections.cs" />
     <Compile Include="StringViewModel.cs" />
     <Compile Include="TabViewModel.cs" />
     <Compile Include="ViewModel.cs" />

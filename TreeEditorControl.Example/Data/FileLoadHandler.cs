@@ -157,7 +157,7 @@ namespace TreeEditorControl.Example.Data
 
             public DialogAction VisitModifyPlayerVariable(ModifyPlayerVariableInteractionCommandData data)
             {
-                var node = new ModifyPlayerVariableAction(_editorEnvironment, data.Variable, data.Value);
+                var node = new ModifyPlayerVariableAction(_editorEnvironment, data.Variable, data.ModifyKind, data.Value);
 
                 return node;
             }
@@ -213,7 +213,7 @@ namespace TreeEditorControl.Example.Data
 
             public DialogCondition VisitPlayerVariableCondition(InteractionPlayerVariableConditionData data)
             {
-                var node = new PlayerVariableCondition(_editorEnvironment, data.Variable, data.CompareValue);
+                var node = new PlayerVariableCondition(_editorEnvironment, data.Variable, data.CompareKind, data.CompareValue);
 
                 return node;
             }

@@ -9,56 +9,62 @@ using TreeEditorControl.Nodes;
 using TreeEditorControl.Nodes.Implementation;
 using TreeEditorControl.Environment;
 using TreeEditorControl.UndoRedo.Implementation;
+using StoryCreator.Common.Interaction;
 
 namespace TreeEditorControl.Example.Dialog
 {
     [NodeCatalogInfo("ModifyPlayerVariableAction", "Actions", "Checks a specific player variable value")]
     public class ModifyPlayerVariableAction : DialogAction, ICopyableNode<ModifyPlayerVariableAction>
     {
-        private UndoRedoValueWrapper<string> _variableUndoRedoWrapper;
-        private UndoRedoValueWrapper<int> _valueUndoRedoWrapper;
+        private UndoRedoValueWrapper<string> _variable;
+        private UndoRedoValueWrapper<ValueModifyKind> _modifyKind;
+        private UndoRedoValueWrapper<int> _value;
 
-        public ModifyPlayerVariableAction(IEditorEnvironment editorEnvironment, string variableName = null, int variableValue = 0) : base(editorEnvironment)
+        public ModifyPlayerVariableAction(IEditorEnvironment editorEnvironment, string variableName = null, ValueModifyKind modifyKind = ValueModifyKind.Set, int variableValue = 0) : base(editorEnvironment)
         {
-            _variableUndoRedoWrapper = CreateUndoRedoWrapper(nameof(Variable), variableName);
-            _valueUndoRedoWrapper = CreateUndoRedoWrapper(nameof(Value), variableValue);
+            _variable = CreateUndoRedoWrapper(nameof(Variable), variableName);
+            _modifyKind = CreateUndoRedoWrapper(nameof(ModifyKind), modifyKind);
+            _value = CreateUndoRedoWrapper(nameof(Value), variableValue);
 
             UpdateHeader();
         }
 
         public string Variable
         {
-            get => _variableUndoRedoWrapper.Value;
-            set => _variableUndoRedoWrapper.Value = value;
+            get => _variable.Value;
+            set => _variable.Value = value;
+        }
+
+        public ValueModifyKind ModifyKind
+        {
+            get => _modifyKind.Value;
+            set => _modifyKind.Value = value;
         }
 
         public int Value
 
         {
-            get => _valueUndoRedoWrapper.Value;
-            set => _valueUndoRedoWrapper.Value = value;
+            get => _value.Value;
+            set => _value.Value = value;
         }
 
         public ModifyPlayerVariableAction CreateCopy()
         {
-            return new ModifyPlayerVariableAction(EditorEnvironment, Variable, Value);
+            return new ModifyPlayerVariableAction(EditorEnvironment, Variable, ModifyKind, Value);
         }
 
         public override T Accept<T>(IDialogActionVisitor<T> visitor) => visitor.VisitModifyPlayerVariable(this);
 
         protected override void NotifyUndoRedoPropertyChange(string propertyName)
         {
-            if (propertyName == nameof(Variable) || propertyName == nameof(Value))
-            {
-                UpdateHeader();
-            }
+            UpdateHeader();
 
             base.NotifyUndoRedoPropertyChange(propertyName);
         }
 
         private void UpdateHeader()
         {
-            Header = DialogHelper.GetHeaderString("ModifyPlayerVariableAction", $"{Variable} == {Value}");
+            Header = DialogHelper.GetHeaderString("ModifyPlayerVariableAction", $"{Variable} {ModifyKind} {Value}");
         }
     }
 }
