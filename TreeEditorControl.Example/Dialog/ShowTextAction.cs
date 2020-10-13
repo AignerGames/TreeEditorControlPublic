@@ -35,7 +35,7 @@ namespace TreeEditorControl.Example.Dialog
 
         public ShowTextAction CreateCopy()
         {
-            return new ShowTextAction(EditorEnvironment, Text);
+            return new ShowTextAction(EditorEnvironment, Actor, Text);
         }
 
         public override T Accept<T>(IDialogActionVisitor<T> visitor) => visitor.VisitShowText(this);

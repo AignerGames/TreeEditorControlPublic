@@ -39,7 +39,7 @@ namespace TreeEditorControl.Example.Dialog
 
         public ChoiceGroup CreateCopy()
         {
-            var choiceCopy = new ChoiceGroup(EditorEnvironment, Text);
+            var choiceCopy = new ChoiceGroup(EditorEnvironment, Actor, Text);
 
             choiceCopy.Choices.AddNodes(Choices.GetCopyableNodeCopies());
 

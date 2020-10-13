@@ -7,8 +7,8 @@
         xmlns:dialog="clr-namespace:TreeEditorControl.Example.Dialog"
         xmlns:treeEditor="clr-namespace:TreeEditorControl.Controls;assembly=TreeEditorControl"
         mc:Ignorable="d"
-        Title="TreeEditorControl Examples" Height="600" Width="800">
-    <TabControl ItemsSource="{Binding TabViewModels}" SelectedItem="{Binding SelectedTab}">
+        Title="TreeEditorControl Examples" Height="600" Width="800" Background="SlateGray">
+    <TabControl ItemsSource="{Binding TabViewModels}" SelectedItem="{Binding SelectedTab}" Background="Transparent">
         <TabControl.Resources>
             <treeEditor:NameToBitmapImageConverter x:Key="NameToBitmapImageConverter">
                 <treeEditor:NameToBitmapImageConverter.BaseUri>
@@ -125,7 +125,7 @@
                                                 <StackPanel Orientation="Horizontal">
                                                     <TextBlock Text="Actor: "/>
                                                     <ComboBox ItemsSource="{Binding ElementName=DialogRootControl, Path=DataContext.Actors}" DisplayMemberPath="Value"
-                                                              SelectedValue="{Binding Actor}" Width="300"/>
+                                                              SelectedValue="{Binding Actor}" SelectedValuePath="Value" Width="300"/>
                                                 </StackPanel>
                                                 <StackPanel Orientation="Horizontal">
                                                     <TextBlock Text="Text: "/>
@@ -148,7 +148,7 @@
                                                 <StackPanel Orientation="Horizontal">
                                                     <TextBlock Text="Actor: "/>
                                                     <ComboBox ItemsSource="{Binding ElementName=DialogRootControl, Path=DataContext.Actors}" DisplayMemberPath="Value"
-                                                              SelectedValue="{Binding Actor}" Width="300"/>
+                                                              SelectedValue="{Binding Actor}" SelectedValuePath="Value" Width="300"/>
                                                 </StackPanel>
                                                 <StackPanel Orientation="Horizontal">
                                                     <TextBlock Text="Text: "/>
