@@ -65,9 +65,12 @@ namespace TreeEditorControl.Example.Data
                 foreach (var interactionData in gameData.Interactions)
                 {
                     var rootNode = new DialogRootNode(_editorEnvironment, interactionData.Name);
-                    var rootActions = CreateActionNodes(interactionData.Commands);
 
-                    rootNode.AddNodes(rootActions);
+                    CreateAndAddConditionNodes(rootNode.Conditions, interactionData.Condition);
+
+                    var rootActions = CreateCommandNodes(interactionData.Command);
+                    rootNode.Actions.AddNodes(rootActions);
+
                     rootNodes.Add(rootNode);
                 }
 
@@ -115,34 +118,30 @@ namespace TreeEditorControl.Example.Data
                 return dialogActions;
             }
 
-            private List<DialogCondition> CreateConditionNodes(InteractionConditionData conditionData)
+            private void CreateAndAddConditionNodes(ConditionNodeContainer container, InteractionConditionData conditionData)
             {
-                // TODO: Special handling for multi conditions
-
-                var dialogConditions = new List<DialogCondition>();
-
                 if(conditionData == null)
                 {
-                    return dialogConditions;
+                    return;
                 }
 
                 if(conditionData is InteractionMultiConditionData multiConditionData)
                 {
+                    container.ConditionKind = multiConditionData.Kind;
+
                     foreach(var conditionDataItem in multiConditionData.Conditions)
                     {
                         var conditionNode = conditionDataItem.Accept(this);
 
-                        dialogConditions.Add(conditionNode);
+                        container.Add(conditionNode);
                     }
                 }
                 else
                 {
                     var conditionNode = conditionData.Accept(this);
 
-                    dialogConditions.Add(conditionNode);
+                    container.Add(conditionNode);
                 }
-
-                return dialogConditions;
             }
 
             public DialogAction VisitMultiCommand(InteractionMultiCommandData data)
@@ -187,10 +186,9 @@ namespace TreeEditorControl.Example.Data
                     var item = new ChoiceItem(_editorEnvironment, itemData.Text);
 
                     var actions = CreateCommandNodes(itemData.Command);
-                    var conditions = CreateConditionNodes(itemData.Condition);
-
                     item.Actions.AddNodes(actions);
-                    item.Conditions.AddNodes(conditions);
+
+                    CreateAndAddConditionNodes(item.Conditions, itemData.Condition);
 
                     return item;
                 }
@@ -200,13 +198,26 @@ namespace TreeEditorControl.Example.Data
             {
                 var node = new ConditionalAction(_editorEnvironment);
 
-                var conditions = CreateConditionNodes(data.Condition);
-                var trueActions = CreateCommandNodes(data.TrueCommand);
-                var falseActions = CreateCommandNodes(data.FalseCommand);
+                CreateAndAddConditionNodes(node.Conditions, data.Condition);
 
-                node.Conditions.AddNodes(conditions);
+                var trueActions = CreateCommandNodes(data.TrueCommand);
                 node.TrueActions.AddNodes(trueActions);
+
+                var falseActions = CreateCommandNodes(data.FalseCommand);
                 node.FalseActions.AddNodes(falseActions);
+
+                return node;
+            }
+
+            public DialogAction VisitRollDiceInteraction(RollDiceInteractionData data)
+            {
+                var node = new DiceRollAction(_editorEnvironment, data.TargetValue, data.MaxValue);
+
+                var successActions = CreateCommandNodes(data.SuccessCommand);
+                node.SuccessActions.AddNodes(successActions);
+
+                var failActions = CreateCommandNodes(data.FailCommand);
+                node.FailActions.AddNodes(failActions);
 
                 return node;
             }

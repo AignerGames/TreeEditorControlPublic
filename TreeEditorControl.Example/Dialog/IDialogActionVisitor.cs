@@ -14,6 +14,8 @@ namespace TreeEditorControl.Example.Dialog
 
         T VisitConditionalInteraction(ConditionalAction node);
 
+        T VisitDiceRollAction(DiceRollAction diceRollAction);
+
         T VisitModifyPlayerVariable(ModifyPlayerVariableAction node);
     }
 }

@@ -47,26 +47,13 @@ namespace TreeEditorControl.Example.Data
                 {
                     var interactionData = new InteractionData
                     {
-                        Name = dialogNode.Name
+                        Name = dialogNode.Name,
                     };
 
                     gameData.Interactions.Add(interactionData);
 
-                    // TODO: Property mit einem command statt liste?
-                    var commandData = CreateCommandData(dialogNode.Nodes);
-                    if(commandData == null)
-                    {
-                        continue;
-                    }
-
-                    if(commandData is InteractionMultiCommandData multiCommandData)
-                    {
-                        interactionData.Commands.AddRange(multiCommandData.Commands);
-                    }
-                    else
-                    {
-                        interactionData.Commands.Add(commandData);
-                    }
+                    interactionData.Condition = CreateConditionData(dialogNode.Conditions);
+                    interactionData.Command = CreateCommandData(dialogNode.Actions.Nodes);
                 }
 
                 return gameData;
@@ -91,11 +78,11 @@ namespace TreeEditorControl.Example.Data
                 return multiCommand.Commands.Count > 1 ? multiCommand : multiCommand.Commands[0];
             }
 
-            private InteractionConditionData CreateConditionData(IReadOnlyList<DialogCondition> dialogConditions)
+            private InteractionConditionData CreateConditionData(ConditionNodeContainer dialogConditions)
             {
-                var multiCondition = new InteractionMultiConditionData();
+                var multiCondition = new InteractionMultiConditionData { Kind = dialogConditions.ConditionKind };
 
-                foreach (var dialogCondition in dialogConditions)
+                foreach (var dialogCondition in dialogConditions.Nodes)
                 {
                     var condition = dialogCondition.Accept(this);
 
@@ -144,7 +131,7 @@ namespace TreeEditorControl.Example.Data
                     var itemData = new InteractionChoiceItemData
                     {
                         Text = itemNode.Text,
-                        Condition = CreateConditionData(itemNode.Conditions.Nodes),
+                        Condition = CreateConditionData(itemNode.Conditions),
                         Command = CreateCommandData(itemNode.Actions.Nodes)
                     };
 
@@ -158,9 +145,20 @@ namespace TreeEditorControl.Example.Data
             {
                 return new ConditionalInteractionCommandData
                 {
-                    Condition = CreateConditionData(node.Conditions.Nodes),
+                    Condition = CreateConditionData(node.Conditions),
                     TrueCommand = CreateCommandData(node.TrueActions.Nodes),
                     FalseCommand = CreateCommandData(node.FalseActions.Nodes)
+                };
+            }
+
+            public InteractionCommandData VisitDiceRollAction(DiceRollAction node)
+            {
+                return new RollDiceInteractionData
+                {
+                    TargetValue = node.TargetValue,
+                    MaxValue = node.MaxValue,
+                    SuccessCommand = CreateCommandData(node.SuccessActions.Nodes),
+                    FailCommand = CreateCommandData(node.FailActions.Nodes)
                 };
             }
 

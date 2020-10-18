@@ -64,6 +64,7 @@
     <Compile Include="Dialog\ChoiceGroup.cs" />
     <Compile Include="Dialog\ChoiceItem.cs" />
     <Compile Include="Dialog\ConditionalAction.cs" />
+    <Compile Include="Dialog\ConditionNodeContainer.cs" />
     <Compile Include="Dialog\CustomNodeFactory.cs" />
     <Compile Include="Dialog\DialogHelper.cs" />
     <Compile Include="Dialog\DialogRootNode.cs" />
@@ -71,6 +72,7 @@
     <Compile Include="Dialog\DialogAction.cs" />
     <Compile Include="Dialog\DialogCondition.cs" />
     <Compile Include="Dialog\DialogNode.cs" />
+    <Compile Include="Dialog\DiceRollAction.cs" />
     <Compile Include="Dialog\IDialogActionVisitor.cs" />
     <Compile Include="Dialog\IDialogConditionVisitor.cs" />
     <Compile Include="Dialog\ModifyPlayerVariableAction.cs" />

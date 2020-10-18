@@ -16,7 +16,9 @@ namespace TreeEditorControl.Example.Dialog
         {
             _textUndoRedoWrapper = CreateUndoRedoWrapper(nameof(Text), text);
 
-            Conditions = AddGroup<DialogCondition>(nameof(Conditions));
+            Conditions = new ConditionNodeContainer(editorEnvironment);
+            InsertChild(Conditions);
+
             Actions = AddGroup<DialogAction>(nameof(Actions));
 
             UpdateHeader();
@@ -28,7 +30,7 @@ namespace TreeEditorControl.Example.Dialog
             set => _textUndoRedoWrapper.Value = value;
         }
 
-        public TreeNodeContainer<DialogCondition> Conditions { get; }
+        public ConditionNodeContainer Conditions { get; }
 
         public TreeNodeContainer<DialogAction> Actions { get; }
 
@@ -36,7 +38,7 @@ namespace TreeEditorControl.Example.Dialog
         {
             var choiceCopy = new ChoiceItem(EditorEnvironment, Text);
 
-            choiceCopy.Conditions.AddNodes(Conditions.GetCopyableNodeCopies());
+            choiceCopy.Conditions.CopyFrom(Conditions);
             choiceCopy.Actions.AddNodes(Actions.GetCopyableNodeCopies());
 
             return choiceCopy;

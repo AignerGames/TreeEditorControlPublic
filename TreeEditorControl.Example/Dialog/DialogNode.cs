@@ -1,5 +1,5 @@
-﻿using TreeEditorControl.Environment;
-using TreeEditorControl.Nodes.Implementation;
+﻿using TreeEditorControl.Nodes.Implementation;
+using TreeEditorControl.Environment;
 
 namespace TreeEditorControl.Example.Dialog
 {

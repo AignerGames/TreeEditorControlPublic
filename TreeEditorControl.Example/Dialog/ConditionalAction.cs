@@ -17,12 +17,15 @@ namespace TreeEditorControl.Example.Dialog
     {
         public ConditionalAction(IEditorEnvironment editorEnvironment) : base(editorEnvironment)
         {
-            Conditions = AddGroup<DialogCondition>(nameof(Conditions));
+            Conditions = new ConditionNodeContainer(EditorEnvironment);
+            InsertChild(Conditions);
+
+
             TrueActions = AddGroup<DialogAction>(nameof(TrueActions));
             FalseActions = AddGroup<DialogAction>(nameof(FalseActions));
         }
 
-        public TreeNodeContainer<DialogCondition> Conditions { get; }
+        public ConditionNodeContainer Conditions { get; }
 
         public TreeNodeContainer<DialogAction> TrueActions { get; }
 
@@ -32,7 +35,7 @@ namespace TreeEditorControl.Example.Dialog
         {
             var copy = new ConditionalAction(EditorEnvironment);
 
-            copy.Conditions.AddNodes(Conditions.GetCopyableNodeCopies());
+            copy.Conditions.CopyFrom(Conditions);
             copy.TrueActions.AddNodes(TrueActions.GetCopyableNodeCopies());
             copy.FalseActions.AddNodes(FalseActions.GetCopyableNodeCopies());
 

@@ -4,29 +4,35 @@ using TreeEditorControl.UndoRedo.Implementation;
 
 namespace TreeEditorControl.Example.Dialog
 {
-    public class DialogRootNode : TreeNodeContainer<DialogAction>
+    public class DialogRootNode : DialogNode
     {
-        private UndoRedoValueWrapper<string> _nameUndoRedoWrapper;
+        private UndoRedoValueWrapper<string> _name;
 
-        public DialogRootNode(IEditorEnvironment editorEnvironment, string name = "Dialog") : base(editorEnvironment, name)
+        public DialogRootNode(IEditorEnvironment editorEnvironment, string name = "Dialog") : base(editorEnvironment)
         {
-            _nameUndoRedoWrapper = CreateUndoRedoWrapper(nameof(Name), name);
+            _name = CreateUndoRedoWrapper(nameof(Name), name);
+
+            Conditions = new ConditionNodeContainer(EditorEnvironment);
+            InsertChild(Conditions);
+
+            Actions = AddGroup<DialogAction>(nameof(Actions));
 
             UpdateHeader();
         }
 
         public string Name
         {
-            get => _nameUndoRedoWrapper.Value;
-            set => _nameUndoRedoWrapper.Value = value;
+            get => _name.Value;
+            set => _name.Value = value;
         }
+
+        public ConditionNodeContainer Conditions { get; }
+
+        public TreeNodeContainer<DialogAction> Actions { get; }
 
         protected override void NotifyUndoRedoPropertyChange(string propertyName)
         {
-            if (propertyName == nameof(Name))
-            {
-                UpdateHeader();
-            }
+            UpdateHeader();
 
             base.NotifyUndoRedoPropertyChange(propertyName);
         }

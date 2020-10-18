@@ -9,6 +9,7 @@ using TreeEditorControl.Example.Data;
 using System.Linq;
 using TreeEditorControl.Nodes;
 using System.Collections.ObjectModel;
+using System.Windows;
 
 namespace TreeEditorControl.Example.Dialog
 {
@@ -68,6 +69,11 @@ namespace TreeEditorControl.Example.Dialog
 
         private void LoadFile()
         {
+            if(MessageBox.Show("Load file?", "Question", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
+            {
+                return;
+            }
+
             EditorEnvironment.UndoRedoStack.IsEnabled = false;
             EditorEnvironment.UndoRedoStack.Reset();
 
@@ -82,6 +88,11 @@ namespace TreeEditorControl.Example.Dialog
 
         private void SaveFile()
         {
+            if(MessageBox.Show("Save file?", "Question", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
+            {
+                return;
+            }
+
             EditorEnvironment.UndoRedoStack.IsEnabled = false;
 
             _fileSaveHandler.Save(EditorDataPath, GameExportPath, this);
@@ -119,6 +130,11 @@ namespace TreeEditorControl.Example.Dialog
 
         private void ResetFile()
         {
+            if(MessageBox.Show("Reset file?", "Question", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
+            {
+                return;
+            }
+
             EditorEnvironment.UndoRedoStack.IsEnabled = false;
             EditorEnvironment.UndoRedoStack.Reset();
 
