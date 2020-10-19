@@ -4,8 +4,9 @@ using TreeEditorControl.Nodes;
 using TreeEditorControl.Nodes.Implementation;
 using TreeEditorControl.Environment;
 using TreeEditorControl.UndoRedo.Implementation;
+using TreeEditorControl.Example.Dialog.Conditions;
 
-namespace TreeEditorControl.Example.Dialog
+namespace TreeEditorControl.Example.Dialog.Actions
 {
     [NodeCatalogInfo("ChoiceItem", "Choices", "Option for a choice group")]
     public class ChoiceItem : DialogNode, ICopyableNode<ChoiceItem>

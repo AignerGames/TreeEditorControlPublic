@@ -10,7 +10,7 @@ using TreeEditorControl.Nodes.Implementation;
 using TreeEditorControl.Environment;
 using TreeEditorControl.UndoRedo.Implementation;
 
-namespace TreeEditorControl.Example.Dialog
+namespace TreeEditorControl.Example.Dialog.Actions
 {
     [NodeCatalogInfo("DiceRollAction", "Actions", "Random success / fail action")]
     public class DiceRollAction : DialogAction, ICopyableNode<DiceRollAction>

@@ -4,9 +4,12 @@ using TreeEditorControl.Nodes;
 using TreeEditorControl.Nodes.Implementation;
 using TreeEditorControl.Environment;
 using TreeEditorControl.UndoRedo.Implementation;
+using TreeEditorControl.Example.Dialog.Actions;
+using TreeEditorControl.Example.Dialog.Conditions;
 using StoryCreator.Common.Interaction;
 
-namespace TreeEditorControl.Example.Dialog
+
+namespace TreeEditorControl.Example.Dialog.Conditions
 {
     [NodeCatalogInfo("PlayerVariableCondition", "Conditions", "Checks a specific player variable value")]
     public class PlayerVariableCondition : DialogCondition, ICopyableNode<PlayerVariableCondition>

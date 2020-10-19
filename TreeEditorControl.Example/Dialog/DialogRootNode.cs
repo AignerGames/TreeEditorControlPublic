@@ -1,6 +1,8 @@
 ﻿using TreeEditorControl.Nodes.Implementation;
 using TreeEditorControl.Environment;
 using TreeEditorControl.UndoRedo.Implementation;
+using TreeEditorControl.Example.Dialog.Conditions;
+using TreeEditorControl.Example.Dialog.Actions;
 
 namespace TreeEditorControl.Example.Dialog
 {

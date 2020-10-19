@@ -14,6 +14,8 @@ using StoryCreator.Common.Data.Interaction.Commands;
 using StoryCreator.Common.Data.Interaction.Conditions;
 using TreeEditorControl.Environment;
 using TreeEditorControl.Nodes;
+using TreeEditorControl.Example.Dialog.Actions;
+using TreeEditorControl.Example.Dialog.Conditions;
 
 namespace TreeEditorControl.Example.Data
 {

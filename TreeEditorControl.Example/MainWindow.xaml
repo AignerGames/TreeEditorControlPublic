@@ -5,6 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TreeEditorControl.Example"
         xmlns:dialog="clr-namespace:TreeEditorControl.Example.Dialog"
+        xmlns:dialogActions="clr-namespace:TreeEditorControl.Example.Dialog.Actions"
+        xmlns:dialogConditions="clr-namespace:TreeEditorControl.Example.Dialog.Conditions"
         xmlns:treeEditor="clr-namespace:TreeEditorControl.Controls;assembly=TreeEditorControl"
         mc:Ignorable="d"
         Title="TreeEditorControl Examples" Height="800" Width="1000" Background="SlateGray">
@@ -61,7 +63,7 @@
                                 </Expander>
 
                                 <!-- Dialog Tree -->
-                                        <treeEditor:TreeEditor Grid.Row="2" DataContext="{Binding EditorViewModel}">
+                                <treeEditor:TreeEditor Grid.Row="2" DataContext="{Binding EditorViewModel}">
                                     <treeEditor:TreeEditor.ToolbarCommandTemplateSelector>
                                         <treeEditor:ExplicitTemplateSelector>
                                             <treeEditor:ExplicitTemplateSelector.Template>
@@ -125,7 +127,7 @@
 
                                         <!-- Dialog Actions -->
 
-                                        <DataTemplate DataType="{x:Type dialog:ShowTextAction}">
+                                        <DataTemplate DataType="{x:Type dialogActions:ShowTextAction}">
                                             <StackPanel>
                                                 <StackPanel Orientation="Horizontal">
                                                     <TextBlock Text="Actor: "/>
@@ -139,7 +141,7 @@
                                             </StackPanel>
                                         </DataTemplate>
 
-                                        <DataTemplate DataType="{x:Type dialog:ChoiceItem}">
+                                        <DataTemplate DataType="{x:Type dialogActions:ChoiceItem}">
                                             <StackPanel>
                                                 <StackPanel Orientation="Horizontal">
                                                     <TextBlock Text="Text: "/>
@@ -148,7 +150,7 @@
                                             </StackPanel>
                                         </DataTemplate>
 
-                                        <DataTemplate DataType="{x:Type dialog:ChoiceGroup}">
+                                        <DataTemplate DataType="{x:Type dialogActions:ChoiceGroup}">
                                             <StackPanel>
                                                 <StackPanel Orientation="Horizontal">
                                                     <TextBlock Text="Actor: "/>
@@ -162,7 +164,7 @@
                                             </StackPanel>
                                         </DataTemplate>
 
-                                        <DataTemplate DataType="{x:Type dialog:ModifyPlayerVariableAction}">
+                                        <DataTemplate DataType="{x:Type dialogActions:ModifyPlayerVariableAction}">
                                             <StackPanel>
                                                 <StackPanel Orientation="Horizontal">
                                                     <TextBlock Text="Variable: " Width="100"/>
@@ -180,11 +182,11 @@
                                             </StackPanel>
                                         </DataTemplate>
 
-                                        <DataTemplate DataType="{x:Type dialog:ConditionalAction}">
+                                        <DataTemplate DataType="{x:Type dialogActions:ConditionalAction}">
                                             <TextBlock Text="If / Else Action"/>
                                         </DataTemplate>
 
-                                        <DataTemplate DataType="{x:Type dialog:DiceRollAction}">
+                                        <DataTemplate DataType="{x:Type dialogActions:DiceRollAction}">
                                             <StackPanel>
                                                 <StackPanel Orientation="Horizontal">
                                                     <TextBlock Text="Target Value: " Width="100"/>
@@ -199,7 +201,7 @@
 
                                         <!-- Dialog Conditions -->
 
-                                        <DataTemplate DataType="{x:Type dialog:ConditionNodeContainer}">
+                                        <DataTemplate DataType="{x:Type dialogConditions:ConditionNodeContainer}">
                                             <StackPanel>
                                                 <StackPanel Orientation="Horizontal">
                                                     <TextBlock Text="ConditionKind: " Width="100"/>
@@ -208,7 +210,7 @@
                                             </StackPanel>
                                         </DataTemplate>
 
-                                        <DataTemplate DataType="{x:Type dialog:PlayerVariableCondition}">
+                                        <DataTemplate DataType="{x:Type dialogConditions:PlayerVariableCondition}">
                                             <StackPanel>
                                                 <StackPanel Orientation="Horizontal">
                                                     <TextBlock Text="Variable: " Width="100"/>

@@ -1,6 +1,6 @@
 ﻿using TreeEditorControl.Environment;
 
-namespace TreeEditorControl.Example.Dialog
+namespace TreeEditorControl.Example.Dialog.Actions
 {
     public abstract class DialogAction : DialogNode
     {

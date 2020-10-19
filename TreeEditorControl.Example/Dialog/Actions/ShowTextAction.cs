@@ -5,7 +5,7 @@ using TreeEditorControl.Nodes.Implementation;
 using TreeEditorControl.Environment;
 using TreeEditorControl.UndoRedo.Implementation;
 
-namespace TreeEditorControl.Example.Dialog
+namespace TreeEditorControl.Example.Dialog.Actions
 {
     [NodeCatalogInfo("ShowText", "Actions", "Shows a dialog text")]
     public class ShowTextAction : DialogAction, ICopyableNode<ShowTextAction>

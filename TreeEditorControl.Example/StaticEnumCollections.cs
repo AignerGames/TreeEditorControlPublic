@@ -16,7 +16,6 @@ namespace TreeEditorControl.Example
 
         public static ReadOnlyObservableCollection<MultiConditionKind> MultiConditionKinds { get; } = Create<MultiConditionKind>();
 
-
         private static ReadOnlyObservableCollection<T> Create<T>() where T : Enum
         {
             var collection = new ObservableCollection<T>(Enum.GetValues(typeof(T)).OfType<T>());

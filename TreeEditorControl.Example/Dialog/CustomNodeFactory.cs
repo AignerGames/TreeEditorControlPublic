@@ -3,6 +3,7 @@ using TreeEditorControl.Catalog;
 using TreeEditorControl.Nodes;
 using TreeEditorControl.Nodes.Implementation;
 using TreeEditorControl.Environment;
+using TreeEditorControl.Example.Dialog.Actions;
 
 namespace TreeEditorControl.Example.Dialog
 {

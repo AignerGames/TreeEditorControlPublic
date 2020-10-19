@@ -11,7 +11,7 @@ using TreeEditorControl.Environment;
 using TreeEditorControl.UndoRedo.Implementation;
 using StoryCreator.Common.Interaction;
 
-namespace TreeEditorControl.Example.Dialog
+namespace TreeEditorControl.Example.Dialog.Actions
 {
     [NodeCatalogInfo("ModifyPlayerVariableAction", "Actions", "Checks a specific player variable value")]
     public class ModifyPlayerVariableAction : DialogAction, ICopyableNode<ModifyPlayerVariableAction>

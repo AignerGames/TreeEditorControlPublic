@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TreeEditorControl.Example.Dialog.Actions;
 
 namespace TreeEditorControl.Example.Dialog
 {
