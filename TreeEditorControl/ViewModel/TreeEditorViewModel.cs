@@ -90,14 +90,19 @@ namespace TreeEditorControl.ViewModel
 
         public ActionCommand RedoCommand { get; }
 
-        public void AddRootNode(ITreeNode node)
+        public void AddRootNode(ITreeNode node, int index = -1)
         {
             if (node == null)
             {
                 return;
             }
 
-            _rootNodes.Add(node);
+            if(index == -1)
+            {
+                index = _rootNodes.Count;
+            }
+
+            _rootNodes.Insert(index, node);
             node.NodeChanged += Node_NodeChanged;
         }
 
@@ -567,6 +572,11 @@ namespace TreeEditorControl.ViewModel
 
             var node = _nodeFactory.CreateNode(catalogItem);
 
+            if(node is IInitializeFromCatalogItem initializeFromCatalogItem)
+            {
+                initializeFromCatalogItem.Initialize(catalogItem);
+            }
+
             UndoRedoStack.IsEnabled = previousUndoRedoEnabled;
 
             return node;
@@ -580,7 +590,7 @@ namespace TreeEditorControl.ViewModel
 
                 if(node is IReadableNodeContainer containerNode)
                 {
-                    containerNode.IsExpanded = true;
+                    containerNode.ExpandRecursive();
                 }
             }
         }

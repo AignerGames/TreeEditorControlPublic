@@ -62,6 +62,19 @@ namespace TreeEditorControl.Nodes
             return false;
         }
 
+        public static void ExpandRecursive(this ITreeNode node)
+        {
+            if (node is IReadableNodeContainer container)
+            {
+                container.IsExpanded = true;
+
+                foreach (var child in container.Nodes)
+                {
+                    ExpandRecursive(child);
+                }
+            }
+        }
+
         public static T CreateNode<T>(this TreeNodeFactory nodeFactory) where T : class, ITreeNode
         {
             return nodeFactory.CreateNode(typeof(T)) as T;

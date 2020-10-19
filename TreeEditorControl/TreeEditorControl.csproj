@@ -66,6 +66,7 @@
     <Compile Include="Environment\IEditorEnvironment.cs" />
     <Compile Include="Environment\Implementation\EditorEnvironment.cs" />
     <Compile Include="Nodes\ICopyableNode.cs" />
+    <Compile Include="Nodes\IInitializeFromCatalogItem.cs" />
     <Compile Include="Nodes\Implementation\ReadableGroupContainerNode.cs" />
     <Compile Include="Nodes\Implementation\TreeNodeEventArgs.cs" />
     <Compile Include="Nodes\Implementation\TreeNodeFactory.cs" />

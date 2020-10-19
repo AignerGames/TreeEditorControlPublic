@@ -8,7 +8,7 @@ using TreeEditorControl.UndoRedo.Implementation;
 namespace TreeEditorControl.Example.Dialog
 {
     [NodeCatalogInfo("ChoiceGroup", "Choices", "Group for choice items")]
-    public class ChoiceGroup : DialogAction, ICopyableNode<ChoiceGroup>
+    public class ChoiceGroup : DialogAction, ICopyableNode<ChoiceGroup>, IInitializeFromCatalogItem
     {
         private UndoRedoValueWrapper<string> _actorUndoRedoWrapper;
         private UndoRedoValueWrapper<string> _textUndoRedoWrapper;
@@ -44,6 +44,12 @@ namespace TreeEditorControl.Example.Dialog
             choiceCopy.Choices.AddNodes(Choices.GetCopyableNodeCopies());
 
             return choiceCopy;
+        }
+
+        public void Initialize(NodeCatalogItem catalogItem)
+        {
+            Choices.Add(new ChoiceItem(EditorEnvironment, "Text_1"));
+            Choices.Add(new ChoiceItem(EditorEnvironment, "Text_2"));
         }
 
         public override T Accept<T>(IDialogActionVisitor<T> visitor) => visitor.VisitShowChoice(this);

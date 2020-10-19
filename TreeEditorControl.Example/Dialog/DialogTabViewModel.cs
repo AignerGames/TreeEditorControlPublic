@@ -54,7 +54,8 @@ namespace TreeEditorControl.Example.Dialog
             EditorViewModel.ContextMenuCommands.Add(ContextMenuCommand.Seperator);
             EditorViewModel.ContextMenuCommands.Add(new ContextMenuCommand("Expand node", ExpandNodeFull, () => EditorViewModel.SelectedNode != null));
             EditorViewModel.ContextMenuCommands.Add(ContextMenuCommand.Seperator);
-            EditorViewModel.ContextMenuCommands.Add(new ContextMenuCommand("Add dialog root", AddDialogRoot));
+            EditorViewModel.ContextMenuCommands.Add(new ContextMenuCommand("Insert dialog root", AddDialogRoot));
+            EditorViewModel.ContextMenuCommands.Add(new ContextMenuCommand("Delete dialog root", DeleteDialogRoot, () => EditorViewModel.SelectedNode is DialogRootNode));
             EditorViewModel.ContextMenuCommands.Add(ContextMenuCommand.Seperator);
             EditorViewModel.ContextMenuCommands.Add(new ContextMenuCommand("Load", LoadFile));
             EditorViewModel.ContextMenuCommands.Add(new ContextMenuCommand("Save", SaveFile));
@@ -83,6 +84,8 @@ namespace TreeEditorControl.Example.Dialog
 
             _fileLoadHandler.Load(EditorDataPath, this);
 
+            EditorViewModel.RootNodes.FirstOrDefault()?.ExpandRecursive();
+
             EditorEnvironment.UndoRedoStack.IsEnabled = true;
         }
 
@@ -102,30 +105,37 @@ namespace TreeEditorControl.Example.Dialog
 
         private void AddDialogRoot()
         {
+            var insertIndex = -1;
+
+            if(EditorViewModel.SelectedNode is DialogRootNode selectedRootNode)
+            {
+                insertIndex = EditorViewModel.RootNodes.IndexOf(selectedRootNode) + 1;
+            }
+
             var dialogRootNode = new DialogRootNode(EditorEnvironment, "NewDialog");
 
-            EditorViewModel.AddRootNode(dialogRootNode);
+            EditorViewModel.AddRootNode(dialogRootNode, insertIndex);
+        }
+
+        private void DeleteDialogRoot()
+        {
+            if (!(EditorViewModel.SelectedNode is DialogRootNode rootNode))
+            {
+                return;
+            }
+
+            if (MessageBox.Show($"Delete {rootNode.Header}?", "Question", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
+            {
+                return;
+            }
+
+            rootNode.IsSelected = false;
+            EditorViewModel.RemoveRootNode(rootNode);
         }
 
         private void ExpandNodeFull()
         {
-            if(EditorViewModel.SelectedNode != null)
-            {
-                ExpandRecursive(EditorViewModel.SelectedNode);
-            }
-
-            void ExpandRecursive(ITreeNode node)
-            {
-                if(node is IReadableNodeContainer container)
-                {
-                    container.IsExpanded = true;
-
-                    foreach(var child in container.Nodes)
-                    {
-                        ExpandRecursive(child);
-                    }
-                }
-            }
+            EditorViewModel.SelectedNode?.ExpandRecursive();
         }
 
         private void ResetFile()
