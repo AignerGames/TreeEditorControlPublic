@@ -30,7 +30,7 @@ namespace TreeEditorControl.Example.Data
             editorData.Actors.AddRange(viewModel.Actors.Select(item => item.Value));
             editorData.Variables.AddRange(viewModel.Variables.Select(item => item.Value));
 
-            editorData.GameData = _visitor.CreateGameData(viewModel.EditorViewModel.RootNodes.OfType<DialogRootNode>());
+            editorData.GameData = _visitor.CreateGameData(viewModel.CurrentGameName, viewModel.EditorViewModel.RootNodes.OfType<DialogRootNode>());
 
             SerializationHelper.Save(editorDataPath, editorData, GameData.AbstractTypes);
             SerializationHelper.Save(gameExportPath, editorData.GameData, GameData.AbstractTypes);
@@ -41,9 +41,9 @@ namespace TreeEditorControl.Example.Data
             IDialogConditionVisitor<InteractionConditionData>
         {
 
-            public GameData CreateGameData(IEnumerable<DialogRootNode> dialogRootNodes)
+            public GameData CreateGameData(string gameName, IEnumerable<DialogRootNode> dialogRootNodes)
             {
-                var gameData = new GameData();
+                var gameData = new GameData { Name = gameName };
 
                 foreach(var dialogNode in dialogRootNodes)
                 {
@@ -114,7 +114,7 @@ namespace TreeEditorControl.Example.Data
                 return new ShowInteractionTextCommandData
                 {
                     Actor = node.Actor,
-                    Sprite = $"{node.Actor}.png",
+                    Sprite = node.Actor,
                     Text = node.Text
                 };
             }
@@ -124,7 +124,7 @@ namespace TreeEditorControl.Example.Data
                 var choiceData = new ShowInteractionChoiceCommandData
                 {
                     Actor = node.Actor,
-                    Sprite = $"{node.Actor}.png",
+                    Sprite = node.Actor,
                     Text = node.Text
                 };
 

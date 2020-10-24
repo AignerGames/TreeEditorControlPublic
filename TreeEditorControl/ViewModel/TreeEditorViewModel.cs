@@ -133,6 +133,8 @@ namespace TreeEditorControl.ViewModel
             }
 
             _rootNodes.Clear();
+
+            SelectedNode = null;
         }
 
         /// <summary>

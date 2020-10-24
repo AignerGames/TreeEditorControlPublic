@@ -34,6 +34,12 @@ namespace TreeEditorControl.Example.Data
         public void Load(string editorDataPath, DialogTabViewModel viewModel)
         {
             var editorData = SerializationHelper.Load<EditorData>(editorDataPath, GameData.AbstractTypes);
+            if(editorData == null)
+            {
+                editorData = new EditorData();
+            }
+
+            viewModel.CurrentGameName = editorData.GameData.Name;
 
             editorData.Actors.ForEach(item => viewModel.Actors.Add(new StringViewModel { Value = item }));
             editorData.Variables.ForEach(item => viewModel.Variables.Add(new StringViewModel { Value = item }));

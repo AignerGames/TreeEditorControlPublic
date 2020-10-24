@@ -10,18 +10,28 @@ using System.Linq;
 using TreeEditorControl.Nodes;
 using System.Collections.ObjectModel;
 using System.Windows;
+using System.ComponentModel;
+using System.IO;
+using System.Windows.Input;
 
 namespace TreeEditorControl.Example.Dialog
 {
     public class DialogTabViewModel : TabViewModel
     {
-        const string EditorDataPath = "Data.json";
-        const string GameExportPath = "GameExport.json";
+        const string GameDataDirectoryName = "GameData";
+        const string GameExportDirectoryName = "GameDataExport";
 
         public const string ShowTextHelloWorldCatalogName = "ShowText HelloWorld";
 
         private readonly FileLoadHandler _fileLoadHandler;
         private readonly FileSaveHandler _fileSaveHandler;
+
+        private string _newFileName;
+        private string _selectedFile;
+
+        private string _currentGameName;
+
+        private bool _gameDataLoaded;
 
         public DialogTabViewModel(EditorEnvironment editorEnvironment) : base("Dialog", editorEnvironment)
         {
@@ -38,69 +48,160 @@ namespace TreeEditorControl.Example.Dialog
 
             EditorViewModel.CatalogItems.AddItems(NodeCatalogItem.CreateItemsForAssignableTypes(typeof(DialogNode), Assembly.GetExecutingAssembly()));
 
-            //EditorViewModel.CatalogItems.Add(new NodeCatalogItem(ShowTextHelloWorldCatalogName, "Actions", "ShowText with 'Hello world!'", typeof(ShowTextAction)));
-
-            //EditorViewModel.ContextMenuCommands.Add(new Commands.ContextMenuCommand("Say 'Hello world!'",
-            //    () => EditorViewModel.SelectedNode is ShowTextAction, 
-            //    () => (EditorViewModel.SelectedNode as ShowTextAction).Text = "Hello world!"));
-
-            var dialogRootNode = nodeFactory.CreateDialogRootNode();
-
-            EditorViewModel.AddRootNode(dialogRootNode);
-
-
-
             // TODO: Toolbar menu
             EditorViewModel.ContextMenuCommands.Add(ContextMenuCommand.Seperator);
             EditorViewModel.ContextMenuCommands.Add(new ContextMenuCommand("Expand node", ExpandNodeFull, () => EditorViewModel.SelectedNode != null));
             EditorViewModel.ContextMenuCommands.Add(ContextMenuCommand.Seperator);
-            EditorViewModel.ContextMenuCommands.Add(new ContextMenuCommand("Insert dialog root", AddDialogRoot));
+            EditorViewModel.ContextMenuCommands.Add(new ContextMenuCommand("Insert dialog root", AddDialogRoot, () => _gameDataLoaded));
             EditorViewModel.ContextMenuCommands.Add(new ContextMenuCommand("Delete dialog root", DeleteDialogRoot, () => EditorViewModel.SelectedNode is DialogRootNode));
             EditorViewModel.ContextMenuCommands.Add(ContextMenuCommand.Seperator);
-            EditorViewModel.ContextMenuCommands.Add(new ContextMenuCommand("Load", LoadFile));
-            EditorViewModel.ContextMenuCommands.Add(new ContextMenuCommand("Save", SaveFile));
+            EditorViewModel.ContextMenuCommands.Add(new ContextMenuCommand("Save", SaveFile, () => _gameDataLoaded));
             EditorViewModel.ContextMenuCommands.Add(ContextMenuCommand.Seperator);
-            EditorViewModel.ContextMenuCommands.Add(new ContextMenuCommand("Reset", ResetFile));
+            EditorViewModel.ContextMenuCommands.Add(new ContextMenuCommand("Reset", ResetFile, () => _gameDataLoaded));
+
+            NewFileCommand = new ActionCommand(AddNewFile, () => !string.IsNullOrWhiteSpace(NewFileName));
+
+            Directory.CreateDirectory(GameDataDirectoryName);
+            Directory.CreateDirectory(GameExportDirectoryName);
+
+            RefreshFiles();
         }
 
+        public ObservableCollection<string> FileNames { get; } = new ObservableCollection<string>();
+
+        public string NewFileName
+        {
+            get => _newFileName;
+            set
+            {
+                SetAndNotify(ref _newFileName, value);
+            }
+        }
+
+        public ICommand NewFileCommand { get; }
+
+        public string SelectedFile
+        {
+            get => _selectedFile;
+            set
+            {
+                if (_gameDataLoaded)
+                {
+                    var boxResult = MessageBox.Show($"Changing file to {value}, save current file {SelectedFile}?", "Question", MessageBoxButton.YesNoCancel, MessageBoxImage.Warning);
+                    if(boxResult == MessageBoxResult.Cancel)
+                    {
+                        return;
+                    }
+
+                    if(boxResult == MessageBoxResult.Yes)
+                    {
+                        ForceSaveFile();
+                    }
+                }
+
+                SetAndNotify(ref _selectedFile, value);
+
+                LoadFile();
+            }
+        }
+
+        public string CurrentGameName
+        {
+            get => _currentGameName;
+            set
+            {
+                SetAndNotify(ref _currentGameName, value);
+            }
+        }
 
         public ObservableCollection<StringViewModel> Actors { get; } = new ObservableCollection<StringViewModel>();
 
         public ObservableCollection<StringViewModel> Variables { get; } = new ObservableCollection<StringViewModel>();
 
+        public override void HandleClosing(CancelEventArgs args)
+        {
+            SaveFile();
+        }
+
+        private void RefreshFiles()
+        {
+            FileNames.Clear();
+
+            var directoryInfo = new DirectoryInfo(GameDataDirectoryName);
+            foreach(var file in directoryInfo.EnumerateFiles())
+            {
+                FileNames.Add(file.Name);
+            }
+        }
+
         private void LoadFile()
         {
-            if(MessageBox.Show("Load file?", "Question", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
-            {
-                return;
-            }
-
             EditorEnvironment.UndoRedoStack.IsEnabled = false;
             EditorEnvironment.UndoRedoStack.Reset();
 
+            CurrentGameName = string.Empty;
             Actors.Clear();
             Variables.Clear();
             EditorViewModel.ClearRootNodes();
 
-            _fileLoadHandler.Load(EditorDataPath, this);
+            _fileLoadHandler.Load(Path.Combine(GameDataDirectoryName, SelectedFile), this);
 
-            EditorViewModel.RootNodes.FirstOrDefault()?.ExpandRecursive();
+            if(EditorViewModel.RootNodes.Count == 0)
+            {
+                var rootNode = new DialogRootNode(EditorEnvironment, "NewInteraction");
+                EditorViewModel.AddRootNode(rootNode);
+            }
+
+            var firstNode = EditorViewModel.RootNodes.First();
+            firstNode.IsSelected = true;
+            firstNode.ExpandRecursive();
 
             EditorEnvironment.UndoRedoStack.IsEnabled = true;
+
+            _gameDataLoaded = true;
         }
 
         private void SaveFile()
         {
-            if(MessageBox.Show("Save file?", "Question", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
+            if(!_gameDataLoaded || MessageBox.Show("Save file?", "Question", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
             {
                 return;
             }
 
+            ForceSaveFile();
+        }
+
+        private void ForceSaveFile()
+        {
             EditorEnvironment.UndoRedoStack.IsEnabled = false;
 
-            _fileSaveHandler.Save(EditorDataPath, GameExportPath, this);
+            _fileSaveHandler.Save(Path.Combine(GameDataDirectoryName, SelectedFile), Path.Combine(GameExportDirectoryName, SelectedFile), this);
 
             EditorEnvironment.UndoRedoStack.IsEnabled = true;
+        }
+
+        private void AddNewFile()
+        {
+            var fileName = NewFileName;
+
+            if(!fileName.EndsWith(".json"))
+            {
+                fileName += ".json";
+            }
+
+            if(File.Exists(Path.Combine(GameDataDirectoryName, fileName)))
+            {
+                if (MessageBox.Show($"The file with the same name already exits. Replace {fileName}?", "Question", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
+                {
+                    return;
+                }
+            }
+
+            NewFileName = string.Empty;
+
+            FileNames.Add(fileName);
+
+            SelectedFile = fileName;
         }
 
         private void AddDialogRoot()

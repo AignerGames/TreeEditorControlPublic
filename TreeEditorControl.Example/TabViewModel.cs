@@ -2,6 +2,7 @@
 using TreeEditorControl.ViewModel;
 using TreeEditorControl.Environment.Implementation;
 using System;
+using System.ComponentModel;
 
 namespace TreeEditorControl.Example
 {
@@ -36,6 +37,11 @@ namespace TreeEditorControl.Example
                     _editorViewModel.NodeChanged += EditorViewModel_NodeChanged;
                 }
             }
+        }
+
+        public virtual void HandleClosing(CancelEventArgs args)
+        {
+
         }
 
         protected EditorEnvironment EditorEnvironment { get; }

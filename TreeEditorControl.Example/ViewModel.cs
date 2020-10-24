@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using TreeEditorControl.Utility;
 using TreeEditorControl.Environment.Implementation;
 using System.Linq;
+using System.ComponentModel;
 
 namespace TreeEditorControl.Example
 {
@@ -31,6 +32,14 @@ namespace TreeEditorControl.Example
         public ObservableCollection<TabViewModel> TabViewModels { get; } = new ObservableCollection<TabViewModel>();
 
         public TabViewModel SelectedTab { get => _selectedTab; set => SetAndNotify(ref _selectedTab, value); }
+
+        public void HandleClosing(CancelEventArgs args)
+        {
+            foreach(var vm in TabViewModels)
+            {
+                vm.HandleClosing(args);
+            }
+        }
 
         private void AddTab(TabViewModel tabViewModel)
         {
