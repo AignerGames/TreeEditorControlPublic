@@ -164,6 +164,59 @@ namespace TreeEditorControl.Example.Data
                 };
             }
 
+            public InteractionCommandData VisitParallelAction(ParallelAction node)
+            {
+                return new ParallelInteractionCommandData
+                {
+                    Command = CreateCommandData(node.Actions.Nodes)
+                };
+            }
+
+            public InteractionCommandData VisitSequenceAction(SequenceAction node)
+            {
+                return new SequenceInteractionCommandData
+                {
+                    Command = CreateCommandData(node.Actions.Nodes)
+                };
+            }
+
+            public InteractionCommandData VisitAddSceneActor(AddSceneActorAction node)
+            {
+                return new AddSceneActorInteractionCommandData
+                {
+                    Actor = node.Actor,
+                    ActorSlotName = node.ActorSlotName,
+                    LookAtSlotName = node.LookAtSlotName,
+                };
+            }
+
+            public InteractionCommandData VisitRemoveSceneActor(RemoveSceneActorAction node)
+            {
+                return new RemoveSceneActorInteractionCommandData
+                {
+                    ActorSlotName = node.ActorSlotName
+                };
+            }
+
+            public InteractionCommandData VisitLookAt(LookAtAction node)
+            {
+                return new LookAtInteractionCommandData
+                {
+                    ActorSlotName = node.ActorSlotName,
+                    TargetSlotName = node.TargetSlotName,
+                    Duration = node.Duration
+                };
+            }
+
+            public InteractionCommandData VisitTriggerAnimation(TriggerAnimationAction node)
+            {
+                return new TriggerAnimationInteractionCommandData
+                {
+                    TriggerName = node.TriggerName,
+                    ActorSlotName = node.ActorSlotName,
+                    WaitUntilDone = node.WaitUntilDone
+                };
+            }
 
             public InteractionConditionData VisitPlayerVariableCondition(PlayerVariableCondition node)
             {

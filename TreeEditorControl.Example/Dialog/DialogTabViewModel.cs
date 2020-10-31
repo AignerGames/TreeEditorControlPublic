@@ -118,6 +118,22 @@ namespace TreeEditorControl.Example.Dialog
 
         public ObservableCollection<StringViewModel> Variables { get; } = new ObservableCollection<StringViewModel>();
 
+        public ObservableCollection<StringViewModel> SceneSlots { get; } = new ObservableCollection<StringViewModel>
+        {
+            new StringViewModel("Slot_1"),
+            new StringViewModel("Slot_2"),
+            new StringViewModel("Slot_3"),
+            new StringViewModel("Slot_4"),
+            new StringViewModel("Slot_5"),
+        };
+
+        public ObservableCollection<StringViewModel> AnimationTriggers { get; } = new ObservableCollection<StringViewModel>
+        {
+            new StringViewModel("Wave"),
+            new StringViewModel("Jump"),
+            new StringViewModel("Eat"),
+        };
+
         public override void HandleClosing(CancelEventArgs args)
         {
             SaveFile();
@@ -189,12 +205,11 @@ namespace TreeEditorControl.Example.Dialog
                 fileName += ".json";
             }
 
-            if(File.Exists(Path.Combine(GameDataDirectoryName, fileName)))
+            if(FileNames.Contains(fileName))
             {
-                if (MessageBox.Show($"The file with the same name already exits. Replace {fileName}?", "Question", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
-                {
-                    return;
-                }
+                MessageBox.Show($"File with the same name already exists: {fileName}", "Error");
+
+                return;
             }
 
             NewFileName = string.Empty;

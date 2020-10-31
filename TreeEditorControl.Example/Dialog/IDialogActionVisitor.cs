@@ -18,5 +18,17 @@ namespace TreeEditorControl.Example.Dialog
         T VisitDiceRollAction(DiceRollAction diceRollAction);
 
         T VisitModifyPlayerVariable(ModifyPlayerVariableAction node);
+
+        T VisitParallelAction(ParallelAction node);
+
+        T VisitSequenceAction(SequenceAction node);
+
+        T VisitAddSceneActor(AddSceneActorAction node);
+
+        T VisitRemoveSceneActor(RemoveSceneActorAction node);
+
+        T VisitLookAt(LookAtAction node);
+
+        T VisitTriggerAnimation(TriggerAnimationAction node);
     }
 }

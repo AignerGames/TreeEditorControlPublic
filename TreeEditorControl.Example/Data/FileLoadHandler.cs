@@ -37,6 +37,14 @@ namespace TreeEditorControl.Example.Data
             if(editorData == null)
             {
                 editorData = new EditorData();
+
+                editorData.Actors.Add("Anzug");
+                editorData.Actors.Add("Anika");
+                editorData.Actors.Add("Blade");
+                editorData.Actors.Add("Drake");
+                editorData.Actors.Add("Fake");
+                editorData.Actors.Add("Tom");
+                editorData.Actors.Add("Story");
             }
 
             viewModel.CurrentGameName = editorData.GameData.Name;
@@ -233,6 +241,52 @@ namespace TreeEditorControl.Example.Data
             public DialogCondition VisitPlayerVariableCondition(InteractionPlayerVariableConditionData data)
             {
                 var node = new PlayerVariableCondition(_editorEnvironment, data.Variable, data.CompareKind, data.CompareValue);
+
+                return node;
+            }
+
+            public DialogAction VisitParallelCommand(ParallelInteractionCommandData data)
+            {
+                var node = new ParallelAction(_editorEnvironment);
+
+                node.Actions.AddNodes(CreateCommandNodes(data.Command));
+
+                return node;
+            }
+
+            public DialogAction VisitSequenceCommand(SequenceInteractionCommandData data)
+            {
+                var node = new SequenceAction(_editorEnvironment);
+
+                node.Actions.AddNodes(CreateCommandNodes(data.Command));
+
+                return node;
+            }
+
+            public DialogAction VisitAddSceneActor(AddSceneActorInteractionCommandData data)
+            {
+                var node = new AddSceneActorAction(_editorEnvironment, data.Actor, data.ActorSlotName, data.LookAtSlotName);
+
+                return node;
+            }
+
+            public DialogAction VisitRemoveSceneActor(RemoveSceneActorInteractionCommandData data)
+            {
+                var node = new RemoveSceneActorAction(_editorEnvironment, data.ActorSlotName);
+
+                return node;
+            }
+
+            public DialogAction VisitLookAt(LookAtInteractionCommandData data)
+            {
+                var node = new LookAtAction(_editorEnvironment, data.ActorSlotName, data.TargetSlotName, data.Duration);
+
+                return node;
+            }
+
+            public DialogAction VisitTriggerAnimation(TriggerAnimationInteractionCommandData data)
+            {
+                var node = new TriggerAnimationAction(_editorEnvironment, data.TriggerName, data.ActorSlotName, data.WaitUntilDone);
 
                 return node;
             }

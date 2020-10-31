@@ -11,6 +11,17 @@ namespace TreeEditorControl.Example
     {
         private string _value;
 
+        public StringViewModel()
+        {
+            // Needed for view (data grid)
+        }
+
+        public StringViewModel(string value)
+        {
+            _value = value;
+        }
+
+
         public string Value
         {
             get => _value;

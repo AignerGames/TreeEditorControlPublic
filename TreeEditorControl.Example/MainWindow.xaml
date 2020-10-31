@@ -216,6 +216,84 @@
                                             </StackPanel>
                                         </DataTemplate>
 
+                                        <DataTemplate DataType="{x:Type dialogActions:ParallelAction}">
+                                            <TextBlock Text="Parallel Actions"/>
+                                        </DataTemplate>
+
+                                        <DataTemplate DataType="{x:Type dialogActions:SequenceAction}">
+                                            <TextBlock Text="Sequence Actions"/>
+                                        </DataTemplate>
+
+                                        <DataTemplate DataType="{x:Type dialogActions:AddSceneActorAction}">
+                                            <StackPanel>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="Actor: " Width="100"/>
+                                                    <ComboBox ItemsSource="{Binding ElementName=DialogRootControl, Path=DataContext.Actors}" SelectedValue="{Binding Actor}"
+                                                              DisplayMemberPath="Value" SelectedValuePath="Value" Width="300"/>
+                                                </StackPanel>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="Actor Slot: " Width="100"/>
+                                                    <ComboBox ItemsSource="{Binding ElementName=DialogRootControl, Path=DataContext.SceneSlots}" SelectedValue="{Binding ActorSlotName}"
+                                                              DisplayMemberPath="Value" SelectedValuePath="Value" Width="300"/>
+                                                </StackPanel>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="LookAt Slot: " Width="100"/>
+                                                    <ComboBox ItemsSource="{Binding ElementName=DialogRootControl, Path=DataContext.SceneSlots}" SelectedValue="{Binding LookAtSlotName}"
+                                                              DisplayMemberPath="Value" SelectedValuePath="Value" Width="300"/>
+                                                    <TextBlock Text=" (or empty for default rotation)" />
+                                                </StackPanel>
+                                            </StackPanel>
+                                        </DataTemplate>
+
+                                        <DataTemplate DataType="{x:Type dialogActions:RemoveSceneActorAction}">
+                                            <StackPanel>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="Actor Slot: " Width="100"/>
+                                                    <ComboBox ItemsSource="{Binding ElementName=DialogRootControl, Path=DataContext.SceneSlots}" SelectedValue="{Binding ActorSlotName}"
+                                                              DisplayMemberPath="Value" SelectedValuePath="Value" Width="300"/>
+                                                </StackPanel>
+                                            </StackPanel>
+                                        </DataTemplate>
+
+                                        <DataTemplate DataType="{x:Type dialogActions:LookAtAction}">
+                                            <StackPanel>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="Actor Slot: " Width="100"/>
+                                                    <ComboBox ItemsSource="{Binding ElementName=DialogRootControl, Path=DataContext.SceneSlots}" SelectedValue="{Binding ActorSlotName}"
+                                                              DisplayMemberPath="Value" SelectedValuePath="Value" Width="300"/>
+                                                </StackPanel>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="Target Slot: " Width="100"/>
+                                                    <ComboBox ItemsSource="{Binding ElementName=DialogRootControl, Path=DataContext.SceneSlots}" SelectedValue="{Binding TargetSlotName}"
+                                                              DisplayMemberPath="Value" SelectedValuePath="Value" Width="300"/>
+                                                    <TextBlock Text=" (or empty to reset the rotation)" />
+                                                </StackPanel>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="Duration (sec): " Width="100"/>
+                                                    <TextBox Text="{Binding Duration}" MinWidth="200"/>
+                                                </StackPanel>
+                                            </StackPanel>
+                                        </DataTemplate>
+
+                                        <DataTemplate DataType="{x:Type dialogActions:TriggerAnimationAction}">
+                                            <StackPanel>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="Trigger Name: " Width="100"/>
+                                                    <ComboBox ItemsSource="{Binding ElementName=DialogRootControl, Path=DataContext.AnimationTriggers}" SelectedValue="{Binding TriggerName}"
+                                                              DisplayMemberPath="Value" SelectedValuePath="Value" Width="300"/>
+                                                </StackPanel>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="Actor Slot: " Width="100"/>
+                                                    <ComboBox ItemsSource="{Binding ElementName=DialogRootControl, Path=DataContext.SceneSlots}" SelectedValue="{Binding ActorSlotName}"
+                                                              DisplayMemberPath="Value" SelectedValuePath="Value" Width="300"/>
+                                                </StackPanel>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="WaitUntilDone: " Width="100"/>
+                                                    <CheckBox IsChecked="{Binding WaitUntilDone}"/>
+                                                </StackPanel>
+                                            </StackPanel>
+                                        </DataTemplate>
+
                                         <!-- Dialog Conditions -->
 
                                         <DataTemplate DataType="{x:Type dialogConditions:ConditionNodeContainer}">

@@ -61,9 +61,15 @@
     <Compile Include="Data\EditorData.cs" />
     <Compile Include="Data\FileSaveHandler.cs" />
     <Compile Include="Data\FileLoadHandler.cs" />
+    <Compile Include="Dialog\Actions\Animation\TriggerAnimationAction.cs" />
     <Compile Include="Dialog\Actions\ChoiceGroup.cs" />
     <Compile Include="Dialog\Actions\ChoiceItem.cs" />
     <Compile Include="Dialog\Actions\ConditionalAction.cs" />
+    <Compile Include="Dialog\Actions\Parallel\ParallelAction.cs" />
+    <Compile Include="Dialog\Actions\Parallel\SequenceAction.cs" />
+    <Compile Include="Dialog\Actions\Scene\AddSceneActorAction.cs" />
+    <Compile Include="Dialog\Actions\Animation\LookAtAction.cs" />
+    <Compile Include="Dialog\Actions\Scene\RemoveSceneActorAction.cs" />
     <Compile Include="Dialog\Conditions\ConditionNodeContainer.cs" />
     <Compile Include="Dialog\CustomNodeFactory.cs" />
     <Compile Include="Dialog\DialogHelper.cs" />

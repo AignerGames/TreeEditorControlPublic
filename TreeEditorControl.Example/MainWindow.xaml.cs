@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel;
+using System.Globalization;
+using System.Threading;
 using System.Windows;
 using System.Windows.Input;
 
@@ -11,6 +13,9 @@ namespace TreeEditorControl.Example
     {
         public MainWindow()
         {
+            Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
+            Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
+
             InitializeComponent();
 
             DataContext = new ViewModel();
