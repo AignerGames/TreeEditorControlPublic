@@ -29,6 +29,7 @@ namespace TreeEditorControl.Example.Data
 
             editorData.Actors.AddRange(viewModel.Actors.Select(item => item.Value));
             editorData.Variables.AddRange(viewModel.Variables.Select(item => item.Value));
+            editorData.SceneReferenceNames.AddRange(viewModel.SceneReferenceNames.Select(item => item.Value));
 
             editorData.GameData = _visitor.CreateGameData(viewModel.CurrentGameName, viewModel.EditorViewModel.RootNodes.OfType<DialogRootNode>());
 
@@ -184,7 +185,8 @@ namespace TreeEditorControl.Example.Data
             {
                 return new AddSceneActorInteractionCommandData
                 {
-                    Actor = node.Actor,
+                    ObjectName = node.ObjectName,
+                    ReferenceName = node.ReferenceName,
                     Position = node.Position.ToData(),
                     Rotation = node.Rotation.ToData()
                 };
@@ -194,7 +196,7 @@ namespace TreeEditorControl.Example.Data
             {
                 return new RemoveSceneActorInteractionCommandData
                 {
-                    ActorSlotName = node.ActorSlotName
+                    ReferenceName = node.ReferenceName
                 };
             }
 
@@ -202,7 +204,7 @@ namespace TreeEditorControl.Example.Data
             {
                 return new LookAtInteractionCommandData
                 {
-                    ActorSlotName = node.ActorSlotName,
+                    ReferenceName = node.ReferenceName,
                     TargetPosition = node.TargetPosition.ToData(),
                     Duration = node.Duration
                 };
@@ -213,7 +215,7 @@ namespace TreeEditorControl.Example.Data
                 return new TriggerAnimationInteractionCommandData
                 {
                     TriggerName = node.TriggerName,
-                    ActorSlotName = node.ActorSlotName,
+                    ReferenceName = node.ReferenceName,
                     WaitUntilDone = node.WaitUntilDone
                 };
             }

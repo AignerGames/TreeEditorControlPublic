@@ -119,14 +119,7 @@ namespace TreeEditorControl.Example.Dialog
 
         public ObservableCollection<StringViewModel> Variables { get; } = new ObservableCollection<StringViewModel>();
 
-        public ObservableCollection<StringViewModel> SceneSlots { get; } = new ObservableCollection<StringViewModel>
-        {
-            new StringViewModel("Slot_1"),
-            new StringViewModel("Slot_2"),
-            new StringViewModel("Slot_3"),
-            new StringViewModel("Slot_4"),
-            new StringViewModel("Slot_5"),
-        };
+        public ObservableCollection<StringViewModel> SceneReferenceNames { get; } = new ObservableCollection<StringViewModel>();
 
         public ObservableCollection<StringViewModel> AnimationTriggers { get; } = new ObservableCollection<StringViewModel>
         {

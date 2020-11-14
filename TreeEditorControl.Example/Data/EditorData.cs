@@ -17,6 +17,8 @@ namespace TreeEditorControl.Example.Data
 
         public List<string> Variables { get; set; } = new List<string>();
 
+        public List<string> SceneReferenceNames { get; set; } = new List<string>();
+
         public GameData GameData { get; set; } = new GameData();
     }
 }

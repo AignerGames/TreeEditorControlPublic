@@ -8,20 +8,28 @@ namespace TreeEditorControl.Example.Dialog.Actions
     [NodeCatalogInfo("AddSceneActorAction", "Scene", "Adds a actor model to the scene")]
     public class AddSceneActorAction : DialogAction, ICopyableNode<AddSceneActorAction>
     {
-        private UndoRedoValueWrapper<string> _actor;
+        private UndoRedoValueWrapper<string> _objectName;
+        private UndoRedoValueWrapper<string> _referenceName;
 
-        public AddSceneActorAction(IEditorEnvironment editorEnvironment, string actor = null) 
+        public AddSceneActorAction(IEditorEnvironment editorEnvironment, string objectName = null, string referenceName = null) 
             : base(editorEnvironment)
         {
-            _actor = CreateUndoRedoWrapper(nameof(Actor), actor);
+            _objectName = CreateUndoRedoWrapper(nameof(ObjectName), objectName);
+            _referenceName = CreateUndoRedoWrapper(nameof(ReferenceName), referenceName);
 
             UpdateHeader();
         }
 
-        public string Actor
+        public string ObjectName
         {
-            get => _actor.Value;
-            set => _actor.Value = value;
+            get => _objectName.Value;
+            set => _objectName.Value = value;
+        }
+
+        public string ReferenceName
+        {
+            get => _referenceName.Value;
+            set => _referenceName.Value = value;
         }
 
         public Vector Position { get; } = new Vector();
@@ -30,7 +38,7 @@ namespace TreeEditorControl.Example.Dialog.Actions
 
         public AddSceneActorAction CreateCopy()
         {
-            var copy = new AddSceneActorAction(EditorEnvironment, Actor);
+            var copy = new AddSceneActorAction(EditorEnvironment, ObjectName, ReferenceName);
 
             copy.Position.CopyFrom(Position);
             copy.Rotation.CopyFrom(Rotation);
@@ -49,7 +57,7 @@ namespace TreeEditorControl.Example.Dialog.Actions
 
         private void UpdateHeader()
         {
-            Header = DialogHelper.GetHeaderString("AddSceneActorAction", $"{Actor}");
+            Header = DialogHelper.GetHeaderString("AddSceneActorAction", $"{ObjectName} as {ReferenceName}");
         }
     }
 }

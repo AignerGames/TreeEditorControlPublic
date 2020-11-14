@@ -8,25 +8,25 @@ namespace TreeEditorControl.Example.Dialog.Actions
     [NodeCatalogInfo("RemoveSceneActorAction", "Scene", "Removes a actor model to the scene")]
     public class RemoveSceneActorAction : DialogAction, ICopyableNode<RemoveSceneActorAction>
     {
-        private UndoRedoValueWrapper<string> _actorSlotName;
+        private UndoRedoValueWrapper<string> _referenceName;
 
-        public RemoveSceneActorAction(IEditorEnvironment editorEnvironment, string actorSlowName = null)
+        public RemoveSceneActorAction(IEditorEnvironment editorEnvironment, string referenceName = null)
             : base(editorEnvironment)
         {
-            _actorSlotName = CreateUndoRedoWrapper(nameof(ActorSlotName), actorSlowName);
+            _referenceName = CreateUndoRedoWrapper(nameof(ReferenceName), referenceName);
 
             UpdateHeader();
         }
 
-        public string ActorSlotName
+        public string ReferenceName
         {
-            get => _actorSlotName.Value;
-            set => _actorSlotName.Value = value;
+            get => _referenceName.Value;
+            set => _referenceName.Value = value;
         }
 
         public RemoveSceneActorAction CreateCopy()
         {
-            return new RemoveSceneActorAction(EditorEnvironment, ActorSlotName);
+            return new RemoveSceneActorAction(EditorEnvironment, ReferenceName);
         }
 
         public override T Accept<T>(IDialogActionVisitor<T> visitor) => visitor.VisitRemoveSceneActor(this);
@@ -40,7 +40,7 @@ namespace TreeEditorControl.Example.Dialog.Actions
 
         private void UpdateHeader()
         {
-            Header = DialogHelper.GetHeaderString("RemoveSceneActorAction", $"At {ActorSlotName}");
+            Header = DialogHelper.GetHeaderString("RemoveSceneActorAction", $"{ReferenceName}");
         }
     }
 }

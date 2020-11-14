@@ -41,6 +41,7 @@
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>
                                 
@@ -79,8 +80,17 @@
                                     </DataGrid>
                                 </Expander>
 
+                                <!-- Scene References -->
+                                <Expander Grid.Row="3" Header="Scene References">
+                                    <DataGrid ItemsSource="{Binding SceneReferenceNames}" MaxHeight="300" AutoGenerateColumns="False" ColumnWidth="*">
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn Header="Names" Binding="{Binding Value}" MinWidth="300"/>
+                                        </DataGrid.Columns>
+                                    </DataGrid>
+                                </Expander>
+
                                 <!-- Dialog Tree -->
-                                <treeEditor:TreeEditor Grid.Row="3" DataContext="{Binding EditorViewModel}">
+                                <treeEditor:TreeEditor Grid.Row="4" DataContext="{Binding EditorViewModel}">
                                     <treeEditor:TreeEditor.ToolbarCommandTemplateSelector>
                                         <treeEditor:ExplicitTemplateSelector>
                                             <treeEditor:ExplicitTemplateSelector.Template>
@@ -227,8 +237,13 @@
                                         <DataTemplate DataType="{x:Type dialogActions:AddSceneActorAction}">
                                             <StackPanel>
                                                 <StackPanel Orientation="Horizontal">
-                                                    <TextBlock Text="Actor: " Width="100"/>
-                                                    <ComboBox ItemsSource="{Binding ElementName=DialogRootControl, Path=DataContext.Actors}" SelectedValue="{Binding Actor}"
+                                                    <TextBlock Text="Object: " Width="100"/>
+                                                    <ComboBox ItemsSource="{Binding ElementName=DialogRootControl, Path=DataContext.Actors}" SelectedValue="{Binding ObjectName}"
+                                                              DisplayMemberPath="Value" SelectedValuePath="Value" Width="300"/>
+                                                </StackPanel>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="ReferenceName: " Width="100"/>
+                                                    <ComboBox ItemsSource="{Binding ElementName=DialogRootControl, Path=DataContext.SceneReferenceNames}" SelectedValue="{Binding ReferenceName}"
                                                               DisplayMemberPath="Value" SelectedValuePath="Value" Width="300"/>
                                                 </StackPanel>
                                                 <StackPanel Orientation="Horizontal">
@@ -244,8 +259,8 @@
                                         <DataTemplate DataType="{x:Type dialogActions:RemoveSceneActorAction}">
                                             <StackPanel>
                                                 <StackPanel Orientation="Horizontal">
-                                                    <TextBlock Text="Actor Slot: " Width="100"/>
-                                                    <ComboBox ItemsSource="{Binding ElementName=DialogRootControl, Path=DataContext.SceneSlots}" SelectedValue="{Binding ActorSlotName}"
+                                                    <TextBlock Text="ReferenceName: " Width="100"/>
+                                                    <ComboBox ItemsSource="{Binding ElementName=DialogRootControl, Path=DataContext.SceneReferenceNames}" SelectedValue="{Binding ReferenceName}"
                                                               DisplayMemberPath="Value" SelectedValuePath="Value" Width="300"/>
                                                 </StackPanel>
                                             </StackPanel>
@@ -254,8 +269,8 @@
                                         <DataTemplate DataType="{x:Type dialogActions:LookAtAction}">
                                             <StackPanel>
                                                 <StackPanel Orientation="Horizontal">
-                                                    <TextBlock Text="Actor Slot: " Width="100"/>
-                                                    <ComboBox ItemsSource="{Binding ElementName=DialogRootControl, Path=DataContext.SceneSlots}" SelectedValue="{Binding ActorSlotName}"
+                                                    <TextBlock Text="ReferenceName: " Width="100"/>
+                                                    <ComboBox ItemsSource="{Binding ElementName=DialogRootControl, Path=DataContext.SceneReferenceNames}" SelectedValue="{Binding ReferenceName}"
                                                               DisplayMemberPath="Value" SelectedValuePath="Value" Width="300"/>
                                                 </StackPanel>
                                                 <StackPanel Orientation="Horizontal">
@@ -272,13 +287,13 @@
                                         <DataTemplate DataType="{x:Type dialogActions:TriggerAnimationAction}">
                                             <StackPanel>
                                                 <StackPanel Orientation="Horizontal">
-                                                    <TextBlock Text="Trigger Name: " Width="100"/>
-                                                    <ComboBox ItemsSource="{Binding ElementName=DialogRootControl, Path=DataContext.AnimationTriggers}" SelectedValue="{Binding TriggerName}"
+                                                    <TextBlock Text="ReferenceName: " Width="100"/>
+                                                    <ComboBox ItemsSource="{Binding ElementName=DialogRootControl, Path=DataContext.SceneReferenceNames}" SelectedValue="{Binding ReferenceName}"
                                                               DisplayMemberPath="Value" SelectedValuePath="Value" Width="300"/>
                                                 </StackPanel>
                                                 <StackPanel Orientation="Horizontal">
-                                                    <TextBlock Text="Actor Slot: " Width="100"/>
-                                                    <ComboBox ItemsSource="{Binding ElementName=DialogRootControl, Path=DataContext.SceneSlots}" SelectedValue="{Binding ActorSlotName}"
+                                                    <TextBlock Text="Trigger Name: " Width="100"/>
+                                                    <ComboBox ItemsSource="{Binding ElementName=DialogRootControl, Path=DataContext.AnimationTriggers}" SelectedValue="{Binding TriggerName}"
                                                               DisplayMemberPath="Value" SelectedValuePath="Value" Width="300"/>
                                                 </StackPanel>
                                                 <StackPanel Orientation="Horizontal">

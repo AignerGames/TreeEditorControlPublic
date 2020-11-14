@@ -45,12 +45,20 @@ namespace TreeEditorControl.Example.Data
                 editorData.Actors.Add("Fake");
                 editorData.Actors.Add("Tom");
                 editorData.Actors.Add("Story");
+
+                foreach(var actor in editorData.Actors)
+                {
+                    editorData.SceneReferenceNames.Add(actor);
+                }
+
+                editorData.SceneReferenceNames.Add("TestReference");
             }
 
             viewModel.CurrentGameName = editorData.GameData.Name;
 
             editorData.Actors.ForEach(item => viewModel.Actors.Add(new StringViewModel { Value = item }));
             editorData.Variables.ForEach(item => viewModel.Variables.Add(new StringViewModel { Value = item }));
+            editorData.SceneReferenceNames.ForEach(item => viewModel.SceneReferenceNames.Add(new StringViewModel { Value = item }));
 
             var nodes = _visitor.CreateRootNodes(editorData.GameData);
 
@@ -265,7 +273,7 @@ namespace TreeEditorControl.Example.Data
 
             public DialogAction VisitAddSceneActor(AddSceneActorInteractionCommandData data)
             {
-                var node = new AddSceneActorAction(_editorEnvironment, data.Actor);
+                var node = new AddSceneActorAction(_editorEnvironment, data.ObjectName, data.ReferenceName);
 
                 node.Position.CopyFrom(data.Position);
                 node.Rotation.CopyFrom(data.Rotation);
@@ -275,14 +283,14 @@ namespace TreeEditorControl.Example.Data
 
             public DialogAction VisitRemoveSceneActor(RemoveSceneActorInteractionCommandData data)
             {
-                var node = new RemoveSceneActorAction(_editorEnvironment, data.ActorSlotName);
+                var node = new RemoveSceneActorAction(_editorEnvironment, data.ReferenceName);
 
                 return node;
             }
 
             public DialogAction VisitLookAt(LookAtInteractionCommandData data)
             {
-                var node = new LookAtAction(_editorEnvironment, data.ActorSlotName, data.Duration);
+                var node = new LookAtAction(_editorEnvironment, data.ReferenceName, data.Duration);
 
                 node.TargetPosition.CopyFrom(data.TargetPosition);
 
@@ -291,7 +299,7 @@ namespace TreeEditorControl.Example.Data
 
             public DialogAction VisitTriggerAnimation(TriggerAnimationInteractionCommandData data)
             {
-                var node = new TriggerAnimationAction(_editorEnvironment, data.TriggerName, data.ActorSlotName, data.WaitUntilDone);
+                var node = new TriggerAnimationAction(_editorEnvironment, data.ReferenceName, data.TriggerName, data.WaitUntilDone);
 
                 return node;
             }

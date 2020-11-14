@@ -8,22 +8,22 @@ namespace TreeEditorControl.Example.Dialog.Actions
     [NodeCatalogInfo("LookAtAction", "Animation", "Rotates the actor to the target slot")]
     public class LookAtAction : DialogAction, ICopyableNode<LookAtAction>
     {
-        private UndoRedoValueWrapper<string> _actorSlotName;
+        private UndoRedoValueWrapper<string> _referenceName;
         private UndoRedoValueWrapper<float> _duration;
 
-        public LookAtAction(IEditorEnvironment editorEnvironment, string actorSlowName = null, float duration = default)
+        public LookAtAction(IEditorEnvironment editorEnvironment, string referenceName = null, float duration = default)
             : base(editorEnvironment)
         {
-            _actorSlotName = CreateUndoRedoWrapper(nameof(ActorSlotName), actorSlowName);
+            _referenceName = CreateUndoRedoWrapper(nameof(ReferenceName), referenceName);
             _duration = CreateUndoRedoWrapper(nameof(Duration), duration);
 
             UpdateHeader();
         }
 
-        public string ActorSlotName
+        public string ReferenceName
         {
-            get => _actorSlotName.Value;
-            set => _actorSlotName.Value = value;
+            get => _referenceName.Value;
+            set => _referenceName.Value = value;
         }
 
         public Vector TargetPosition { get; } = new Vector();
@@ -36,7 +36,7 @@ namespace TreeEditorControl.Example.Dialog.Actions
 
         public LookAtAction CreateCopy()
         {
-            var copy = new LookAtAction(EditorEnvironment, ActorSlotName, Duration);
+            var copy = new LookAtAction(EditorEnvironment, ReferenceName, Duration);
 
             copy.TargetPosition.CopyFrom(TargetPosition);
 
@@ -54,7 +54,7 @@ namespace TreeEditorControl.Example.Dialog.Actions
 
         private void UpdateHeader()
         {
-            Header = DialogHelper.GetHeaderString("LookAtAction", $"{ActorSlotName}");
+            Header = DialogHelper.GetHeaderString("LookAtAction", $"{ReferenceName}");
         }
     }
 }
