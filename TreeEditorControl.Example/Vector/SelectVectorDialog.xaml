@@ -1,0 +1,28 @@
+﻿<Window x:Class="TreeEditorControl.Example.SelectVectorDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TreeEditorControl.Example"
+        mc:Ignorable="d"
+        Title="Select vector" SizeToContent="WidthAndHeight" WindowStyle="ToolWindow">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.5*"/>
+            <ColumnDefinition Width="0.5*"/>
+        </Grid.ColumnDefinitions>
+
+        <ComboBox Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Name="_ComboBox" MinWidth="300" Margin="3"/>
+
+        <Button Grid.Row="1" Grid.Column="0" Content="Select" IsDefault="True" Width="100" VerticalAlignment="Center" Margin="3" 
+                Click="SelectButton_Clicked"/>
+        
+        <Button Grid.Row="1" Grid.Column="1" Content="Cancel" IsCancel="True" Width="100" VerticalAlignment="Center" Margin="3"/>
+
+    </Grid>
+</Window>

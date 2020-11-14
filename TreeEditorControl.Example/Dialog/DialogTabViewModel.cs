@@ -1,4 +1,11 @@
 ﻿using System.Reflection;
+using System.Collections.ObjectModel;
+using System.Windows;
+using System.ComponentModel;
+using System.IO;
+using System.Windows.Input;
+using System.Collections.Generic;
+using System.Linq;
 
 using TreeEditorControl.Catalog;
 using TreeEditorControl.Utility;
@@ -6,13 +13,7 @@ using TreeEditorControl.ViewModel;
 using TreeEditorControl.Environment.Implementation;
 using TreeEditorControl.Commands;
 using TreeEditorControl.Example.Data;
-using System.Linq;
 using TreeEditorControl.Nodes;
-using System.Collections.ObjectModel;
-using System.Windows;
-using System.ComponentModel;
-using System.IO;
-using System.Windows.Input;
 
 namespace TreeEditorControl.Example.Dialog
 {
@@ -132,6 +133,13 @@ namespace TreeEditorControl.Example.Dialog
             new StringViewModel("Wave"),
             new StringViewModel("Jump"),
             new StringViewModel("Eat"),
+        };
+
+        public ObservableCollection<NamedVector> LocationVectors { get; } = new ObservableCollection<NamedVector>
+        {
+            new NamedVector("A", 1, 2, 3),
+            new NamedVector("B", 1, 42, 3),
+            new NamedVector("C", 99, 99, 99),
         };
 
         public override void HandleClosing(CancelEventArgs args)

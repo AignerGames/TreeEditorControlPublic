@@ -84,9 +84,17 @@
     <Compile Include="Dialog\Actions\ModifyPlayerVariableAction.cs" />
     <Compile Include="Dialog\Actions\ShowTextAction.cs" />
     <Compile Include="Dialog\Conditions\PlayerVariableCondition.cs" />
+    <Compile Include="Vector\VectorEditControl.xaml.cs">
+      <DependentUpon>VectorEditControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Vector\SelectVectorDialog.xaml.cs">
+      <DependentUpon>SelectVectorDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="StaticEnumCollections.cs" />
     <Compile Include="StringViewModel.cs" />
     <Compile Include="TabViewModel.cs" />
+    <Compile Include="Vector\NamedVector.cs" />
+    <Compile Include="Vector\Vector.cs" />
     <Compile Include="ViewModel.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -100,6 +108,14 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Vector\VectorEditControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Vector\SelectVectorDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">

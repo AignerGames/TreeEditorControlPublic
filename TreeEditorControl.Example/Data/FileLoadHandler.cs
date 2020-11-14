@@ -265,7 +265,10 @@ namespace TreeEditorControl.Example.Data
 
             public DialogAction VisitAddSceneActor(AddSceneActorInteractionCommandData data)
             {
-                var node = new AddSceneActorAction(_editorEnvironment, data.Actor, data.ActorSlotName, data.LookAtSlotName);
+                var node = new AddSceneActorAction(_editorEnvironment, data.Actor);
+
+                node.Position.CopyFrom(data.Position);
+                node.Rotation.CopyFrom(data.Rotation);
 
                 return node;
             }
@@ -279,7 +282,9 @@ namespace TreeEditorControl.Example.Data
 
             public DialogAction VisitLookAt(LookAtInteractionCommandData data)
             {
-                var node = new LookAtAction(_editorEnvironment, data.ActorSlotName, data.TargetSlotName, data.Duration);
+                var node = new LookAtAction(_editorEnvironment, data.ActorSlotName, data.Duration);
+
+                node.TargetPosition.CopyFrom(data.TargetPosition);
 
                 return node;
             }

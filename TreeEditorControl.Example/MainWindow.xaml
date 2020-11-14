@@ -232,15 +232,11 @@
                                                               DisplayMemberPath="Value" SelectedValuePath="Value" Width="300"/>
                                                 </StackPanel>
                                                 <StackPanel Orientation="Horizontal">
-                                                    <TextBlock Text="Actor Slot: " Width="100"/>
-                                                    <ComboBox ItemsSource="{Binding ElementName=DialogRootControl, Path=DataContext.SceneSlots}" SelectedValue="{Binding ActorSlotName}"
-                                                              DisplayMemberPath="Value" SelectedValuePath="Value" Width="300"/>
+                                                    <local:VectorEditControl Text="Position" Vector="{Binding Position}" 
+                                                                             VectorSelection="{Binding ElementName=DialogRootControl, Path=DataContext.LocationVectors}"/>
                                                 </StackPanel>
                                                 <StackPanel Orientation="Horizontal">
-                                                    <TextBlock Text="LookAt Slot: " Width="100"/>
-                                                    <ComboBox ItemsSource="{Binding ElementName=DialogRootControl, Path=DataContext.SceneSlots}" SelectedValue="{Binding LookAtSlotName}"
-                                                              DisplayMemberPath="Value" SelectedValuePath="Value" Width="300"/>
-                                                    <TextBlock Text=" (or empty for default rotation)" />
+                                                    <local:VectorEditControl Text="Rotation" Vector="{Binding Rotation}"/>
                                                 </StackPanel>
                                             </StackPanel>
                                         </DataTemplate>
@@ -263,10 +259,8 @@
                                                               DisplayMemberPath="Value" SelectedValuePath="Value" Width="300"/>
                                                 </StackPanel>
                                                 <StackPanel Orientation="Horizontal">
-                                                    <TextBlock Text="Target Slot: " Width="100"/>
-                                                    <ComboBox ItemsSource="{Binding ElementName=DialogRootControl, Path=DataContext.SceneSlots}" SelectedValue="{Binding TargetSlotName}"
-                                                              DisplayMemberPath="Value" SelectedValuePath="Value" Width="300"/>
-                                                    <TextBlock Text=" (or empty to reset the rotation)" />
+                                                    <local:VectorEditControl Text="Position" Vector="{Binding TargetPosition}" 
+                                                                             VectorSelection="{Binding ElementName=DialogRootControl, Path=DataContext.LocationVectors}"/>
                                                 </StackPanel>
                                                 <StackPanel Orientation="Horizontal">
                                                     <TextBlock Text="Duration (sec): " Width="100"/>

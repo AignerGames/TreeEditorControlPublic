@@ -185,8 +185,8 @@ namespace TreeEditorControl.Example.Data
                 return new AddSceneActorInteractionCommandData
                 {
                     Actor = node.Actor,
-                    ActorSlotName = node.ActorSlotName,
-                    LookAtSlotName = node.LookAtSlotName,
+                    Position = node.Position.ToData(),
+                    Rotation = node.Rotation.ToData()
                 };
             }
 
@@ -203,7 +203,7 @@ namespace TreeEditorControl.Example.Data
                 return new LookAtInteractionCommandData
                 {
                     ActorSlotName = node.ActorSlotName,
-                    TargetSlotName = node.TargetSlotName,
+                    TargetPosition = node.TargetPosition.ToData(),
                     Duration = node.Duration
                 };
             }

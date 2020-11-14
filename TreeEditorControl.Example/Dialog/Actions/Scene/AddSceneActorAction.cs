@@ -9,16 +9,11 @@ namespace TreeEditorControl.Example.Dialog.Actions
     public class AddSceneActorAction : DialogAction, ICopyableNode<AddSceneActorAction>
     {
         private UndoRedoValueWrapper<string> _actor;
-        private UndoRedoValueWrapper<string> _actorSlotName;
-        private UndoRedoValueWrapper<string> _lookAtSlotName;
 
-        public AddSceneActorAction(IEditorEnvironment editorEnvironment, string actor = null, 
-            string actorSlowName = null, string lookAtSlotName = null) 
+        public AddSceneActorAction(IEditorEnvironment editorEnvironment, string actor = null) 
             : base(editorEnvironment)
         {
             _actor = CreateUndoRedoWrapper(nameof(Actor), actor);
-            _actorSlotName = CreateUndoRedoWrapper(nameof(ActorSlotName), actorSlowName);
-            _lookAtSlotName = CreateUndoRedoWrapper(nameof(LookAtSlotName), lookAtSlotName);
 
             UpdateHeader();
         }
@@ -29,21 +24,18 @@ namespace TreeEditorControl.Example.Dialog.Actions
             set => _actor.Value = value;
         }
 
-        public string ActorSlotName
-        {
-            get => _actorSlotName.Value;
-            set => _actorSlotName.Value = value;
-        }
+        public Vector Position { get; } = new Vector();
 
-        public string LookAtSlotName
-        {
-            get => _lookAtSlotName.Value;
-            set => _lookAtSlotName.Value = value;
-        }
+        public Vector Rotation { get; } = new Vector(0, 180, 0);
 
         public AddSceneActorAction CreateCopy()
         {
-            return new AddSceneActorAction(EditorEnvironment, Actor, ActorSlotName, LookAtSlotName);
+            var copy = new AddSceneActorAction(EditorEnvironment, Actor);
+
+            copy.Position.CopyFrom(Position);
+            copy.Rotation.CopyFrom(Rotation);
+
+            return copy;
         }
 
         public override T Accept<T>(IDialogActionVisitor<T> visitor) => visitor.VisitAddSceneActor(this);
@@ -57,7 +49,7 @@ namespace TreeEditorControl.Example.Dialog.Actions
 
         private void UpdateHeader()
         {
-            Header = DialogHelper.GetHeaderString("AddSceneActorAction", $"{Actor} at {ActorSlotName}");
+            Header = DialogHelper.GetHeaderString("AddSceneActorAction", $"{Actor}");
         }
     }
 }

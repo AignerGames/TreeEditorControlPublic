@@ -9,15 +9,12 @@ namespace TreeEditorControl.Example.Dialog.Actions
     public class LookAtAction : DialogAction, ICopyableNode<LookAtAction>
     {
         private UndoRedoValueWrapper<string> _actorSlotName;
-        private UndoRedoValueWrapper<string> _targetSlotName;
         private UndoRedoValueWrapper<float> _duration;
 
-        public LookAtAction(IEditorEnvironment editorEnvironment, string actorSlowName = null, string targetSlotName = null,
-            float duration = default)
+        public LookAtAction(IEditorEnvironment editorEnvironment, string actorSlowName = null, float duration = default)
             : base(editorEnvironment)
         {
             _actorSlotName = CreateUndoRedoWrapper(nameof(ActorSlotName), actorSlowName);
-            _targetSlotName = CreateUndoRedoWrapper(nameof(TargetSlotName), targetSlotName);
             _duration = CreateUndoRedoWrapper(nameof(Duration), duration);
 
             UpdateHeader();
@@ -29,11 +26,7 @@ namespace TreeEditorControl.Example.Dialog.Actions
             set => _actorSlotName.Value = value;
         }
 
-        public string TargetSlotName
-        {
-            get => _targetSlotName.Value;
-            set => _targetSlotName.Value = value;
-        }
+        public Vector TargetPosition { get; } = new Vector();
 
         public float Duration
         {
@@ -43,7 +36,11 @@ namespace TreeEditorControl.Example.Dialog.Actions
 
         public LookAtAction CreateCopy()
         {
-            return new LookAtAction(EditorEnvironment, ActorSlotName, TargetSlotName, Duration);
+            var copy = new LookAtAction(EditorEnvironment, ActorSlotName, Duration);
+
+            copy.TargetPosition.CopyFrom(TargetPosition);
+
+            return copy;
         }
 
         public override T Accept<T>(IDialogActionVisitor<T> visitor) => visitor.VisitLookAt(this);
@@ -57,7 +54,7 @@ namespace TreeEditorControl.Example.Dialog.Actions
 
         private void UpdateHeader()
         {
-            Header = DialogHelper.GetHeaderString("LookAtAction", $"{ActorSlotName} to {TargetSlotName} in {Duration}sec");
+            Header = DialogHelper.GetHeaderString("LookAtAction", $"{ActorSlotName}");
         }
     }
 }
