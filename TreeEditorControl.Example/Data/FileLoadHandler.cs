@@ -246,13 +246,6 @@ namespace TreeEditorControl.Example.Data
                 return node;
             }
 
-            public DialogCondition VisitPlayerVariableCondition(InteractionPlayerVariableConditionData data)
-            {
-                var node = new PlayerVariableCondition(_editorEnvironment, data.Variable, data.CompareKind, data.CompareValue);
-
-                return node;
-            }
-
             public DialogAction VisitParallelCommand(ParallelInteractionCommandData data)
             {
                 var node = new ParallelAction(_editorEnvironment);
@@ -300,6 +293,20 @@ namespace TreeEditorControl.Example.Data
             public DialogAction VisitTriggerAnimation(TriggerAnimationInteractionCommandData data)
             {
                 var node = new TriggerAnimationAction(_editorEnvironment, data.ReferenceName, data.TriggerName, data.WaitUntilDone);
+
+                return node;
+            }
+
+            public DialogAction VisitWait(WaitInteractionCommandData data)
+            {
+                var node = new WaitAction(_editorEnvironment, data.Duration);
+
+                return node;
+            }
+
+            public DialogCondition VisitPlayerVariableCondition(InteractionPlayerVariableConditionData data)
+            {
+                var node = new PlayerVariableCondition(_editorEnvironment, data.Variable, data.CompareKind, data.CompareValue);
 
                 return node;
             }

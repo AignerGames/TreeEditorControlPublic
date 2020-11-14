@@ -220,6 +220,14 @@ namespace TreeEditorControl.Example.Data
                 };
             }
 
+            public InteractionCommandData VisitWait(WaitAction node)
+            {
+                return new WaitInteractionCommandData
+                {
+                    Duration = node.Duration
+                };
+            }
+
             public InteractionConditionData VisitPlayerVariableCondition(PlayerVariableCondition node)
             {
                 return new InteractionPlayerVariableConditionData

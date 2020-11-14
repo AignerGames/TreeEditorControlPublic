@@ -30,5 +30,7 @@ namespace TreeEditorControl.Example.Dialog
         T VisitLookAt(LookAtAction node);
 
         T VisitTriggerAnimation(TriggerAnimationAction node);
+
+        T VisitWait(WaitAction node);
     }
 }

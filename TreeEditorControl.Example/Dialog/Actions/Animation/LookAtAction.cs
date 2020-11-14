@@ -5,7 +5,7 @@ using TreeEditorControl.UndoRedo.Implementation;
 
 namespace TreeEditorControl.Example.Dialog.Actions
 {
-    [NodeCatalogInfo("LookAtAction", "Animation", "Rotates the actor to the target slot")]
+    [NodeCatalogInfo("LookAtAction", "Animation", "Rotates the actor to the target position")]
     public class LookAtAction : DialogAction, ICopyableNode<LookAtAction>
     {
         private UndoRedoValueWrapper<string> _referenceName;

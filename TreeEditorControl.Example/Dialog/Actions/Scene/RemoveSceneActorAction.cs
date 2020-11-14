@@ -5,7 +5,7 @@ using TreeEditorControl.UndoRedo.Implementation;
 
 namespace TreeEditorControl.Example.Dialog.Actions
 {
-    [NodeCatalogInfo("RemoveSceneActorAction", "Scene", "Removes a actor model to the scene")]
+    [NodeCatalogInfo("RemoveSceneActorAction", "Scene", "Removes a object to the scene")]
     public class RemoveSceneActorAction : DialogAction, ICopyableNode<RemoveSceneActorAction>
     {
         private UndoRedoValueWrapper<string> _referenceName;

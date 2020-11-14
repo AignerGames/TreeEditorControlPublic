@@ -5,7 +5,7 @@ using TreeEditorControl.UndoRedo.Implementation;
 
 namespace TreeEditorControl.Example.Dialog.Actions
 {
-    [NodeCatalogInfo("TriggerAnimationAction", "Animation", "Triggers a specific animation state")]
+    [NodeCatalogInfo("TriggerAnimationAction", "Animation", "Triggers a animation")]
     public class TriggerAnimationAction : DialogAction, ICopyableNode<TriggerAnimationAction>
     {
         private UndoRedoValueWrapper<string> _referenceName;

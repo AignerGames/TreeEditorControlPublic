@@ -303,6 +303,15 @@
                                             </StackPanel>
                                         </DataTemplate>
 
+                                        <DataTemplate DataType="{x:Type dialogActions:WaitAction}">
+                                            <StackPanel>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="Duration (sec): " Width="100"/>
+                                                    <TextBox Text="{Binding Duration}" MinWidth="200"/>
+                                                </StackPanel>
+                                            </StackPanel>
+                                        </DataTemplate>
+
                                         <!-- Dialog Conditions -->
 
                                         <DataTemplate DataType="{x:Type dialogConditions:ConditionNodeContainer}">
