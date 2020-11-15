@@ -29,6 +29,8 @@ namespace TreeEditorControl.Example.Dialog
 
         T VisitLookAt(LookAtAction node);
 
+        T VisitMoveTo(MoveToAction moveToAction);
+
         T VisitTriggerAnimation(TriggerAnimationAction node);
 
         T VisitWait(WaitAction node);

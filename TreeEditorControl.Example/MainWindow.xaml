@@ -284,6 +284,24 @@
                                             </StackPanel>
                                         </DataTemplate>
 
+                                        <DataTemplate DataType="{x:Type dialogActions:MoveToAction}">
+                                            <StackPanel>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="ReferenceName: " Width="100"/>
+                                                    <ComboBox ItemsSource="{Binding ElementName=DialogRootControl, Path=DataContext.SceneReferenceNames}" SelectedValue="{Binding ReferenceName}"
+                                                              DisplayMemberPath="Value" SelectedValuePath="Value" Width="300"/>
+                                                </StackPanel>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <local:VectorEditControl Text="Position" Vector="{Binding TargetPosition}" 
+                                                                             VectorSelection="{Binding ElementName=DialogRootControl, Path=DataContext.LocationVectors}"/>
+                                                </StackPanel>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="Duration (sec): " Width="100"/>
+                                                    <TextBox Text="{Binding Duration}" MinWidth="200"/>
+                                                </StackPanel>
+                                            </StackPanel>
+                                        </DataTemplate>
+
                                         <DataTemplate DataType="{x:Type dialogActions:TriggerAnimationAction}">
                                             <StackPanel>
                                                 <StackPanel Orientation="Horizontal">

@@ -21,6 +21,7 @@ namespace TreeEditorControl.Example.Dialog
     {
         const string GameDataDirectoryName = "GameData";
         const string GameExportDirectoryName = "GameDataExport";
+        const string UnityExportDirectoryPath = @"D:\UnityProjectsVR\AignerGamesStoryCreator\Assets\Resources\GameDataExport";
 
         public const string ShowTextHelloWorldCatalogName = "ShowText HelloWorld";
 
@@ -121,17 +122,26 @@ namespace TreeEditorControl.Example.Dialog
 
         public ObservableCollection<StringViewModel> SceneObjects { get; } = new ObservableCollection<StringViewModel>
         {
+            // Actors
             new StringViewModel("Anzug"),
-            new StringViewModel("Anika"),
+            new StringViewModel("Drake"),
+
+            // Effects
+            new StringViewModel("Poop"),
+            new StringViewModel("Blood"),
+            new StringViewModel("Cry"),
         };
 
         public ObservableCollection<StringViewModel> SceneReferenceNames { get; } = new ObservableCollection<StringViewModel>();
 
         public ObservableCollection<StringViewModel> AnimationTriggers { get; } = new ObservableCollection<StringViewModel>
         {
-            new StringViewModel("Wave"),
-            new StringViewModel("Jump"),
-            new StringViewModel("Eat"),
+            new StringViewModel("Idle"),
+            new StringViewModel("Move"),
+            new StringViewModel("Attack"),
+            new StringViewModel("Damage"),
+            new StringViewModel("Die"),
+            new StringViewModel("Happy"),
         };
 
         public ObservableCollection<NamedVector> LocationVectors { get; } = new ObservableCollection<NamedVector>
@@ -200,7 +210,9 @@ namespace TreeEditorControl.Example.Dialog
         {
             EditorEnvironment.UndoRedoStack.IsEnabled = false;
 
-            _fileSaveHandler.Save(Path.Combine(GameDataDirectoryName, SelectedFile), Path.Combine(GameExportDirectoryName, SelectedFile), this);
+            var unityExportPath = Directory.Exists(UnityExportDirectoryPath) ? Path.Combine(UnityExportDirectoryPath, SelectedFile) : null;
+
+            _fileSaveHandler.Save(Path.Combine(GameDataDirectoryName, SelectedFile), Path.Combine(GameExportDirectoryName, SelectedFile), unityExportPath, this);
 
             EditorEnvironment.UndoRedoStack.IsEnabled = true;
         }

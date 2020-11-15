@@ -285,6 +285,15 @@ namespace TreeEditorControl.Example.Data
                 return node;
             }
 
+            public DialogAction VisitMoveTo(MoveToInteractionCommandData data)
+            {
+                var node = new MoveToAction(_editorEnvironment, data.ReferenceName, data.Duration);
+
+                node.TargetPosition.CopyFrom(data.TargetPosition);
+
+                return node;
+            }
+
             public DialogAction VisitTriggerAnimation(TriggerAnimationInteractionCommandData data)
             {
                 var node = new TriggerAnimationAction(_editorEnvironment, data.ReferenceName, data.TriggerName, data.WaitUntilDone);

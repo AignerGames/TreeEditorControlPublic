@@ -57,7 +57,7 @@ namespace TreeEditorControl.Example.Dialog.Actions
 
         private void UpdateHeader()
         {
-            Header = DialogHelper.GetHeaderString("AddSceneObjectAction", $"{ObjectName} as {ReferenceName}");
+            Header = DialogHelper.GetHeaderString("AddSceneObjectAction", $"{ObjectName} as {ReferenceName} at {Position}");
         }
     }
 }

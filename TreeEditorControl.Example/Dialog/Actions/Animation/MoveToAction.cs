@@ -5,13 +5,13 @@ using TreeEditorControl.UndoRedo.Implementation;
 
 namespace TreeEditorControl.Example.Dialog.Actions
 {
-    [NodeCatalogInfo("LookAtAction", "Animation", "Rotates the object to the target position")]
-    public class LookAtAction : DialogAction, ICopyableNode<LookAtAction>
+    [NodeCatalogInfo("MoveToAction", "Animation", "Moves the object to the target position")]
+    public class MoveToAction : DialogAction, ICopyableNode<MoveToAction>
     {
         private UndoRedoValueWrapper<string> _referenceName;
         private UndoRedoValueWrapper<float> _duration;
 
-        public LookAtAction(IEditorEnvironment editorEnvironment, string referenceName = null, float duration = default)
+        public MoveToAction(IEditorEnvironment editorEnvironment, string referenceName = null, float duration = default)
             : base(editorEnvironment)
         {
             _referenceName = CreateUndoRedoWrapper(nameof(ReferenceName), referenceName);
@@ -34,16 +34,16 @@ namespace TreeEditorControl.Example.Dialog.Actions
             set => _duration.Value = value;
         }
 
-        public LookAtAction CreateCopy()
+        public MoveToAction CreateCopy()
         {
-            var copy = new LookAtAction(EditorEnvironment, ReferenceName, Duration);
+            var copy = new MoveToAction(EditorEnvironment, ReferenceName, Duration);
 
             copy.TargetPosition.CopyFrom(TargetPosition);
 
             return copy;
         }
 
-        public override T Accept<T>(IDialogActionVisitor<T> visitor) => visitor.VisitLookAt(this);
+        public override T Accept<T>(IDialogActionVisitor<T> visitor) => visitor.VisitMoveTo(this);
 
         protected override void NotifyUndoRedoPropertyChange(string propertyName)
         {
@@ -54,7 +54,7 @@ namespace TreeEditorControl.Example.Dialog.Actions
 
         private void UpdateHeader()
         {
-            Header = DialogHelper.GetHeaderString("LookAtAction", $"{ReferenceName} {TargetPosition}");
+            Header = DialogHelper.GetHeaderString("MoveToAction", $"{ReferenceName} {TargetPosition}");
         }
     }
 }

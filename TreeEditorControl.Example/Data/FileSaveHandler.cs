@@ -23,7 +23,7 @@ namespace TreeEditorControl.Example.Data
     {
         private readonly Visitor _visitor = new Visitor();
 
-        public void Save(string editorDataPath, string gameExportPath, DialogTabViewModel viewModel)
+        public void Save(string editorDataPath, string gameExportPath, string unityExportPath, DialogTabViewModel viewModel)
         {
             var editorData = new EditorData();
 
@@ -35,6 +35,11 @@ namespace TreeEditorControl.Example.Data
 
             SerializationHelper.Save(editorDataPath, editorData, GameData.AbstractTypes);
             SerializationHelper.Save(gameExportPath, editorData.GameData, GameData.AbstractTypes);
+
+            if(unityExportPath != null)
+            {
+                SerializationHelper.Save(unityExportPath, editorData.GameData, GameData.AbstractTypes);
+            }
         }
 
         private class Visitor :
@@ -203,6 +208,16 @@ namespace TreeEditorControl.Example.Data
             public InteractionCommandData VisitLookAt(LookAtAction node)
             {
                 return new LookAtInteractionCommandData
+                {
+                    ReferenceName = node.ReferenceName,
+                    TargetPosition = node.TargetPosition.ToData(),
+                    Duration = node.Duration
+                };
+            }
+
+            public InteractionCommandData VisitMoveTo(MoveToAction node)
+            {
+                return new MoveToInteractionCommandData
                 {
                     ReferenceName = node.ReferenceName,
                     TargetPosition = node.TargetPosition.ToData(),
