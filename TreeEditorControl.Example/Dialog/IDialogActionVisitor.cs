@@ -23,9 +23,9 @@ namespace TreeEditorControl.Example.Dialog
 
         T VisitSequenceAction(SequenceAction node);
 
-        T VisitAddSceneActor(AddSceneActorAction node);
+        T VisitAddSceneActor(AddSceneObjectAction node);
 
-        T VisitRemoveSceneActor(RemoveSceneActorAction node);
+        T VisitRemoveSceneActor(RemoveSceneObjectAction node);
 
         T VisitLookAt(LookAtAction node);
 

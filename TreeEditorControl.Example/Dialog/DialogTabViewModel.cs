@@ -119,6 +119,12 @@ namespace TreeEditorControl.Example.Dialog
 
         public ObservableCollection<StringViewModel> Variables { get; } = new ObservableCollection<StringViewModel>();
 
+        public ObservableCollection<StringViewModel> SceneObjects { get; } = new ObservableCollection<StringViewModel>
+        {
+            new StringViewModel("Anzug"),
+            new StringViewModel("Anika"),
+        };
+
         public ObservableCollection<StringViewModel> SceneReferenceNames { get; } = new ObservableCollection<StringViewModel>();
 
         public ObservableCollection<StringViewModel> AnimationTriggers { get; } = new ObservableCollection<StringViewModel>
@@ -130,9 +136,11 @@ namespace TreeEditorControl.Example.Dialog
 
         public ObservableCollection<NamedVector> LocationVectors { get; } = new ObservableCollection<NamedVector>
         {
-            new NamedVector("A", 1, 2, 3),
-            new NamedVector("B", 1, 42, 3),
-            new NamedVector("C", 99, 99, 99),
+            new NamedVector("Left Outer", -4, 0, 0),
+            new NamedVector("Left Inner", -2, 0, 0),
+            new NamedVector("Center", 0, 0, 0),
+            new NamedVector("Right Inner", 2, 0, 0),
+            new NamedVector("Right Outer", 4, 0, 0),
         };
 
         public override void HandleClosing(CancelEventArgs args)

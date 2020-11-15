@@ -234,11 +234,11 @@
                                             <TextBlock Text="Sequence Actions"/>
                                         </DataTemplate>
 
-                                        <DataTemplate DataType="{x:Type dialogActions:AddSceneActorAction}">
+                                        <DataTemplate DataType="{x:Type dialogActions:AddSceneObjectAction}">
                                             <StackPanel>
                                                 <StackPanel Orientation="Horizontal">
                                                     <TextBlock Text="Object: " Width="100"/>
-                                                    <ComboBox ItemsSource="{Binding ElementName=DialogRootControl, Path=DataContext.Actors}" SelectedValue="{Binding ObjectName}"
+                                                    <ComboBox ItemsSource="{Binding ElementName=DialogRootControl, Path=DataContext.SceneObjects}" SelectedValue="{Binding ObjectName}"
                                                               DisplayMemberPath="Value" SelectedValuePath="Value" Width="300"/>
                                                 </StackPanel>
                                                 <StackPanel Orientation="Horizontal">
@@ -256,7 +256,7 @@
                                             </StackPanel>
                                         </DataTemplate>
 
-                                        <DataTemplate DataType="{x:Type dialogActions:RemoveSceneActorAction}">
+                                        <DataTemplate DataType="{x:Type dialogActions:RemoveSceneObjectAction}">
                                             <StackPanel>
                                                 <StackPanel Orientation="Horizontal">
                                                     <TextBlock Text="ReferenceName: " Width="100"/>

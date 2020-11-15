@@ -181,9 +181,9 @@ namespace TreeEditorControl.Example.Data
                 };
             }
 
-            public InteractionCommandData VisitAddSceneActor(AddSceneActorAction node)
+            public InteractionCommandData VisitAddSceneActor(AddSceneObjectAction node)
             {
-                return new AddSceneActorInteractionCommandData
+                return new AddSceneObjectInteractionCommandData
                 {
                     ObjectName = node.ObjectName,
                     ReferenceName = node.ReferenceName,
@@ -192,9 +192,9 @@ namespace TreeEditorControl.Example.Data
                 };
             }
 
-            public InteractionCommandData VisitRemoveSceneActor(RemoveSceneActorAction node)
+            public InteractionCommandData VisitRemoveSceneActor(RemoveSceneObjectAction node)
             {
-                return new RemoveSceneActorInteractionCommandData
+                return new RemoveSceneObjectInteractionCommandData
                 {
                     ReferenceName = node.ReferenceName
                 };

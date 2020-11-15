@@ -5,13 +5,13 @@ using TreeEditorControl.UndoRedo.Implementation;
 
 namespace TreeEditorControl.Example.Dialog.Actions
 {
-    [NodeCatalogInfo("AddSceneActorAction", "Scene", "Adds a object to the scene")]
-    public class AddSceneActorAction : DialogAction, ICopyableNode<AddSceneActorAction>
+    [NodeCatalogInfo("AddSceneObjectAction", "Scene", "Adds a object to the scene")]
+    public class AddSceneObjectAction : DialogAction, ICopyableNode<AddSceneObjectAction>
     {
         private UndoRedoValueWrapper<string> _objectName;
         private UndoRedoValueWrapper<string> _referenceName;
 
-        public AddSceneActorAction(IEditorEnvironment editorEnvironment, string objectName = null, string referenceName = null) 
+        public AddSceneObjectAction(IEditorEnvironment editorEnvironment, string objectName = null, string referenceName = null) 
             : base(editorEnvironment)
         {
             _objectName = CreateUndoRedoWrapper(nameof(ObjectName), objectName);
@@ -36,9 +36,9 @@ namespace TreeEditorControl.Example.Dialog.Actions
 
         public Vector Rotation { get; } = new Vector(0, 180, 0);
 
-        public AddSceneActorAction CreateCopy()
+        public AddSceneObjectAction CreateCopy()
         {
-            var copy = new AddSceneActorAction(EditorEnvironment, ObjectName, ReferenceName);
+            var copy = new AddSceneObjectAction(EditorEnvironment, ObjectName, ReferenceName);
 
             copy.Position.CopyFrom(Position);
             copy.Rotation.CopyFrom(Rotation);
@@ -57,7 +57,7 @@ namespace TreeEditorControl.Example.Dialog.Actions
 
         private void UpdateHeader()
         {
-            Header = DialogHelper.GetHeaderString("AddSceneActorAction", $"{ObjectName} as {ReferenceName}");
+            Header = DialogHelper.GetHeaderString("AddSceneObjectAction", $"{ObjectName} as {ReferenceName}");
         }
     }
 }

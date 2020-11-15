@@ -46,11 +46,6 @@ namespace TreeEditorControl.Example.Data
                 editorData.Actors.Add("Tom");
                 editorData.Actors.Add("Story");
 
-                foreach(var actor in editorData.Actors)
-                {
-                    editorData.SceneReferenceNames.Add(actor);
-                }
-
                 editorData.SceneReferenceNames.Add("TestReference");
             }
 
@@ -264,9 +259,9 @@ namespace TreeEditorControl.Example.Data
                 return node;
             }
 
-            public DialogAction VisitAddSceneActor(AddSceneActorInteractionCommandData data)
+            public DialogAction VisitAddSceneObject(AddSceneObjectInteractionCommandData data)
             {
-                var node = new AddSceneActorAction(_editorEnvironment, data.ObjectName, data.ReferenceName);
+                var node = new AddSceneObjectAction(_editorEnvironment, data.ObjectName, data.ReferenceName);
 
                 node.Position.CopyFrom(data.Position);
                 node.Rotation.CopyFrom(data.Rotation);
@@ -274,9 +269,9 @@ namespace TreeEditorControl.Example.Data
                 return node;
             }
 
-            public DialogAction VisitRemoveSceneActor(RemoveSceneActorInteractionCommandData data)
+            public DialogAction VisitRemoveSceneObject(RemoveSceneObjectInteractionCommandData data)
             {
-                var node = new RemoveSceneActorAction(_editorEnvironment, data.ReferenceName);
+                var node = new RemoveSceneObjectAction(_editorEnvironment, data.ReferenceName);
 
                 return node;
             }
