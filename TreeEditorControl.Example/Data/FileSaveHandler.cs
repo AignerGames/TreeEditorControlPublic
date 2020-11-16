@@ -231,7 +231,7 @@ namespace TreeEditorControl.Example.Data
                 {
                     TriggerName = node.TriggerName,
                     ReferenceName = node.ReferenceName,
-                    WaitUntilDone = node.WaitUntilDone
+                    WaitUntilDoneTime = node.WaitUntilDoneTime
                 };
             }
 

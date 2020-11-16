@@ -296,7 +296,7 @@ namespace TreeEditorControl.Example.Data
 
             public DialogAction VisitTriggerAnimation(TriggerAnimationInteractionCommandData data)
             {
-                var node = new TriggerAnimationAction(_editorEnvironment, data.ReferenceName, data.TriggerName, data.WaitUntilDone);
+                var node = new TriggerAnimationAction(_editorEnvironment, data.ReferenceName, data.TriggerName, data.WaitUntilDoneTime);
 
                 return node;
             }

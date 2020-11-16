@@ -18,6 +18,9 @@ namespace TreeEditorControl.Example.Dialog.Actions
             _referenceName = CreateUndoRedoWrapper(nameof(ReferenceName), referenceName);
 
             UpdateHeader();
+
+            Position.PropertyChanged += (s, e) => UpdateHeader();
+            Rotation.PropertyChanged += (s, e) => UpdateHeader();
         }
 
         public string ObjectName
@@ -34,7 +37,7 @@ namespace TreeEditorControl.Example.Dialog.Actions
 
         public Vector Position { get; } = new Vector();
 
-        public Vector Rotation { get; } = new Vector(0, 180, 0);
+        public Vector Rotation { get; } = new Vector();
 
         public AddSceneObjectAction CreateCopy()
         {
@@ -57,7 +60,7 @@ namespace TreeEditorControl.Example.Dialog.Actions
 
         private void UpdateHeader()
         {
-            Header = DialogHelper.GetHeaderString("AddSceneObjectAction", $"{ObjectName} as {ReferenceName} at {Position}");
+            Header = DialogHelper.GetHeaderString("AddSceneObjectAction", $"{ObjectName} as {ReferenceName} Pos: {Position} Rot: {Rotation}");
         }
     }
 }

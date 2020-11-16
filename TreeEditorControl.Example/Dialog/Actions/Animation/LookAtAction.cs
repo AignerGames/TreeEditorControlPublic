@@ -18,6 +18,8 @@ namespace TreeEditorControl.Example.Dialog.Actions
             _duration = CreateUndoRedoWrapper(nameof(Duration), duration);
 
             UpdateHeader();
+
+            TargetPosition.PropertyChanged += (s, e) => UpdateHeader();
         }
 
         public string ReferenceName
@@ -54,7 +56,7 @@ namespace TreeEditorControl.Example.Dialog.Actions
 
         private void UpdateHeader()
         {
-            Header = DialogHelper.GetHeaderString("LookAtAction", $"{ReferenceName} {TargetPosition}");
+            Header = DialogHelper.GetHeaderString("LookAtAction", $"{ReferenceName} {TargetPosition} in {Duration} sec.");
         }
     }
 }

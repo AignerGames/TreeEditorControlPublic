@@ -123,13 +123,22 @@ namespace TreeEditorControl.Example.Dialog
         public ObservableCollection<StringViewModel> SceneObjects { get; } = new ObservableCollection<StringViewModel>
         {
             // Actors
-            new StringViewModel("Anzug"),
+            new StringViewModel("Fake"),
+            new StringViewModel("Marc"),
+            new StringViewModel("Anika"),
+            new StringViewModel("Tom"),
             new StringViewModel("Drake"),
+            new StringViewModel("VikingWarrior"),
+            new StringViewModel("EnglandWarrior"),
 
             // Effects
             new StringViewModel("Poop"),
             new StringViewModel("Blood"),
             new StringViewModel("Cry"),
+
+            // Environment
+            new StringViewModel("VikingCity"),
+            new StringViewModel("EnglandCity"),
         };
 
         public ObservableCollection<StringViewModel> SceneReferenceNames { get; } = new ObservableCollection<StringViewModel>();
@@ -141,7 +150,6 @@ namespace TreeEditorControl.Example.Dialog
             new StringViewModel("Attack"),
             new StringViewModel("Damage"),
             new StringViewModel("Die"),
-            new StringViewModel("Happy"),
         };
 
         public ObservableCollection<NamedVector> LocationVectors { get; } = new ObservableCollection<NamedVector>
@@ -177,6 +185,7 @@ namespace TreeEditorControl.Example.Dialog
             CurrentGameName = string.Empty;
             Actors.Clear();
             Variables.Clear();
+            SceneReferenceNames.Clear();
             EditorViewModel.ClearRootNodes();
 
             _fileLoadHandler.Load(Path.Combine(GameDataDirectoryName, SelectedFile), this);

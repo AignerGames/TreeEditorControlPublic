@@ -316,7 +316,8 @@
                                                 </StackPanel>
                                                 <StackPanel Orientation="Horizontal">
                                                     <TextBlock Text="WaitUntilDone: " Width="100"/>
-                                                    <CheckBox IsChecked="{Binding WaitUntilDone}"/>
+                                                    <TextBox Text="{Binding WaitUntilDoneTime}" MinWidth="100"/>
+                                                    <TextBlock Text=" (Normalized time 0.0-1.0)"/>
                                                 </StackPanel>
                                             </StackPanel>
                                         </DataTemplate>
@@ -325,7 +326,7 @@
                                             <StackPanel>
                                                 <StackPanel Orientation="Horizontal">
                                                     <TextBlock Text="Duration (sec): " Width="100"/>
-                                                    <TextBox Text="{Binding Duration}" MinWidth="200"/>
+                                                    <TextBox Text="{Binding Duration}" MinWidth="100"/>
                                                 </StackPanel>
                                             </StackPanel>
                                         </DataTemplate>

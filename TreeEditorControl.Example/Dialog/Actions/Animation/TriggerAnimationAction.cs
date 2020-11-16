@@ -10,14 +10,14 @@ namespace TreeEditorControl.Example.Dialog.Actions
     {
         private UndoRedoValueWrapper<string> _referenceName;
         private UndoRedoValueWrapper<string> _triggerName;
-        private UndoRedoValueWrapper<bool> _waitUntilDone;
+        private UndoRedoValueWrapper<float> _waitUntilDoneTime;
 
         public TriggerAnimationAction(IEditorEnvironment editorEnvironment, string referenceName = null, string triggerName = null,
-            bool waitUntilDone = false) : base(editorEnvironment)
+            float waitUntilDoneTime = 0) : base(editorEnvironment)
         {
             _referenceName = CreateUndoRedoWrapper(nameof(ReferenceName), referenceName);
             _triggerName = CreateUndoRedoWrapper(nameof(TriggerName), triggerName);
-            _waitUntilDone = CreateUndoRedoWrapper(nameof(WaitUntilDone), waitUntilDone);
+            _waitUntilDoneTime = CreateUndoRedoWrapper(nameof(WaitUntilDoneTime), waitUntilDoneTime);
 
             UpdateHeader();
         }
@@ -34,15 +34,18 @@ namespace TreeEditorControl.Example.Dialog.Actions
             set => _triggerName.Value = value;
         }
 
-        public bool WaitUntilDone
+        /// <summary>
+        /// Normalized time (0-1), 0 means don't wait, 1 means wait until fully done.
+        /// </summary>
+        public float WaitUntilDoneTime
         {
-            get => _waitUntilDone.Value;
-            set => _waitUntilDone.Value = value;
+            get => _waitUntilDoneTime.Value;
+            set => _waitUntilDoneTime.Value = value;
         }
 
         public TriggerAnimationAction CreateCopy()
         {
-            return new TriggerAnimationAction(EditorEnvironment, ReferenceName, TriggerName, WaitUntilDone);
+            return new TriggerAnimationAction(EditorEnvironment, ReferenceName, TriggerName, WaitUntilDoneTime);
         }
 
         public override T Accept<T>(IDialogActionVisitor<T> visitor) => visitor.VisitTriggerAnimation(this);
@@ -56,7 +59,7 @@ namespace TreeEditorControl.Example.Dialog.Actions
 
         private void UpdateHeader()
         {
-            Header = DialogHelper.GetHeaderString("TriggerAnimationAction", $"{ReferenceName}: {TriggerName}");
+            Header = DialogHelper.GetHeaderString("TriggerAnimationAction", $"{ReferenceName}: {TriggerName} {WaitUntilDoneTime * 100}%");
         }
     }
 }
