@@ -16,6 +16,8 @@ using TreeEditorControl.Environment;
 using TreeEditorControl.Nodes;
 using TreeEditorControl.Example.Dialog.Actions;
 using TreeEditorControl.Example.Dialog.Conditions;
+using TreeEditorControl.Example.Combat;
+using StoryCreator.Common.Data.Combat;
 
 namespace TreeEditorControl.Example.Data
 {
@@ -46,7 +48,6 @@ namespace TreeEditorControl.Example.Data
             IDialogActionVisitor<InteractionCommandData>,
             IDialogConditionVisitor<InteractionConditionData>
         {
-
             public GameData CreateGameData(string gameName, IEnumerable<DialogRootNode> dialogRootNodes)
             {
                 var gameData = new GameData { Name = gameName };
@@ -168,6 +169,19 @@ namespace TreeEditorControl.Example.Data
                     SuccessCommand = CreateCommandData(node.SuccessActions.Nodes),
                     FailCommand = CreateCommandData(node.FailActions.Nodes)
                 };
+            }
+
+            public InteractionCommandData VisitBattlefieldAction(BattlefieldAction node)
+            {
+                var data = new BattlefieldInteractionData
+                {
+                    WinCommand = CreateCommandData(node.WinActions.Nodes),
+                    LoseCommand = CreateCommandData(node.LoseActions.Nodes)
+                };
+
+                data.Enemies.AddRange(node.Enemies);
+
+                return data;
             }
 
             public InteractionCommandData VisitParallelAction(ParallelAction node)

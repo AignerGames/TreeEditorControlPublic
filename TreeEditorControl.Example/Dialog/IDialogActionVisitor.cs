@@ -19,6 +19,8 @@ namespace TreeEditorControl.Example.Dialog
 
         T VisitModifyPlayerVariable(ModifyPlayerVariableAction node);
 
+        T VisitBattlefieldAction(BattlefieldAction node);
+
         T VisitParallelAction(ParallelAction node);
 
         T VisitSequenceAction(SequenceAction node);

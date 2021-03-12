@@ -14,6 +14,7 @@ using StoryCreator.Common.Data.Interaction.Commands;
 using StoryCreator.Common.Data.Interaction.Conditions;
 using TreeEditorControl.Environment;
 using TreeEditorControl.Nodes;
+using TreeEditorControl.Utility;
 using TreeEditorControl.Example.Dialog.Actions;
 using TreeEditorControl.Example.Dialog.Conditions;
 
@@ -237,6 +238,21 @@ namespace TreeEditorControl.Example.Data
 
                 var failActions = CreateCommandNodes(data.FailCommand);
                 node.FailActions.AddNodes(failActions);
+
+                return node;
+            }
+
+            public DialogAction VisitBattlefieldInteraction(BattlefieldInteractionData data)
+            {
+                var node = new BattlefieldAction(_editorEnvironment);
+
+                node.Enemies.AddItems(data.Enemies);
+
+                var winActions = CreateCommandNodes(data.WinCommand);
+                node.WinActions.AddNodes(winActions);
+
+                var loseActions = CreateCommandNodes(data.LoseCommand);
+                node.LoseActions.AddNodes(loseActions);
 
                 return node;
             }

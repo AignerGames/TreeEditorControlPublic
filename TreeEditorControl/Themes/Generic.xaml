@@ -129,13 +129,13 @@
                             <RowDefinition Height="Auto"/>
 
                             <!-- Catalog / Tree  -->
-                            <RowDefinition Height="7*"/>
+                            <RowDefinition Height="6*"/>
 
                             <!-- Grid splitter -->
                             <RowDefinition Height="5"/>
 
                             <!-- Node info box -->
-                            <RowDefinition Height="3*"/>
+                            <RowDefinition Height="4*"/>
 
                         </Grid.RowDefinitions>
 

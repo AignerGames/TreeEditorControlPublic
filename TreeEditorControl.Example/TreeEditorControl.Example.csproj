@@ -58,12 +58,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Combat\Enemy.cs" />
     <Compile Include="Data\EditorData.cs" />
     <Compile Include="Data\FileSaveHandler.cs" />
     <Compile Include="Data\FileLoadHandler.cs" />
     <Compile Include="Dialog\Actions\Animation\MoveToAction.cs" />
     <Compile Include="Dialog\Actions\Animation\TriggerAnimationAction.cs" />
     <Compile Include="Dialog\Actions\Animation\WaitAction.cs" />
+    <Compile Include="Dialog\Actions\BattlefieldAction.cs" />
     <Compile Include="Dialog\Actions\ChoiceGroup.cs" />
     <Compile Include="Dialog\Actions\ChoiceItem.cs" />
     <Compile Include="Dialog\Actions\ConditionalAction.cs" />

@@ -14,6 +14,7 @@ using TreeEditorControl.Environment.Implementation;
 using TreeEditorControl.Commands;
 using TreeEditorControl.Example.Data;
 using TreeEditorControl.Nodes;
+using TreeEditorControl.Example.Combat;
 
 namespace TreeEditorControl.Example.Dialog
 {
@@ -123,13 +124,19 @@ namespace TreeEditorControl.Example.Dialog
         public ObservableCollection<StringViewModel> SceneObjects { get; } = new ObservableCollection<StringViewModel>
         {
             // Actors
-            new StringViewModel("Fake"),
-            new StringViewModel("Marc"),
-            new StringViewModel("Anika"),
-            new StringViewModel("Tom"),
-            new StringViewModel("Drake"),
-            new StringViewModel("VikingWarrior"),
-            new StringViewModel("EnglandWarrior"),
+            //new StringViewModel("Fake"),
+            //new StringViewModel("Marc"),
+            //new StringViewModel("Anika"),
+            //new StringViewModel("Tom"),
+            //new StringViewModel("Drake"),
+            //new StringViewModel("VikingWarrior"),
+            //new StringViewModel("EnglandWarrior"),
+            new StringViewModel("HaloBackground"),
+            new StringViewModel("MC_Drake"),
+            new StringViewModel("MC_Tom"),
+            new StringViewModel("MC_Blade"),
+            new StringViewModel("MC_Fake"),
+            new StringViewModel("MC_Happy"),
 
             // Effects
             new StringViewModel("Poop"),
@@ -159,6 +166,12 @@ namespace TreeEditorControl.Example.Dialog
             new NamedVector("Center", 0, 0, 0),
             new NamedVector("Right Inner", 2, 0, 0),
             new NamedVector("Right Outer", 4, 0, 0),
+        };
+
+        public ObservableCollection<Enemy> Enemies { get; } = new ObservableCollection<Enemy>
+        {
+            new Enemy{ Name = "Rat" },
+            new Enemy{ Name = "Bat" }
         };
 
         public override void HandleClosing(CancelEventArgs args)

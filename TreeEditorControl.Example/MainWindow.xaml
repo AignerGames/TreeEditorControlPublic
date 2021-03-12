@@ -7,6 +7,7 @@
         xmlns:dialog="clr-namespace:TreeEditorControl.Example.Dialog"
         xmlns:dialogActions="clr-namespace:TreeEditorControl.Example.Dialog.Actions"
         xmlns:dialogConditions="clr-namespace:TreeEditorControl.Example.Dialog.Conditions"
+        xmlns:combat="clr-namespace:TreeEditorControl.Example.Combat"
         xmlns:treeEditor="clr-namespace:TreeEditorControl.Controls;assembly=TreeEditorControl"
         mc:Ignorable="d"
         Title="TreeEditorControl Examples" Height="800" Width="1000" Background="SlateGray">
@@ -224,6 +225,27 @@
                                                     <TextBox Text="{Binding MaxValue}" MinWidth="200"/>
                                                 </StackPanel>
                                             </StackPanel>
+                                        </DataTemplate>
+
+                                        <DataTemplate DataType="{x:Type dialogActions:BattlefieldAction}">
+                                            <Grid>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="Auto"/>
+                                                    <RowDefinition/>
+                                                </Grid.RowDefinitions>
+
+                                                <StackPanel Grid.Row="0" HorizontalAlignment="Left">
+                                                    <TextBlock Text="Enemies"/>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <Button Content="Add" Command="{Binding AddEnemyCommand}" Margin="5"/>
+                                                        <Button Content="Remove" Command="{Binding RemoveEnemyCommand}" Margin="5"/>
+                                                    </StackPanel>
+                                                    <ComboBox ItemsSource="{Binding ElementName=DialogRootControl, Path=DataContext.Enemies}" SelectedValue="{Binding NewEnemey}"
+                                                              DisplayMemberPath="Name" SelectedValuePath="Name" Width="300" Margin="5"/>
+                                                </StackPanel>
+
+                                                <ListBox Grid.Row="1" ItemsSource="{Binding Enemies}" SelectedItem="{Binding SelectedEnemy}"/>
+                                            </Grid>
                                         </DataTemplate>
 
                                         <DataTemplate DataType="{x:Type dialogActions:ParallelAction}">
