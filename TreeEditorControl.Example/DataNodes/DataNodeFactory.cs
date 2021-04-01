@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Reflection;
+using System.Collections.ObjectModel;
 
 using TreeEditorControl.Catalog;
 using TreeEditorControl.Nodes;
@@ -16,6 +17,8 @@ namespace TreeEditorControl.Example.DataNodes
     public class DataNodeFactory : ITreeNodeFactory
     {
         private readonly IEditorEnvironment _editorEnvironment;
+
+        private readonly Dictionary<Type, IComboBoxValueProvider> _enumValueProviderCache = new Dictionary<Type, IComboBoxValueProvider>();
 
         public DataNodeFactory(IEditorEnvironment editorEnvironment)
         {
@@ -88,7 +91,22 @@ namespace TreeEditorControl.Example.DataNodes
 
         private ComboBoxProperty CreateComboBoxProperty(ComboBoxPropertyAttribute comboBoxPropertyAttribute, PropertyInfo propertyInfo)
         {
-            var valueProvoder = ComboBoxValueProviders[comboBoxPropertyAttribute.ValueProviderId];
+            IComboBoxValueProvider valueProvoder;
+
+            if (comboBoxPropertyAttribute.ValueProviderId == null && propertyInfo.PropertyType.IsEnum)
+            {
+                if(!_enumValueProviderCache.TryGetValue(propertyInfo.PropertyType, out valueProvoder))
+                {
+                    var enumValues = new ObservableCollection<object>(Enum.GetValues(propertyInfo.PropertyType).OfType<object>());
+                    valueProvoder = new ComboBoxValueProvider(() => enumValues);
+
+                    _enumValueProviderCache[propertyInfo.PropertyType] = valueProvoder;
+                }
+            }
+            else
+            {
+                valueProvoder = ComboBoxValueProviders[comboBoxPropertyAttribute.ValueProviderId];
+            }
 
             return new ComboBoxProperty(_editorEnvironment, valueProvoder, propertyInfo, comboBoxPropertyAttribute.PropertyName);
         }
@@ -96,6 +114,13 @@ namespace TreeEditorControl.Example.DataNodes
         private ObjectProperty CreateObjectProperty(ObjectPropertyAttribute objectPropertyAttribute, PropertyInfo propertyInfo)
         {
             return new ObjectProperty(_editorEnvironment, propertyInfo, objectPropertyAttribute.PropertyName);
+        }
+
+        public enum MyEnum
+        {
+            Test,
+            Other,
+            Last
         }
 
         [Serializable]
@@ -115,6 +140,9 @@ namespace TreeEditorControl.Example.DataNodes
 
             [TextBoxProperty]
             public int Number { get; set; }
+
+            [ComboBoxProperty]
+            public MyEnum EnumValue { get; set; }
 
             [ObjectProperty]
             public List<SubNodeData> SubNodes { get; } = new List<SubNodeData>();

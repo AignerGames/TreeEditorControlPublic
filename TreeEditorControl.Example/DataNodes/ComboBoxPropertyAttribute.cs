@@ -8,7 +8,7 @@ namespace TreeEditorControl.Example.DataNodes
 {
     public class ComboBoxPropertyAttribute : NodePropertyAttribute
     {
-        public ComboBoxPropertyAttribute(string valueProviderId, string propertyName = null) : base(propertyName)
+        public ComboBoxPropertyAttribute(string valueProviderId = null, string propertyName = null) : base(propertyName)
         {
             ValueProviderId = valueProviderId;
         }

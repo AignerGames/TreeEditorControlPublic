@@ -33,7 +33,9 @@ namespace TreeEditorControl.Example.DataNodes
             {
                 try
                 {
-                    var convertedValue = Convert.ChangeType(value, PropertyInfo.PropertyType);
+                    var convertedValue = PropertyInfo.PropertyType.IsEnum && value is string stringValue
+                        ? Enum.Parse(PropertyInfo.PropertyType, stringValue)
+                        : Convert.ChangeType(value, PropertyInfo.PropertyType);
 
                     _valueWrapper.Value = convertedValue;
                 }
