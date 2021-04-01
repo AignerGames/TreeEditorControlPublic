@@ -21,8 +21,6 @@ namespace TreeEditorControl.ViewModel
     {
         private readonly ObservableCollection<ITreeNode> _rootNodes = new ObservableCollection<ITreeNode>();
 
-        private readonly ITreeNodeFactory _nodeFactory;
-
         private NodeCatalogItem _selectedCatalogItem;
 
         private ITreeNode _selectedNode;
@@ -37,10 +35,8 @@ namespace TreeEditorControl.ViewModel
         /// </summary>
         private ITreeNode _clipboardNode;
 
-        public TreeEditorViewModel(IEditorEnvironment editorEnvironment, ITreeNodeFactory nodeFactory) : base(editorEnvironment)
+        public TreeEditorViewModel(IEditorEnvironment editorEnvironment) : base(editorEnvironment)
         {
-            _nodeFactory = nodeFactory;
-
             RootNodes = new ReadOnlyObservableCollection<ITreeNode>(_rootNodes);
 
             // These commands are used for keyboard shortcuts
@@ -393,7 +389,7 @@ namespace TreeEditorControl.ViewModel
                 return false;
             }
 
-            return targetNode is ITreeNodeContainer targetContainer && targetContainer.IsNodeTypeSupported(sourceNode.GetType());
+            return targetNode is ITreeNodeContainer targetContainer && targetContainer.IsNodeTypeSupported(sourceNode.GetNodeType());
         }
 
         public void Drop(ITreeNode sourceNode, ITreeNode targetNode)
@@ -572,7 +568,7 @@ namespace TreeEditorControl.ViewModel
             // Disabled undo redo during the node initialization
             UndoRedoStack.IsEnabled = false;
 
-            var node = _nodeFactory.CreateNode(catalogItem);
+            var node = EditorEnvironment.NodeFactory.CreateNode(catalogItem);
 
             if(node is IInitializeFromCatalogItem initializeFromCatalogItem)
             {

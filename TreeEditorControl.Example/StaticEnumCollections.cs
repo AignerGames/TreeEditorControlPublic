@@ -1,5 +1,4 @@
-﻿using StoryCreator.Common.Interaction;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -10,11 +9,6 @@ namespace TreeEditorControl.Example
 {
     public static class StaticEnumCollections
     {
-        public static ReadOnlyObservableCollection<ValueCompareKind> ValueCompareKinds { get; } = Create<ValueCompareKind>();
-
-        public static ReadOnlyObservableCollection<ValueModifyKind> ValueModifyKinds { get; } = Create<ValueModifyKind>();
-
-        public static ReadOnlyObservableCollection<MultiConditionKind> MultiConditionKinds { get; } = Create<MultiConditionKind>();
 
         private static ReadOnlyObservableCollection<T> Create<T>() where T : Enum
         {

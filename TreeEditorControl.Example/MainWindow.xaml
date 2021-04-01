@@ -5,9 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TreeEditorControl.Example"
         xmlns:dialog="clr-namespace:TreeEditorControl.Example.Dialog"
-        xmlns:dialogActions="clr-namespace:TreeEditorControl.Example.Dialog.Actions"
-        xmlns:dialogConditions="clr-namespace:TreeEditorControl.Example.Dialog.Conditions"
-        xmlns:combat="clr-namespace:TreeEditorControl.Example.Combat"
+        xmlns:nodes="clr-namespace:TreeEditorControl.Example.DataNodes"
         xmlns:treeEditor="clr-namespace:TreeEditorControl.Controls;assembly=TreeEditorControl"
         mc:Ignorable="d"
         Title="TreeEditorControl Examples" Height="800" Width="1000" Background="SlateGray">
@@ -64,31 +62,31 @@
 
 
                                 <!-- Actors -->
-                                <Expander  Grid.Row="1" Header="Actors">
+                                <!--<Expander  Grid.Row="1" Header="Actors">
                                     <DataGrid ItemsSource="{Binding Actors}" MaxHeight="300" AutoGenerateColumns="False" ColumnWidth="*">
                                         <DataGrid.Columns>
                                             <DataGridTextColumn Header="Actors" Binding="{Binding Value}" MinWidth="300"/>
                                         </DataGrid.Columns>
                                     </DataGrid>
-                                </Expander>
+                                </Expander>-->
 
                                 <!-- Variables -->
-                                <Expander Grid.Row="2" Header="Variables">
+                                <!--<Expander Grid.Row="2" Header="Variables">
                                     <DataGrid ItemsSource="{Binding Variables}" MaxHeight="300" AutoGenerateColumns="False" ColumnWidth="*">
                                         <DataGrid.Columns>
                                             <DataGridTextColumn Header="Variables" Binding="{Binding Value}" MinWidth="300"/>
                                         </DataGrid.Columns>
                                     </DataGrid>
-                                </Expander>
+                                </Expander>-->
 
                                 <!-- Scene References -->
-                                <Expander Grid.Row="3" Header="Scene References">
+                                <!--<Expander Grid.Row="3" Header="Scene References">
                                     <DataGrid ItemsSource="{Binding SceneReferenceNames}" MaxHeight="300" AutoGenerateColumns="False" ColumnWidth="*">
                                         <DataGrid.Columns>
                                             <DataGridTextColumn Header="Names" Binding="{Binding Value}" MinWidth="300"/>
                                         </DataGrid.Columns>
                                     </DataGrid>
-                                </Expander>
+                                </Expander>-->
 
                                 <!-- Dialog Tree -->
                                 <treeEditor:TreeEditor Grid.Row="4" DataContext="{Binding EditorViewModel}">
@@ -140,9 +138,7 @@
 
                                     <treeEditor:TreeEditor.Resources>
                                         
-                                        <!-- Dialog Root -->
-
-                                        <DataTemplate DataType="{x:Type dialog:DialogRootNode}">
+                                        <!--<DataTemplate DataType="{x:Type dialog:DialogRootNode}">
                                             <StackPanel>
                                                 <TextBlock Text="Dialog root node"/>
                                                 <StackPanel Orientation="Horizontal">
@@ -150,236 +146,82 @@
                                                     <TextBox Text="{Binding Name}" MinWidth="200" VerticalAlignment="Stretch"/>
                                                 </StackPanel>
                                             </StackPanel>
-                                        </DataTemplate>
+                                        </DataTemplate>-->
 
+                                        <DataTemplate DataType="{x:Type nodes:DataNode}">
+                                            
+                                            <!-- Node Properties -->
+                                            <ItemsControl ItemsSource="{Binding Properties}">
+                                                <ItemsControl.ItemContainerStyle>
+                                                    <Style TargetType="ContentPresenter">
+                                                        <Setter Property="Margin" Value="3"/>
+                                                    </Style>
+                                                </ItemsControl.ItemContainerStyle>
 
-                                        <!-- Dialog Actions -->
+                                                <ItemsControl.Resources>
 
-                                        <DataTemplate DataType="{x:Type dialogActions:ShowTextAction}">
-                                            <StackPanel>
-                                                <StackPanel Orientation="Horizontal">
-                                                    <TextBlock Text="Actor: "/>
-                                                    <ComboBox ItemsSource="{Binding ElementName=DialogRootControl, Path=DataContext.Actors}" SelectedValue="{Binding Actor}"
-                                                              DisplayMemberPath="Value" SelectedValuePath="Value" Width="300"/>
-                                                </StackPanel>
-                                                <StackPanel Orientation="Horizontal">
-                                                    <TextBlock Text="Text: "/>
-                                                    <TextBox Text="{Binding Text}" MinWidth="800" VerticalAlignment="Stretch" AcceptsReturn="True"/>
-                                                </StackPanel>
-                                            </StackPanel>
-                                        </DataTemplate>
+                                                    <Style x:Key="PropertyName" TargetType="{x:Type TextBlock}">
+                                                        <Setter Property="Text" Value="{Binding Name}"/>
+                                                        <Setter Property="FontSize" Value="12"/>
+                                                        <Setter Property="FontWeight" Value="Bold"/>
+                                                        <Setter Property="VerticalAlignment" Value="Center"/>
+                                                    </Style>
 
-                                        <DataTemplate DataType="{x:Type dialogActions:ChoiceItem}">
-                                            <StackPanel>
-                                                <StackPanel Orientation="Horizontal">
-                                                    <TextBlock Text="Text: "/>
-                                                    <TextBox Text="{Binding Text}" MinWidth="800" VerticalAlignment="Stretch"/>
-                                                </StackPanel>
-                                            </StackPanel>
-                                        </DataTemplate>
+                                                    <DataTemplate DataType="{x:Type nodes:TextBoxProperty}">
+                                                        <StackPanel>
+                                                            <StackPanel.Style>
+                                                                <Style TargetType="StackPanel">
+                                                                    <Setter Property="Orientation" Value="Horizontal"/>
+                                                                    
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding Multiline}" Value="True">
+                                                                            <Setter Property="Orientation" Value="Vertical"/>
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </StackPanel.Style>
 
-                                        <DataTemplate DataType="{x:Type dialogActions:ChoiceGroup}">
-                                            <StackPanel>
-                                                <StackPanel Orientation="Horizontal">
-                                                    <TextBlock Text="Actor: "/>
-                                                    <ComboBox ItemsSource="{Binding ElementName=DialogRootControl, Path=DataContext.Actors}" SelectedValue="{Binding Actor}"
-                                                              DisplayMemberPath="Value" SelectedValuePath="Value" Width="300"/>
-                                                </StackPanel>
-                                                <StackPanel Orientation="Horizontal">
-                                                    <TextBlock Text="Text: "/>
-                                                    <TextBox Text="{Binding Text}" MinWidth="800" VerticalAlignment="Stretch" AcceptsReturn="True"/>
-                                                </StackPanel>
-                                            </StackPanel>
-                                        </DataTemplate>
+                                                            <TextBlock Style="{StaticResource PropertyName}"/>
 
-                                        <DataTemplate DataType="{x:Type dialogActions:ModifyPlayerVariableAction}">
-                                            <StackPanel>
-                                                <StackPanel Orientation="Horizontal">
-                                                    <TextBlock Text="Variable: " Width="100"/>
-                                                    <ComboBox ItemsSource="{Binding ElementName=DialogRootControl, Path=DataContext.Variables}" SelectedValue="{Binding Variable}"
-                                                              DisplayMemberPath="Value" SelectedValuePath="Value" Width="300"/>
-                                                </StackPanel>
-                                                <StackPanel Orientation="Horizontal">
-                                                    <TextBlock Text="ModifyKind: " Width="100"/>
-                                                    <ComboBox ItemsSource="{x:Static local:StaticEnumCollections.ValueModifyKinds}" SelectedValue="{Binding ModifyKind}"/>
-                                                </StackPanel>
-                                                <StackPanel Orientation="Horizontal">
-                                                    <TextBlock Text="Value: " Width="100"/>
-                                                    <TextBox Text="{Binding Value}" MinWidth="200"/>
-                                                </StackPanel>
-                                            </StackPanel>
-                                        </DataTemplate>
+                                                            <TextBox Text="{Binding Value}" AcceptsReturn="{Binding Multiline}">
+                                                                <TextBox.Style>
+                                                                    <Style TargetType="TextBox">
+                                                                        <Setter Property="Margin" Value="10, 0, 0, 0"/>
+                                                                        <Setter Property="MinWidth" Value="100"/>
+                                                                        <Setter Property="AcceptsReturn" Value="False"/>
+                                                                        
+                                                                        <Style.Triggers>
+                                                                            <DataTrigger Binding="{Binding Multiline}" Value="True">
+                                                                                <Setter Property="Margin" Value="0, 5, 0, 5"/>
+                                                                                <Setter Property="AcceptsReturn" Value="True"/>
+                                                                                <Setter Property="MinHeight" Value="30"/>
+                                                                            </DataTrigger>
+                                                                        </Style.Triggers>
+                                                                    </Style>
+                                                                </TextBox.Style>
+                                                            </TextBox>
+                                                        </StackPanel>
+                                                    </DataTemplate>
 
-                                        <DataTemplate DataType="{x:Type dialogActions:ConditionalAction}">
-                                            <TextBlock Text="If / Else Action"/>
-                                        </DataTemplate>
+                                                    <DataTemplate DataType="{x:Type nodes:ComboBoxProperty}">
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <TextBlock Style="{StaticResource PropertyName}"/>
+                                                            <ComboBox Text="{Binding Value}" ItemsSource="{Binding Values}" Margin="10, 0, 0, 0" MinWidth="100"/>
+                                                        </StackPanel>
+                                                    </DataTemplate>
 
-                                        <DataTemplate DataType="{x:Type dialogActions:DiceRollAction}">
-                                            <StackPanel>
-                                                <StackPanel Orientation="Horizontal">
-                                                    <TextBlock Text="Target Value: " Width="100"/>
-                                                    <TextBox Text="{Binding TargetValue}" MinWidth="200"/>
-                                                </StackPanel>
-                                                <StackPanel Orientation="Horizontal">
-                                                    <TextBlock Text="Max Value: " Width="100"/>
-                                                    <TextBox Text="{Binding MaxValue}" MinWidth="200"/>
-                                                </StackPanel>
-                                            </StackPanel>
-                                        </DataTemplate>
+                                                    <DataTemplate DataType="{x:Type nodes:ObjectProperty}">
+                                                        <Expander IsExpanded="{Binding IsExpanded}">
+                                                            <Expander.Header>
+                                                                <TextBlock Style="{StaticResource PropertyName}"/>
+                                                            </Expander.Header>
+                                                            <ContentControl Content="{Binding DataNode}" Margin="10, 0,0,0"/>
+                                                        </Expander>
+                                                    </DataTemplate>
 
-                                        <DataTemplate DataType="{x:Type dialogActions:BattlefieldAction}">
-                                            <Grid>
-                                                <Grid.RowDefinitions>
-                                                    <RowDefinition Height="Auto"/>
-                                                    <RowDefinition/>
-                                                </Grid.RowDefinitions>
+                                                </ItemsControl.Resources>
+                                            </ItemsControl>
 
-                                                <StackPanel Grid.Row="0" HorizontalAlignment="Left">
-                                                    <TextBlock Text="Enemies"/>
-                                                    <StackPanel Orientation="Horizontal">
-                                                        <Button Content="Add" Command="{Binding AddEnemyCommand}" Margin="5"/>
-                                                        <Button Content="Remove" Command="{Binding RemoveEnemyCommand}" Margin="5"/>
-                                                    </StackPanel>
-                                                    <ComboBox ItemsSource="{Binding ElementName=DialogRootControl, Path=DataContext.Enemies}" SelectedValue="{Binding NewEnemey}"
-                                                              DisplayMemberPath="Name" SelectedValuePath="Name" Width="300" Margin="5"/>
-                                                </StackPanel>
-
-                                                <ListBox Grid.Row="1" ItemsSource="{Binding Enemies}" SelectedItem="{Binding SelectedEnemy}"/>
-                                            </Grid>
-                                        </DataTemplate>
-
-                                        <DataTemplate DataType="{x:Type dialogActions:ParallelAction}">
-                                            <TextBlock Text="Parallel Actions"/>
-                                        </DataTemplate>
-
-                                        <DataTemplate DataType="{x:Type dialogActions:SequenceAction}">
-                                            <TextBlock Text="Sequence Actions"/>
-                                        </DataTemplate>
-
-                                        <DataTemplate DataType="{x:Type dialogActions:AddSceneObjectAction}">
-                                            <StackPanel>
-                                                <StackPanel Orientation="Horizontal">
-                                                    <TextBlock Text="Object: " Width="100"/>
-                                                    <ComboBox ItemsSource="{Binding ElementName=DialogRootControl, Path=DataContext.SceneObjects}" SelectedValue="{Binding ObjectName}"
-                                                              DisplayMemberPath="Value" SelectedValuePath="Value" Width="300"/>
-                                                </StackPanel>
-                                                <StackPanel Orientation="Horizontal">
-                                                    <TextBlock Text="ReferenceName: " Width="100"/>
-                                                    <ComboBox ItemsSource="{Binding ElementName=DialogRootControl, Path=DataContext.SceneReferenceNames}" SelectedValue="{Binding ReferenceName}"
-                                                              DisplayMemberPath="Value" SelectedValuePath="Value" Width="300"/>
-                                                </StackPanel>
-                                                <StackPanel Orientation="Horizontal">
-                                                    <local:VectorEditControl Text="Position" Vector="{Binding Position}" 
-                                                                             VectorSelection="{Binding ElementName=DialogRootControl, Path=DataContext.LocationVectors}"/>
-                                                </StackPanel>
-                                                <StackPanel Orientation="Horizontal">
-                                                    <local:VectorEditControl Text="Rotation" Vector="{Binding Rotation}"/>
-                                                </StackPanel>
-                                            </StackPanel>
-                                        </DataTemplate>
-
-                                        <DataTemplate DataType="{x:Type dialogActions:RemoveSceneObjectAction}">
-                                            <StackPanel>
-                                                <StackPanel Orientation="Horizontal">
-                                                    <TextBlock Text="ReferenceName: " Width="100"/>
-                                                    <ComboBox ItemsSource="{Binding ElementName=DialogRootControl, Path=DataContext.SceneReferenceNames}" SelectedValue="{Binding ReferenceName}"
-                                                              DisplayMemberPath="Value" SelectedValuePath="Value" Width="300"/>
-                                                </StackPanel>
-                                            </StackPanel>
-                                        </DataTemplate>
-
-                                        <DataTemplate DataType="{x:Type dialogActions:LookAtAction}">
-                                            <StackPanel>
-                                                <StackPanel Orientation="Horizontal">
-                                                    <TextBlock Text="ReferenceName: " Width="100"/>
-                                                    <ComboBox ItemsSource="{Binding ElementName=DialogRootControl, Path=DataContext.SceneReferenceNames}" SelectedValue="{Binding ReferenceName}"
-                                                              DisplayMemberPath="Value" SelectedValuePath="Value" Width="300"/>
-                                                </StackPanel>
-                                                <StackPanel Orientation="Horizontal">
-                                                    <local:VectorEditControl Text="Position" Vector="{Binding TargetPosition}" 
-                                                                             VectorSelection="{Binding ElementName=DialogRootControl, Path=DataContext.LocationVectors}"/>
-                                                </StackPanel>
-                                                <StackPanel Orientation="Horizontal">
-                                                    <TextBlock Text="Duration (sec): " Width="100"/>
-                                                    <TextBox Text="{Binding Duration}" MinWidth="200"/>
-                                                </StackPanel>
-                                            </StackPanel>
-                                        </DataTemplate>
-
-                                        <DataTemplate DataType="{x:Type dialogActions:MoveToAction}">
-                                            <StackPanel>
-                                                <StackPanel Orientation="Horizontal">
-                                                    <TextBlock Text="ReferenceName: " Width="100"/>
-                                                    <ComboBox ItemsSource="{Binding ElementName=DialogRootControl, Path=DataContext.SceneReferenceNames}" SelectedValue="{Binding ReferenceName}"
-                                                              DisplayMemberPath="Value" SelectedValuePath="Value" Width="300"/>
-                                                </StackPanel>
-                                                <StackPanel Orientation="Horizontal">
-                                                    <local:VectorEditControl Text="Position" Vector="{Binding TargetPosition}" 
-                                                                             VectorSelection="{Binding ElementName=DialogRootControl, Path=DataContext.LocationVectors}"/>
-                                                </StackPanel>
-                                                <StackPanel Orientation="Horizontal">
-                                                    <TextBlock Text="Duration (sec): " Width="100"/>
-                                                    <TextBox Text="{Binding Duration}" MinWidth="200"/>
-                                                </StackPanel>
-                                            </StackPanel>
-                                        </DataTemplate>
-
-                                        <DataTemplate DataType="{x:Type dialogActions:TriggerAnimationAction}">
-                                            <StackPanel>
-                                                <StackPanel Orientation="Horizontal">
-                                                    <TextBlock Text="ReferenceName: " Width="100"/>
-                                                    <ComboBox ItemsSource="{Binding ElementName=DialogRootControl, Path=DataContext.SceneReferenceNames}" SelectedValue="{Binding ReferenceName}"
-                                                              DisplayMemberPath="Value" SelectedValuePath="Value" Width="300"/>
-                                                </StackPanel>
-                                                <StackPanel Orientation="Horizontal">
-                                                    <TextBlock Text="Trigger Name: " Width="100"/>
-                                                    <ComboBox ItemsSource="{Binding ElementName=DialogRootControl, Path=DataContext.AnimationTriggers}" SelectedValue="{Binding TriggerName}"
-                                                              DisplayMemberPath="Value" SelectedValuePath="Value" Width="300"/>
-                                                </StackPanel>
-                                                <StackPanel Orientation="Horizontal">
-                                                    <TextBlock Text="WaitUntilDone: " Width="100"/>
-                                                    <TextBox Text="{Binding WaitUntilDoneTime}" MinWidth="100"/>
-                                                    <TextBlock Text=" (Normalized time 0.0-1.0)"/>
-                                                </StackPanel>
-                                            </StackPanel>
-                                        </DataTemplate>
-
-                                        <DataTemplate DataType="{x:Type dialogActions:WaitAction}">
-                                            <StackPanel>
-                                                <StackPanel Orientation="Horizontal">
-                                                    <TextBlock Text="Duration (sec): " Width="100"/>
-                                                    <TextBox Text="{Binding Duration}" MinWidth="100"/>
-                                                </StackPanel>
-                                            </StackPanel>
-                                        </DataTemplate>
-
-                                        <!-- Dialog Conditions -->
-
-                                        <DataTemplate DataType="{x:Type dialogConditions:ConditionNodeContainer}">
-                                            <StackPanel>
-                                                <StackPanel Orientation="Horizontal">
-                                                    <TextBlock Text="ConditionKind: " Width="100"/>
-                                                    <ComboBox ItemsSource="{x:Static local:StaticEnumCollections.MultiConditionKinds}" SelectedValue="{Binding ConditionKind}"/>
-                                                </StackPanel>
-                                            </StackPanel>
-                                        </DataTemplate>
-
-                                        <DataTemplate DataType="{x:Type dialogConditions:PlayerVariableCondition}">
-                                            <StackPanel>
-                                                <StackPanel Orientation="Horizontal">
-                                                    <TextBlock Text="Variable: " Width="100"/>
-                                                    <ComboBox ItemsSource="{Binding ElementName=DialogRootControl, Path=DataContext.Variables}" SelectedValue="{Binding Variable}"
-                                                              DisplayMemberPath="Value" SelectedValuePath="Value" Width="300"/>
-                                                </StackPanel>
-                                                <StackPanel Orientation="Horizontal">
-                                                    <TextBlock Text="CompareMode: " Width="100"/>
-                                                    <ComboBox ItemsSource="{x:Static local:StaticEnumCollections.ValueCompareKinds}" SelectedValue="{Binding CompareKind}"/> 
-                                                </StackPanel>
-                                                <StackPanel Orientation="Horizontal">
-                                                    <TextBlock Text="Value: " Width="100"/>
-                                                    <TextBox Text="{Binding CompareValue}" MinWidth="200"/>
-                                                </StackPanel>
-                                            </StackPanel>
                                         </DataTemplate>
 
                                     </treeEditor:TreeEditor.Resources>

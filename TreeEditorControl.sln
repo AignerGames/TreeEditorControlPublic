@@ -7,8 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TreeEditorControl.Example",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TreeEditorControl", "TreeEditorControl\TreeEditorControl.csproj", "{0998AF8D-D44C-4EF7-AE00-7417CCFB06B2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StoryCreator.Common", "..\..\..\Source\repos\StoryCreator.Common\StoryCreator.Common\StoryCreator.Common.csproj", "{F9BB0971-D32E-4A9E-A36B-697740EDD65D}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,10 +21,6 @@ Global
 		{0998AF8D-D44C-4EF7-AE00-7417CCFB06B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0998AF8D-D44C-4EF7-AE00-7417CCFB06B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0998AF8D-D44C-4EF7-AE00-7417CCFB06B2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F9BB0971-D32E-4A9E-A36B-697740EDD65D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F9BB0971-D32E-4A9E-A36B-697740EDD65D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F9BB0971-D32E-4A9E-A36B-697740EDD65D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F9BB0971-D32E-4A9E-A36B-697740EDD65D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

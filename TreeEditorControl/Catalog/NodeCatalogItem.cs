@@ -35,10 +35,16 @@ namespace TreeEditorControl.Catalog
         /// <param name="assembly">The assembly which contains the node types. (For example Assembly.GetExecutingAssembly())</param>
         public static List<NodeCatalogItem> CreateItemsForAssignableTypes(Type assignableNodeType, Assembly assembly)
         {
+            var assignableTypes = TypeUtility.GetAssignableTypes(assignableNodeType, assembly);
+
+            return CreateItemsForTypes(assignableTypes);
+        }
+
+        public static List<NodeCatalogItem> CreateItemsForTypes(IEnumerable<Type> types)
+        {
             var catalogItems = new List<NodeCatalogItem>();
 
-            var assignableTypes = TypeUtility.GetAssignableTypes(assignableNodeType, assembly);
-            foreach (var nodeType in assignableTypes)
+            foreach (var nodeType in types)
             {
                 // The node needs an valid constructor, otherwise the factory can't create an instance
                 if (!TypeUtility.CanCreateTreeNodeInstance(nodeType))

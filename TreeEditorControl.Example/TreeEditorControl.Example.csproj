@@ -24,6 +24,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -33,8 +34,13 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="StoryGameShared">
+      <HintPath>D:\UnityProjectsVR\StoryGameVR\Library\ScriptAssemblies\StoryGameShared.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -58,36 +64,23 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Combat\Enemy.cs" />
+    <Compile Include="DataNodes\ComboBoxProperty.cs" />
+    <Compile Include="DataNodes\ComboBoxPropertyAttribute.cs" />
+    <Compile Include="DataNodes\ComboBoxValueProvider.cs" />
+    <Compile Include="DataNodes\DataNode.cs" />
+    <Compile Include="DataNodes\DataNodeFactory.cs" />
+    <Compile Include="DataNodes\IComboBoxValueProvider.cs" />
+    <Compile Include="DataNodes\NodeHeaderFormatAttribute.cs" />
+    <Compile Include="DataNodes\NodeHeaderFormatIndexAttribute.cs" />
+    <Compile Include="DataNodes\NodeProperty.cs" />
+    <Compile Include="DataNodes\NodePropertyAttribute.cs" />
+    <Compile Include="DataNodes\ObjectProperty.cs" />
+    <Compile Include="DataNodes\ObjectPropertyAttribute.cs" />
+    <Compile Include="DataNodes\TextBoxProperty.cs" />
+    <Compile Include="DataNodes\TextBoxPropertyAttribute.cs" />
     <Compile Include="Data\EditorData.cs" />
-    <Compile Include="Data\FileSaveHandler.cs" />
-    <Compile Include="Data\FileLoadHandler.cs" />
-    <Compile Include="Dialog\Actions\Animation\MoveToAction.cs" />
-    <Compile Include="Dialog\Actions\Animation\TriggerAnimationAction.cs" />
-    <Compile Include="Dialog\Actions\Animation\WaitAction.cs" />
-    <Compile Include="Dialog\Actions\BattlefieldAction.cs" />
-    <Compile Include="Dialog\Actions\ChoiceGroup.cs" />
-    <Compile Include="Dialog\Actions\ChoiceItem.cs" />
-    <Compile Include="Dialog\Actions\ConditionalAction.cs" />
-    <Compile Include="Dialog\Actions\Parallel\ParallelAction.cs" />
-    <Compile Include="Dialog\Actions\Parallel\SequenceAction.cs" />
-    <Compile Include="Dialog\Actions\Scene\AddSceneObjectAction.cs" />
-    <Compile Include="Dialog\Actions\Animation\LookAtAction.cs" />
-    <Compile Include="Dialog\Actions\Scene\RemoveSceneObjectAction.cs" />
-    <Compile Include="Dialog\Conditions\ConditionNodeContainer.cs" />
-    <Compile Include="Dialog\CustomNodeFactory.cs" />
     <Compile Include="Dialog\DialogHelper.cs" />
-    <Compile Include="Dialog\DialogRootNode.cs" />
     <Compile Include="Dialog\DialogTabViewModel.cs" />
-    <Compile Include="Dialog\Actions\DialogAction.cs" />
-    <Compile Include="Dialog\Conditions\DialogCondition.cs" />
-    <Compile Include="Dialog\DialogNode.cs" />
-    <Compile Include="Dialog\Actions\DiceRollAction.cs" />
-    <Compile Include="Dialog\IDialogActionVisitor.cs" />
-    <Compile Include="Dialog\IDialogConditionVisitor.cs" />
-    <Compile Include="Dialog\Actions\ModifyPlayerVariableAction.cs" />
-    <Compile Include="Dialog\Actions\ShowTextAction.cs" />
-    <Compile Include="Dialog\Conditions\PlayerVariableCondition.cs" />
     <Compile Include="Vector\VectorEditControl.xaml.cs">
       <DependentUpon>VectorEditControl.xaml</DependentUpon>
     </Compile>
@@ -148,10 +141,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\Source\repos\StoryCreator.Common\StoryCreator.Common\StoryCreator.Common.csproj">
-      <Project>{f9bb0971-d32e-4a9e-a36b-697740edd65d}</Project>
-      <Name>StoryCreator.Common</Name>
-    </ProjectReference>
     <ProjectReference Include="..\TreeEditorControl\TreeEditorControl.csproj">
       <Project>{0998af8d-d44c-4ef7-ae00-7417ccfb06b2}</Project>
       <Name>TreeEditorControl</Name>

@@ -1,12 +1,14 @@
-﻿using TreeEditorControl.UndoRedo;
+﻿using TreeEditorControl.Nodes;
+using TreeEditorControl.UndoRedo;
 using TreeEditorControl.UndoRedo.Implementation;
 
 namespace TreeEditorControl.Environment.Implementation
 {
     public class EditorEnvironment : IEditorEnvironment
     {
-        public EditorEnvironment(IUndoRedoStack undoRedoStack)
+        public EditorEnvironment(ITreeNodeFactory nodeFactory, IUndoRedoStack undoRedoStack)
         {
+            NodeFactory = nodeFactory;
             UndoRedoStack = undoRedoStack;
         }
 
@@ -15,6 +17,8 @@ namespace TreeEditorControl.Environment.Implementation
             UndoRedoStack = new UndoRedoStack();
         }
 
-        public IUndoRedoStack UndoRedoStack { get; }
+        public ITreeNodeFactory NodeFactory { get; set; }
+
+        public IUndoRedoStack UndoRedoStack { get; set; }
     }
 }

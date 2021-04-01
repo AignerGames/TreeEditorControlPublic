@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.ComponentModel;
@@ -14,7 +15,7 @@ using TreeEditorControl.Environment.Implementation;
 using TreeEditorControl.Commands;
 using TreeEditorControl.Example.Data;
 using TreeEditorControl.Nodes;
-using TreeEditorControl.Example.Combat;
+using TreeEditorControl.Example.DataNodes;
 
 namespace TreeEditorControl.Example.Dialog
 {
@@ -24,10 +25,6 @@ namespace TreeEditorControl.Example.Dialog
         const string GameExportDirectoryName = "GameDataExport";
         const string UnityExportDirectoryPath = @"D:\UnityProjectsVR\AignerGamesStoryCreator\Assets\Resources\GameDataExport";
 
-        public const string ShowTextHelloWorldCatalogName = "ShowText HelloWorld";
-
-        private readonly FileLoadHandler _fileLoadHandler;
-        private readonly FileSaveHandler _fileSaveHandler;
 
         private string _newFileName;
         private string _selectedFile;
@@ -38,25 +35,26 @@ namespace TreeEditorControl.Example.Dialog
 
         public DialogTabViewModel(EditorEnvironment editorEnvironment) : base("Dialog", editorEnvironment)
         {
-            _fileLoadHandler = new FileLoadHandler(editorEnvironment);
-            _fileSaveHandler = new FileSaveHandler();
+            var nodeFactory = new DataNodeFactory(EditorEnvironment);
 
+            nodeFactory.ComboBoxValueProviders["Test"] = new ComboBoxValueProvider(() => new List<string> { "A", "B", "C" });
 
-            var nodeFactory = new CustomNodeFactory(editorEnvironment);
+            EditorEnvironment.NodeFactory = nodeFactory;
 
-            EditorViewModel = new TreeEditorViewModel(editorEnvironment, nodeFactory);
+            EditorViewModel = new TreeEditorViewModel(EditorEnvironment);
+
+            var catalogItems = NodeCatalogItem.CreateItemsForTypes(new Type[] { typeof(DataNodeFactory.SubNodeData) });
+            EditorViewModel.CatalogItems.AddItems(catalogItems);
 
             EditorViewModel.AddDefaultCommands();
             EditorViewModel.AddDefaultContextMenuCommands();
-
-            EditorViewModel.CatalogItems.AddItems(NodeCatalogItem.CreateItemsForAssignableTypes(typeof(DialogNode), Assembly.GetExecutingAssembly()));
 
             // TODO: Toolbar menu
             EditorViewModel.ContextMenuCommands.Add(ContextMenuCommand.Seperator);
             EditorViewModel.ContextMenuCommands.Add(new ContextMenuCommand("Expand node", ExpandNodeFull, () => EditorViewModel.SelectedNode != null));
             EditorViewModel.ContextMenuCommands.Add(ContextMenuCommand.Seperator);
-            EditorViewModel.ContextMenuCommands.Add(new ContextMenuCommand("Insert dialog root", AddDialogRoot, () => _gameDataLoaded));
-            EditorViewModel.ContextMenuCommands.Add(new ContextMenuCommand("Delete dialog root", DeleteDialogRoot, () => EditorViewModel.SelectedNode is DialogRootNode));
+            //EditorViewModel.ContextMenuCommands.Add(new ContextMenuCommand("Insert dialog root", AddDialogRoot, () => _gameDataLoaded));
+            //EditorViewModel.ContextMenuCommands.Add(new ContextMenuCommand("Delete dialog root", DeleteDialogRoot, () => EditorViewModel.SelectedNode is DialogRootNode));
             EditorViewModel.ContextMenuCommands.Add(ContextMenuCommand.Seperator);
             EditorViewModel.ContextMenuCommands.Add(new ContextMenuCommand("Save", SaveFile, () => _gameDataLoaded));
             EditorViewModel.ContextMenuCommands.Add(ContextMenuCommand.Seperator);
@@ -68,6 +66,23 @@ namespace TreeEditorControl.Example.Dialog
             Directory.CreateDirectory(GameExportDirectoryName);
 
             RefreshFiles();
+
+
+
+            // TODO: Prototype
+            var rootNode = nodeFactory.CreatePrototypeNode();
+            EditorViewModel.AddRootNode(rootNode);
+
+
+            var sourceNode = new DataNodeFactory.TestData();
+            sourceNode.Name = "ABC";
+
+            var sourceSubNode = new DataNodeFactory.SubNodeData();
+            sourceSubNode.SubNodeText = "SUB";
+
+            sourceNode.EpicSubNodes.Add(sourceSubNode);
+
+            rootNode.SetInstanceValues(sourceNode);
         }
 
         public ObservableCollection<string> FileNames { get; } = new ObservableCollection<string>();
@@ -168,12 +183,6 @@ namespace TreeEditorControl.Example.Dialog
             new NamedVector("Right Outer", 4, 0, 0),
         };
 
-        public ObservableCollection<Enemy> Enemies { get; } = new ObservableCollection<Enemy>
-        {
-            new Enemy{ Name = "Rat" },
-            new Enemy{ Name = "Bat" }
-        };
-
         public override void HandleClosing(CancelEventArgs args)
         {
             SaveFile();
@@ -201,13 +210,13 @@ namespace TreeEditorControl.Example.Dialog
             SceneReferenceNames.Clear();
             EditorViewModel.ClearRootNodes();
 
-            _fileLoadHandler.Load(Path.Combine(GameDataDirectoryName, SelectedFile), this);
+            //_fileLoadHandler.Load(Path.Combine(GameDataDirectoryName, SelectedFile), this);
 
-            if(EditorViewModel.RootNodes.Count == 0)
-            {
-                var rootNode = new DialogRootNode(EditorEnvironment, "NewInteraction");
-                EditorViewModel.AddRootNode(rootNode);
-            }
+            //if(EditorViewModel.RootNodes.Count == 0)
+            //{
+            //    var rootNode = new DialogRootNode(EditorEnvironment, "NewInteraction");
+            //    EditorViewModel.AddRootNode(rootNode);
+            //}
 
             var firstNode = EditorViewModel.RootNodes.First();
             firstNode.IsSelected = true;
@@ -234,7 +243,7 @@ namespace TreeEditorControl.Example.Dialog
 
             var unityExportPath = Directory.Exists(UnityExportDirectoryPath) ? Path.Combine(UnityExportDirectoryPath, SelectedFile) : null;
 
-            _fileSaveHandler.Save(Path.Combine(GameDataDirectoryName, SelectedFile), Path.Combine(GameExportDirectoryName, SelectedFile), unityExportPath, this);
+            //_fileSaveHandler.Save(Path.Combine(GameDataDirectoryName, SelectedFile), Path.Combine(GameExportDirectoryName, SelectedFile), unityExportPath, this);
 
             EditorEnvironment.UndoRedoStack.IsEnabled = true;
         }
@@ -264,32 +273,32 @@ namespace TreeEditorControl.Example.Dialog
 
         private void AddDialogRoot()
         {
-            var insertIndex = -1;
+            //var insertIndex = -1;
 
-            if(EditorViewModel.SelectedNode is DialogRootNode selectedRootNode)
-            {
-                insertIndex = EditorViewModel.RootNodes.IndexOf(selectedRootNode) + 1;
-            }
+            //if(EditorViewModel.SelectedNode is DialogRootNode selectedRootNode)
+            //{
+            //    insertIndex = EditorViewModel.RootNodes.IndexOf(selectedRootNode) + 1;
+            //}
 
-            var dialogRootNode = new DialogRootNode(EditorEnvironment, "NewDialog");
+            //var dialogRootNode = new DialogRootNode(EditorEnvironment, "NewDialog");
 
-            EditorViewModel.AddRootNode(dialogRootNode, insertIndex);
+            //EditorViewModel.AddRootNode(dialogRootNode, insertIndex);
         }
 
         private void DeleteDialogRoot()
         {
-            if (!(EditorViewModel.SelectedNode is DialogRootNode rootNode))
-            {
-                return;
-            }
+            //if (!(EditorViewModel.SelectedNode is DialogRootNode rootNode))
+            //{
+            //    return;
+            //}
 
-            if (MessageBox.Show($"Delete {rootNode.Header}?", "Question", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
-            {
-                return;
-            }
+            //if (MessageBox.Show($"Delete {rootNode.Header}?", "Question", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
+            //{
+            //    return;
+            //}
 
-            rootNode.IsSelected = false;
-            EditorViewModel.RemoveRootNode(rootNode);
+            //rootNode.IsSelected = false;
+            //EditorViewModel.RemoveRootNode(rootNode);
         }
 
         private void ExpandNodeFull()

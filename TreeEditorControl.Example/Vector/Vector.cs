@@ -48,26 +48,9 @@ namespace TreeEditorControl.Example
             return $"X: {X} Y: {Y} Z: {Z}";
         }
 
-        public StoryCreator.Common.Data.Interaction.VectorData ToData()
-        {
-            return new StoryCreator.Common.Data.Interaction.VectorData { X = X, Y = Y, Z = Z };
-        }
-
         public void CopyFrom(Vector vector)
         {
             if(vector == null)
-            {
-                return;
-            }
-
-            X = vector.X;
-            Y = vector.Y;
-            Z = vector.Z;
-        }
-
-        public void CopyFrom(StoryCreator.Common.Data.Interaction.VectorData vector)
-        {
-            if (vector == null)
             {
                 return;
             }
