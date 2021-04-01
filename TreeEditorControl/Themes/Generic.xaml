@@ -186,6 +186,7 @@
                                         <KeyBinding Modifiers="Control" Key="X" Command="{Binding CutNodeCommand}" />
                                         <KeyBinding Modifiers="Control" Key="C" Command="{Binding CopyNodeCommand}" />
                                         <KeyBinding Modifiers="Control" Key="V" Command="{Binding PasteNodeCommand}" />
+                                        <KeyBinding Modifiers="Control" Key="D" Command="{Binding DuplicateNodeCommand}" />
                                         <KeyBinding Modifiers="Control" Key="Z" Command="{Binding UndoCommand}" />
                                         <KeyBinding Modifiers="Control" Key="Y" Command="{Binding RedoCommand}" />
                                     </controls:CustomTreeViewControl.InputBindings>

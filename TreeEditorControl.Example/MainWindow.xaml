@@ -54,39 +54,7 @@
                                         <TextBlock Text="Files: " FontSize="14" FontWeight="Bold" Margin="3"/>
                                         <ComboBox ItemsSource="{Binding FileNames}" SelectedItem="{Binding SelectedFile, Mode=TwoWay}" MinWidth="300" Margin="3"/>
                                     </StackPanel>
-                                    <StackPanel Orientation="Horizontal" Margin="3">
-                                        <TextBlock Text="Game: " FontSize="14" FontWeight="Bold" Margin="3"/>
-                                        <TextBox Text="{Binding CurrentGameName}" MinWidth="300" Margin="3"/>
-                                    </StackPanel>
                                 </StackPanel>
-
-
-                                <!-- Actors -->
-                                <!--<Expander  Grid.Row="1" Header="Actors">
-                                    <DataGrid ItemsSource="{Binding Actors}" MaxHeight="300" AutoGenerateColumns="False" ColumnWidth="*">
-                                        <DataGrid.Columns>
-                                            <DataGridTextColumn Header="Actors" Binding="{Binding Value}" MinWidth="300"/>
-                                        </DataGrid.Columns>
-                                    </DataGrid>
-                                </Expander>-->
-
-                                <!-- Variables -->
-                                <!--<Expander Grid.Row="2" Header="Variables">
-                                    <DataGrid ItemsSource="{Binding Variables}" MaxHeight="300" AutoGenerateColumns="False" ColumnWidth="*">
-                                        <DataGrid.Columns>
-                                            <DataGridTextColumn Header="Variables" Binding="{Binding Value}" MinWidth="300"/>
-                                        </DataGrid.Columns>
-                                    </DataGrid>
-                                </Expander>-->
-
-                                <!-- Scene References -->
-                                <!--<Expander Grid.Row="3" Header="Scene References">
-                                    <DataGrid ItemsSource="{Binding SceneReferenceNames}" MaxHeight="300" AutoGenerateColumns="False" ColumnWidth="*">
-                                        <DataGrid.Columns>
-                                            <DataGridTextColumn Header="Names" Binding="{Binding Value}" MinWidth="300"/>
-                                        </DataGrid.Columns>
-                                    </DataGrid>
-                                </Expander>-->
 
                                 <!-- Dialog Tree -->
                                 <treeEditor:TreeEditor Grid.Row="4" DataContext="{Binding EditorViewModel}">

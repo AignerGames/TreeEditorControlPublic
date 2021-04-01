@@ -39,7 +39,7 @@
   <ItemGroup>
     <Reference Include="StoryGameShared">
       <HintPath>D:\UnityProjectsVR\StoryGameVR\Library\ScriptAssemblies\StoryGameShared.dll</HintPath>
-      <Private>False</Private>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />

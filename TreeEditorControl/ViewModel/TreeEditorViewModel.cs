@@ -44,6 +44,7 @@ namespace TreeEditorControl.ViewModel
             CutNodeCommand = new ActionCommand(CutNode, CanCutNode);
             CopyNodeCommand = new ActionCommand(CopyNode, CanCopyNode);
             PasteNodeCommand = new ActionCommand(PasteNode, CanPasteNode);
+            DuplicateNodeCommand = new ActionCommand(DuplicateNode, CanDuplicateNode);
             UndoCommand = new ActionCommand(Undo, CanUndo);
             RedoCommand = new ActionCommand(Redo, CanRedo);
 
@@ -81,6 +82,8 @@ namespace TreeEditorControl.ViewModel
         public ActionCommand CopyNodeCommand { get; }
 
         public ActionCommand PasteNodeCommand { get; }
+
+        public ActionCommand DuplicateNodeCommand { get; }
 
         public ActionCommand UndoCommand { get; }
 
@@ -525,6 +528,39 @@ namespace TreeEditorControl.ViewModel
 
             // Create a new copy, this allows multiple paste actions for the "same" node
             _clipboardNode = CreateNodeCopy(_clipboardNode as ICopyableNode<ITreeNode>);
+        }
+
+        public bool CanDuplicateNode()
+        {
+            return SelectedNode is ICopyableNode<ITreeNode> && SelectedNode?.Parent is ITreeNodeContainer;
+        }
+
+        public void DuplicateNode()
+        {
+            if(!CanDuplicateNode())
+            {
+                return;
+            }
+
+            var copyable = (ICopyableNode<ITreeNode>)SelectedNode;
+            var container = (ITreeNodeContainer)SelectedNode.Parent;
+
+            var selectedNodeIndex = container.IndexOf(SelectedNode);
+            if (selectedNodeIndex < 0)
+            {
+                return;
+            }
+
+            var undoRedoId = UndoRedoStack.StartSequence();
+
+            var duplicateNode = CreateNodeCopy(copyable);
+
+            if(container.TryInsertNode(selectedNodeIndex + 1, duplicateNode))
+            {
+                AddChangeNodeSelectionUndoRedoCommand(duplicateNode);
+            }
+
+            UndoRedoStack.EndSequence(undoRedoId);
         }
 
         private void Node_NodeChanged(object sender, NodeChangedArgs e)

@@ -46,12 +46,12 @@ namespace TreeEditorControl.Example.DataNodes
 
         public PropertyInfo PropertyInfo { get; }
 
-        public void ReadInstanceValue(object instance)
+        public virtual void ReadInstanceValue(object instance)
         {
             Value = PropertyInfo.GetValue(instance);
         }
 
-        public void WriteInstanceValue(object instance)
+        public virtual void WriteInstanceValue(object instance)
         {
             PropertyInfo.SetValue(instance, Value);
         }

@@ -16,6 +16,7 @@ using TreeEditorControl.Commands;
 using TreeEditorControl.Example.Data;
 using TreeEditorControl.Nodes;
 using TreeEditorControl.Example.DataNodes;
+using System.Windows.Threading;
 
 namespace TreeEditorControl.Example.Dialog
 {
@@ -28,8 +29,6 @@ namespace TreeEditorControl.Example.Dialog
 
         private string _newFileName;
         private string _selectedFile;
-
-        private string _currentGameName;
 
         private bool _gameDataLoaded;
 
@@ -83,6 +82,10 @@ namespace TreeEditorControl.Example.Dialog
             sourceNode.EpicSubNodes.Add(sourceSubNode);
 
             rootNode.SetInstanceValues(sourceNode);
+
+
+
+            var testDeserialize = rootNode.GetInstanceValues();
         }
 
         public ObservableCollection<string> FileNames { get; } = new ObservableCollection<string>();
@@ -103,11 +106,27 @@ namespace TreeEditorControl.Example.Dialog
             get => _selectedFile;
             set
             {
+                if(_selectedFile == value)
+                {
+                    return;
+                }
+
                 if (_gameDataLoaded)
                 {
-                    var boxResult = MessageBox.Show($"Changing file to {value}, save current file {SelectedFile}?", "Question", MessageBoxButton.YesNoCancel, MessageBoxImage.Warning);
+                    // https://stackoverflow.com/questions/2585183/wpf-combobox-selecteditem-change-to-previous-value
+                    var previousValue = _selectedFile;
+
+                    _selectedFile = value;
+
+                    var boxResult = MessageBox.Show($"Changing file to {value}, save current file {previousValue}?", "Question", MessageBoxButton.YesNoCancel, MessageBoxImage.Warning);
                     if(boxResult == MessageBoxResult.Cancel)
                     {
+                        Action dispatcherAction = () =>
+                        {
+                            SetAndNotify(ref _selectedFile, previousValue);
+                        };
+
+                        Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.ContextIdle, dispatcherAction);
                         return;
                     }
 
@@ -122,66 +141,6 @@ namespace TreeEditorControl.Example.Dialog
                 LoadFile();
             }
         }
-
-        public string CurrentGameName
-        {
-            get => _currentGameName;
-            set
-            {
-                SetAndNotify(ref _currentGameName, value);
-            }
-        }
-
-        public ObservableCollection<StringViewModel> Actors { get; } = new ObservableCollection<StringViewModel>();
-
-        public ObservableCollection<StringViewModel> Variables { get; } = new ObservableCollection<StringViewModel>();
-
-        public ObservableCollection<StringViewModel> SceneObjects { get; } = new ObservableCollection<StringViewModel>
-        {
-            // Actors
-            //new StringViewModel("Fake"),
-            //new StringViewModel("Marc"),
-            //new StringViewModel("Anika"),
-            //new StringViewModel("Tom"),
-            //new StringViewModel("Drake"),
-            //new StringViewModel("VikingWarrior"),
-            //new StringViewModel("EnglandWarrior"),
-            new StringViewModel("HaloBackground"),
-            new StringViewModel("MC_Drake"),
-            new StringViewModel("MC_Tom"),
-            new StringViewModel("MC_Blade"),
-            new StringViewModel("MC_Fake"),
-            new StringViewModel("MC_Happy"),
-
-            // Effects
-            new StringViewModel("Poop"),
-            new StringViewModel("Blood"),
-            new StringViewModel("Cry"),
-
-            // Environment
-            new StringViewModel("VikingCity"),
-            new StringViewModel("EnglandCity"),
-        };
-
-        public ObservableCollection<StringViewModel> SceneReferenceNames { get; } = new ObservableCollection<StringViewModel>();
-
-        public ObservableCollection<StringViewModel> AnimationTriggers { get; } = new ObservableCollection<StringViewModel>
-        {
-            new StringViewModel("Idle"),
-            new StringViewModel("Move"),
-            new StringViewModel("Attack"),
-            new StringViewModel("Damage"),
-            new StringViewModel("Die"),
-        };
-
-        public ObservableCollection<NamedVector> LocationVectors { get; } = new ObservableCollection<NamedVector>
-        {
-            new NamedVector("Left Outer", -4, 0, 0),
-            new NamedVector("Left Inner", -2, 0, 0),
-            new NamedVector("Center", 0, 0, 0),
-            new NamedVector("Right Inner", 2, 0, 0),
-            new NamedVector("Right Outer", 4, 0, 0),
-        };
 
         public override void HandleClosing(CancelEventArgs args)
         {
@@ -204,19 +163,20 @@ namespace TreeEditorControl.Example.Dialog
             EditorEnvironment.UndoRedoStack.IsEnabled = false;
             EditorEnvironment.UndoRedoStack.Reset();
 
-            CurrentGameName = string.Empty;
-            Actors.Clear();
-            Variables.Clear();
-            SceneReferenceNames.Clear();
             EditorViewModel.ClearRootNodes();
 
-            //_fileLoadHandler.Load(Path.Combine(GameDataDirectoryName, SelectedFile), this);
+            var loadPath = Path.Combine(GameDataDirectoryName, SelectedFile);
 
-            //if(EditorViewModel.RootNodes.Count == 0)
-            //{
-            //    var rootNode = new DialogRootNode(EditorEnvironment, "NewInteraction");
-            //    EditorViewModel.AddRootNode(rootNode);
-            //}
+            var rootData = Shared.Json.SerializationHelper.Load<DataNodeFactory.TestData>(loadPath);
+            if(rootData == null)
+            {
+                rootData = new DataNodeFactory.TestData();
+            }
+
+            var rootNode = (DataNode)EditorEnvironment.NodeFactory.CreateNode(rootData.GetType());
+            rootNode.SetInstanceValues(rootData);
+
+            EditorViewModel.AddRootNode(rootNode);
 
             var firstNode = EditorViewModel.RootNodes.First();
             firstNode.IsSelected = true;
@@ -241,7 +201,14 @@ namespace TreeEditorControl.Example.Dialog
         {
             EditorEnvironment.UndoRedoStack.IsEnabled = false;
 
-            var unityExportPath = Directory.Exists(UnityExportDirectoryPath) ? Path.Combine(UnityExportDirectoryPath, SelectedFile) : null;
+            var savePath = Path.Combine(GameDataDirectoryName, SelectedFile);
+
+            var rootNode = EditorViewModel.RootNodes.OfType<DataNode>().First();
+            var rootData = rootNode.GetInstanceValues() as DataNodeFactory.TestData;
+
+            Shared.Json.SerializationHelper.Save(savePath, rootData);
+
+            //var unityExportPath = Directory.Exists(UnityExportDirectoryPath) ? Path.Combine(UnityExportDirectoryPath, SelectedFile) : null;
 
             //_fileSaveHandler.Save(Path.Combine(GameDataDirectoryName, SelectedFile), Path.Combine(GameExportDirectoryName, SelectedFile), unityExportPath, this);
 
@@ -316,8 +283,6 @@ namespace TreeEditorControl.Example.Dialog
             EditorEnvironment.UndoRedoStack.IsEnabled = false;
             EditorEnvironment.UndoRedoStack.Reset();
 
-            Actors.Clear();
-            Variables.Clear();
             EditorViewModel.ClearRootNodes();
 
             AddDialogRoot();

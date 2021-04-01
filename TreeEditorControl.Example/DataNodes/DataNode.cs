@@ -65,7 +65,7 @@ namespace TreeEditorControl.Example.DataNodes
                 containerNode.ClearNodes();
 
                 // TODO: Null checks?
-                var subNodeValues = containerNode.PropertyInfo.GetValue(instance) as IReadOnlyList<object>;
+                var subNodeValues = containerNode.PropertyInfo.GetValue(instance) as System.Collections.IList;
 
                 foreach(var value in subNodeValues)
                 {
@@ -80,8 +80,25 @@ namespace TreeEditorControl.Example.DataNodes
 
         public object GetInstanceValues()
         {
-            // TODO: set values
             var instance = Activator.CreateInstance(DataType);
+
+            foreach(var property in Properties)
+            {
+                property.WriteInstanceValue(instance);
+            }
+
+            foreach (var containerNode in Nodes.OfType<PropertyNodeContainer>())
+            {
+                // TODO: Null checks?
+                var dataInstances = containerNode.PropertyInfo.GetValue(instance) as System.Collections.IList;
+
+                foreach (var containerDataNode in containerNode.Nodes.OfType<DataNode>())
+                {
+                    var dataInstance = containerDataNode.GetInstanceValues();
+
+                    dataInstances.Add(dataInstance);
+                }
+            }
 
             return instance;
         }
