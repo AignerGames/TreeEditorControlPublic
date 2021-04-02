@@ -1,16 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Reflection;
 using System.Collections.ObjectModel;
 
 using TreeEditorControl.Catalog;
 using TreeEditorControl.Nodes;
-using TreeEditorControl.Nodes.Implementation;
 using TreeEditorControl.Environment;
-using TreeEditorControl.Utility;
 using TreeEditorControl.DataNodeAttributes;
 
 namespace TreeEditorControl.DataNodes
@@ -27,6 +23,8 @@ namespace TreeEditorControl.DataNodes
         }
 
         public Dictionary<string, IComboBoxValueProvider> ComboBoxValueProviders { get; } = new Dictionary<string, IComboBoxValueProvider>();
+
+        public Dictionary<Type, Func<Type, List<NodeProperty>, DataNode>> CustomDataNodeFactories { get; } = new Dictionary<Type, Func<Type, List<NodeProperty>, DataNode>>();
 
         public ITreeNode CreateNode(NodeCatalogItem catalogItem)
         {
@@ -46,6 +44,11 @@ namespace TreeEditorControl.DataNodes
         public DataNode CreateDataNode(Type dataType)
         {
             var nodeProperties = GetNodeProperties(dataType);
+
+            if(CustomDataNodeFactories.TryGetValue(dataType, out var factory))
+            {
+                return factory.Invoke(dataType, nodeProperties);
+            }
 
             var dataNode = new DataNode(_editorEnvironment, dataType, nodeProperties);
 
@@ -70,6 +73,9 @@ namespace TreeEditorControl.DataNodes
                         break;
                     case ComboBoxPropertyAttribute comboBoxPropertyAttribute:
                         nodeProperty = CreateComboBoxProperty(comboBoxPropertyAttribute, propertyInfo);
+                        break;
+                    case CheckBoxPropertyAttribute checkBoxPropertyAttribute:
+                        nodeProperty = CreateCheckBoxProperty(checkBoxPropertyAttribute, propertyInfo);
                         break;
                     case ObjectPropertyAttribute objectPropertyAttribute:
                         nodeProperty = CreateObjectProperty(objectPropertyAttribute, propertyInfo);
@@ -112,6 +118,11 @@ namespace TreeEditorControl.DataNodes
             return new ComboBoxProperty(_editorEnvironment, valueProvoder, propertyInfo, comboBoxPropertyAttribute.PropertyName);
         }
 
+        private CheckBoxProperty CreateCheckBoxProperty(CheckBoxPropertyAttribute checkBoxPropertyAttribute, PropertyInfo propertyInfo)
+        {
+            return new CheckBoxProperty(_editorEnvironment, propertyInfo, checkBoxPropertyAttribute.PropertyName);
+        }
+
         private ObjectProperty CreateObjectProperty(ObjectPropertyAttribute objectPropertyAttribute, PropertyInfo propertyInfo)
         {
             return new ObjectProperty(_editorEnvironment, propertyInfo, objectPropertyAttribute.PropertyName);
@@ -144,6 +155,12 @@ namespace TreeEditorControl.DataNodes
 
             [ComboBoxProperty]
             public MyEnum EnumValue { get; set; }
+
+            [CheckBoxProperty]
+            public bool CheckBoxValue { get; set; }
+
+            [CheckBoxProperty]
+            public string CheckBoxString { get; set; }
 
             [ObjectProperty]
             public List<SubNodeData> SubNodes { get; } = new List<SubNodeData>();

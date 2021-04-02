@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CheckBoxProperty.cs" />
     <Compile Include="ComboBoxProperty.cs" />
     <Compile Include="ComboBoxValueProvider.cs" />
     <Compile Include="DataNode.cs" />

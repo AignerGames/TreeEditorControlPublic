@@ -105,17 +105,7 @@
                                     </treeEditor:TreeEditor.SelectedNodeInfoTemplateSelector>
 
                                     <treeEditor:TreeEditor.Resources>
-                                        
-                                        <!--<DataTemplate DataType="{x:Type dialog:DialogRootNode}">
-                                            <StackPanel>
-                                                <TextBlock Text="Dialog root node"/>
-                                                <StackPanel Orientation="Horizontal">
-                                                    <TextBlock Text="Name: "/>
-                                                    <TextBox Text="{Binding Name}" MinWidth="200" VerticalAlignment="Stretch"/>
-                                                </StackPanel>
-                                            </StackPanel>
-                                        </DataTemplate>-->
-
+                                       
                                         <DataTemplate DataType="{x:Type nodes:DataNode}">
                                             
                                             <!-- Node Properties -->
@@ -175,6 +165,14 @@
                                                         <StackPanel Orientation="Horizontal">
                                                             <TextBlock Style="{StaticResource PropertyName}"/>
                                                             <ComboBox Text="{Binding Value}" ItemsSource="{Binding Values}" Margin="10, 0, 0, 0" MinWidth="100"/>
+                                                        </StackPanel>
+                                                    </DataTemplate>
+
+                                                    <DataTemplate DataType="{x:Type nodes:CheckBoxProperty}">
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <CheckBox IsChecked="{Binding Value}">
+                                                                <TextBlock Style="{StaticResource PropertyName}"/>
+                                                            </CheckBox>
                                                         </StackPanel>
                                                     </DataTemplate>
 
