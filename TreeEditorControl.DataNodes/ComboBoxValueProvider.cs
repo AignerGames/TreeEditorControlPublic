@@ -4,7 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TreeEditorControl.Example.DataNodes
+using TreeEditorControl.DataNodeAttributes;
+
+namespace TreeEditorControl.DataNodes
 {
     public class ComboBoxValueProvider : IComboBoxValueProvider
     {

@@ -7,8 +7,9 @@ using System.Linq;
 using TreeEditorControl.Nodes.Implementation;
 using TreeEditorControl.Environment;
 using TreeEditorControl.Nodes;
+using TreeEditorControl.DataNodeAttributes;
 
-namespace TreeEditorControl.Example.DataNodes
+namespace TreeEditorControl.DataNodes
 {
     public class DataNode : ReadableGroupContainerNode, ICopyableNode<DataNode>
     {

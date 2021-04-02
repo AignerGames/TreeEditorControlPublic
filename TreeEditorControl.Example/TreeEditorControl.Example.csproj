@@ -64,20 +64,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="DataNodes\ComboBoxProperty.cs" />
-    <Compile Include="DataNodes\ComboBoxPropertyAttribute.cs" />
-    <Compile Include="DataNodes\ComboBoxValueProvider.cs" />
-    <Compile Include="DataNodes\DataNode.cs" />
-    <Compile Include="DataNodes\DataNodeFactory.cs" />
-    <Compile Include="DataNodes\IComboBoxValueProvider.cs" />
-    <Compile Include="DataNodes\NodeHeaderFormatAttribute.cs" />
-    <Compile Include="DataNodes\NodeHeaderFormatIndexAttribute.cs" />
-    <Compile Include="DataNodes\NodeProperty.cs" />
-    <Compile Include="DataNodes\NodePropertyAttribute.cs" />
-    <Compile Include="DataNodes\ObjectProperty.cs" />
-    <Compile Include="DataNodes\ObjectPropertyAttribute.cs" />
-    <Compile Include="DataNodes\TextBoxProperty.cs" />
-    <Compile Include="DataNodes\TextBoxPropertyAttribute.cs" />
     <Compile Include="Data\EditorData.cs" />
     <Compile Include="Dialog\DialogHelper.cs" />
     <Compile Include="Dialog\DialogTabViewModel.cs" />
@@ -141,6 +127,14 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\TreeEditorControl.DataNodeAttributes\TreeEditorControl.DataNodeAttributes.csproj">
+      <Project>{7f4fe819-d05e-49f3-995d-762e90576059}</Project>
+      <Name>TreeEditorControl.DataNodeAttributes</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TreeEditorControl.DataNodes\TreeEditorControl.DataNodes.csproj">
+      <Project>{b21b89bd-7aff-444f-b98a-22013aeacc25}</Project>
+      <Name>TreeEditorControl.DataNodes</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TreeEditorControl\TreeEditorControl.csproj">
       <Project>{0998af8d-d44c-4ef7-ae00-7417ccfb06b2}</Project>
       <Name>TreeEditorControl</Name>

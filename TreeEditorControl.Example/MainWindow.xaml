@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TreeEditorControl.Example"
         xmlns:dialog="clr-namespace:TreeEditorControl.Example.Dialog"
-        xmlns:nodes="clr-namespace:TreeEditorControl.Example.DataNodes"
+        xmlns:nodes="clr-namespace:TreeEditorControl.DataNodes;assembly=TreeEditorControl.DataNodes"
         xmlns:treeEditor="clr-namespace:TreeEditorControl.Controls;assembly=TreeEditorControl"
         mc:Ignorable="d"
         Title="TreeEditorControl Examples" Height="800" Width="1000" Background="SlateGray">

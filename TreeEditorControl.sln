@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TreeEditorControl.Example",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TreeEditorControl", "TreeEditorControl\TreeEditorControl.csproj", "{0998AF8D-D44C-4EF7-AE00-7417CCFB06B2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TreeEditorControl.DataNodeAttributes", "TreeEditorControl.DataNodeAttributes\TreeEditorControl.DataNodeAttributes.csproj", "{7F4FE819-D05E-49F3-995D-762E90576059}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TreeEditorControl.DataNodes", "TreeEditorControl.DataNodes\TreeEditorControl.DataNodes.csproj", "{B21B89BD-7AFF-444F-B98A-22013AEACC25}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{0998AF8D-D44C-4EF7-AE00-7417CCFB06B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0998AF8D-D44C-4EF7-AE00-7417CCFB06B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0998AF8D-D44C-4EF7-AE00-7417CCFB06B2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7F4FE819-D05E-49F3-995D-762E90576059}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F4FE819-D05E-49F3-995D-762E90576059}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7F4FE819-D05E-49F3-995D-762E90576059}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7F4FE819-D05E-49F3-995D-762E90576059}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B21B89BD-7AFF-444F-B98A-22013AEACC25}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B21B89BD-7AFF-444F-B98A-22013AEACC25}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B21B89BD-7AFF-444F-B98A-22013AEACC25}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B21B89BD-7AFF-444F-B98A-22013AEACC25}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace TreeEditorControl.Example.DataNodes
+﻿namespace TreeEditorControl.DataNodeAttributes
 {
     public class ObjectPropertyAttribute : NodePropertyAttribute
     {

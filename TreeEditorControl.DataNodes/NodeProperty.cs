@@ -10,7 +10,7 @@ using TreeEditorControl.UndoRedo.Implementation;
 using TreeEditorControl.Environment;
 using TreeEditorControl.Utility;
 
-namespace TreeEditorControl.Example.DataNodes
+namespace TreeEditorControl.DataNodes
 {
     public abstract class NodeProperty : EditorObject
     {

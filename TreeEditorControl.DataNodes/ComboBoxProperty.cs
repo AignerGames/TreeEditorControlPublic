@@ -4,9 +4,11 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using TreeEditorControl.Environment;
 
-namespace TreeEditorControl.Example.DataNodes
+using TreeEditorControl.Environment;
+using TreeEditorControl.DataNodeAttributes;
+
+namespace TreeEditorControl.DataNodes
 {
     public class ComboBoxProperty : NodeProperty
     {

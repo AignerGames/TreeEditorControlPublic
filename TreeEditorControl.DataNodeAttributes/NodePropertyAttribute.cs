@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace TreeEditorControl.Example.DataNodes
+namespace TreeEditorControl.DataNodeAttributes
 {
     [AttributeUsage(AttributeTargets.Property)]
     public abstract class NodePropertyAttribute : Attribute

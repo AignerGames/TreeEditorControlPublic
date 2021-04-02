@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TreeEditorControl.Environment;
 
-namespace TreeEditorControl.Example.DataNodes
+namespace TreeEditorControl.DataNodes
 {
     public class TextBoxProperty : NodeProperty
     {

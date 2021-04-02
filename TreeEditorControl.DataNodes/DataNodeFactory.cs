@@ -11,8 +11,9 @@ using TreeEditorControl.Nodes;
 using TreeEditorControl.Nodes.Implementation;
 using TreeEditorControl.Environment;
 using TreeEditorControl.Utility;
+using TreeEditorControl.DataNodeAttributes;
 
-namespace TreeEditorControl.Example.DataNodes
+namespace TreeEditorControl.DataNodes
 {
     public class DataNodeFactory : ITreeNodeFactory
     {

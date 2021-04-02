@@ -15,7 +15,7 @@ using TreeEditorControl.Environment.Implementation;
 using TreeEditorControl.Commands;
 using TreeEditorControl.Example.Data;
 using TreeEditorControl.Nodes;
-using TreeEditorControl.Example.DataNodes;
+using TreeEditorControl.DataNodes;
 using System.Windows.Threading;
 
 namespace TreeEditorControl.Example.Dialog
