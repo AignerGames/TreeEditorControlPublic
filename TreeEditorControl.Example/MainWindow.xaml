@@ -5,10 +5,18 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TreeEditorControl.Example"
         xmlns:dialog="clr-namespace:TreeEditorControl.Example.Dialog"
-        xmlns:nodes="clr-namespace:TreeEditorControl.DataNodes;assembly=TreeEditorControl.DataNodes"
         xmlns:treeEditor="clr-namespace:TreeEditorControl.Controls;assembly=TreeEditorControl"
         mc:Ignorable="d"
         Title="TreeEditorControl Examples" Height="800" Width="1000" Background="SlateGray">
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary  Source="pack://application:,,,/TreeEditorControl.DataNodes;component/DataNodeTemplates.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    
     <TabControl ItemsSource="{Binding TabViewModels}" SelectedItem="{Binding SelectedTab}" Background="Transparent">
         <TabControl.Resources>
             <treeEditor:NameToBitmapImageConverter x:Key="NameToBitmapImageConverter">
@@ -104,93 +112,13 @@
                                         </treeEditor:ExplicitTemplateSelector>
                                     </treeEditor:TreeEditor.SelectedNodeInfoTemplateSelector>
 
-                                    <treeEditor:TreeEditor.Resources>
-                                       
-                                        <DataTemplate DataType="{x:Type nodes:DataNode}">
-                                            
-                                            <!-- Node Properties -->
-                                            <ItemsControl ItemsSource="{Binding Properties}">
-                                                <ItemsControl.ItemContainerStyle>
-                                                    <Style TargetType="ContentPresenter">
-                                                        <Setter Property="Margin" Value="3"/>
-                                                    </Style>
-                                                </ItemsControl.ItemContainerStyle>
-
-                                                <ItemsControl.Resources>
-
-                                                    <Style x:Key="PropertyName" TargetType="{x:Type TextBlock}">
-                                                        <Setter Property="Text" Value="{Binding Name}"/>
-                                                        <Setter Property="FontSize" Value="12"/>
-                                                        <Setter Property="FontWeight" Value="Bold"/>
-                                                        <Setter Property="VerticalAlignment" Value="Center"/>
-                                                    </Style>
-
-                                                    <DataTemplate DataType="{x:Type nodes:TextBoxProperty}">
-                                                        <StackPanel>
-                                                            <StackPanel.Style>
-                                                                <Style TargetType="StackPanel">
-                                                                    <Setter Property="Orientation" Value="Horizontal"/>
-                                                                    
-                                                                    <Style.Triggers>
-                                                                        <DataTrigger Binding="{Binding Multiline}" Value="True">
-                                                                            <Setter Property="Orientation" Value="Vertical"/>
-                                                                        </DataTrigger>
-                                                                    </Style.Triggers>
-                                                                </Style>
-                                                            </StackPanel.Style>
-
-                                                            <TextBlock Style="{StaticResource PropertyName}"/>
-
-                                                            <TextBox Text="{Binding Value}" AcceptsReturn="{Binding Multiline}">
-                                                                <TextBox.Style>
-                                                                    <Style TargetType="TextBox">
-                                                                        <Setter Property="Margin" Value="10, 0, 0, 0"/>
-                                                                        <Setter Property="MinWidth" Value="100"/>
-                                                                        <Setter Property="AcceptsReturn" Value="False"/>
-                                                                        
-                                                                        <Style.Triggers>
-                                                                            <DataTrigger Binding="{Binding Multiline}" Value="True">
-                                                                                <Setter Property="Margin" Value="0, 5, 0, 5"/>
-                                                                                <Setter Property="AcceptsReturn" Value="True"/>
-                                                                                <Setter Property="MinHeight" Value="30"/>
-                                                                            </DataTrigger>
-                                                                        </Style.Triggers>
-                                                                    </Style>
-                                                                </TextBox.Style>
-                                                            </TextBox>
-                                                        </StackPanel>
-                                                    </DataTemplate>
-
-                                                    <DataTemplate DataType="{x:Type nodes:ComboBoxProperty}">
-                                                        <StackPanel Orientation="Horizontal">
-                                                            <TextBlock Style="{StaticResource PropertyName}"/>
-                                                            <ComboBox Text="{Binding Value}" ItemsSource="{Binding Values}" Margin="10, 0, 0, 0" MinWidth="100"/>
-                                                        </StackPanel>
-                                                    </DataTemplate>
-
-                                                    <DataTemplate DataType="{x:Type nodes:CheckBoxProperty}">
-                                                        <StackPanel Orientation="Horizontal">
-                                                            <CheckBox IsChecked="{Binding Value}">
-                                                                <TextBlock Style="{StaticResource PropertyName}"/>
-                                                            </CheckBox>
-                                                        </StackPanel>
-                                                    </DataTemplate>
-
-                                                    <DataTemplate DataType="{x:Type nodes:ObjectProperty}">
-                                                        <Expander IsExpanded="{Binding IsExpanded}">
-                                                            <Expander.Header>
-                                                                <TextBlock Style="{StaticResource PropertyName}"/>
-                                                            </Expander.Header>
-                                                            <ContentControl Content="{Binding DataNode}" Margin="10, 0,0,0"/>
-                                                        </Expander>
-                                                    </DataTemplate>
-
-                                                </ItemsControl.Resources>
-                                            </ItemsControl>
-
-                                        </DataTemplate>
-
-                                    </treeEditor:TreeEditor.Resources>
+                                    <!--<treeEditor:TreeEditor.Resources>
+                                        <ResourceDictionary>
+                                            <ResourceDictionary.MergedDictionaries>
+                                                <ResourceDictionary Source="./DataNodeTemplates.xaml"/>
+                                            </ResourceDictionary.MergedDictionaries>
+                                        </ResourceDictionary>
+                                    </treeEditor:TreeEditor.Resources>-->
 
                                 </treeEditor:TreeEditor>
                             </Grid>
