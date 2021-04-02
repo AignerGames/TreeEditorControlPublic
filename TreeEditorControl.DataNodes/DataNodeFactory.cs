@@ -125,7 +125,7 @@ namespace TreeEditorControl.DataNodes
 
         private ObjectProperty CreateObjectProperty(ObjectPropertyAttribute objectPropertyAttribute, PropertyInfo propertyInfo)
         {
-            return new ObjectProperty(_editorEnvironment, propertyInfo, objectPropertyAttribute.PropertyName);
+            return new ObjectProperty(_editorEnvironment, propertyInfo, objectPropertyAttribute.PropertyName, objectPropertyAttribute.SingleObjectList);
         }
 
         public enum MyEnum
@@ -170,6 +170,9 @@ namespace TreeEditorControl.DataNodes
 
             [ObjectProperty]
             public SubNodeData ObjectData { get; set; } = new SubNodeData(); // Support null values and auto create them?
+
+            [ObjectProperty(singleObjectList: true)]
+            public SubNodeData ObjectDataAsList { get; set; } = new SubNodeData();
         }
 
         [Serializable]

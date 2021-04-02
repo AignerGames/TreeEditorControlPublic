@@ -44,7 +44,6 @@ namespace TreeEditorControl.DataNodes
 
         public DataNode CreateCopy()
         {
-            // TODO: Copy values
             var instanceCopy = GetInstanceValues();
 
             var copyNode = (DataNode)EditorEnvironment.NodeFactory.CreateNode(DataType);
@@ -65,11 +64,25 @@ namespace TreeEditorControl.DataNodes
             {
                 containerNode.ClearNodes();
 
-                // TODO: Null checks?
-                var subNodeValues = containerNode.PropertyInfo.GetValue(instance) as System.Collections.IList;
+                var subNodeValues = new List<object>();
 
-                foreach(var value in subNodeValues)
+                if (containerNode.SignleObjectList)
                 {
+                    var objectValue = containerNode.PropertyInfo.GetValue(instance);
+                    subNodeValues.Add(objectValue);
+                }
+                else if (containerNode.PropertyInfo.GetValue(instance) is IEnumerable<object> objectValues)
+                {
+                    subNodeValues.AddRange(objectValues);
+                }
+
+                foreach (var value in subNodeValues)
+                {
+                    if(value == null)
+                    {
+                        continue;
+                    }
+
                     var subNode = (DataNode)EditorEnvironment.NodeFactory.CreateNode(value.GetType());
 
                     subNode.SetInstanceValues(value);
@@ -90,14 +103,23 @@ namespace TreeEditorControl.DataNodes
 
             foreach (var containerNode in Nodes.OfType<PropertyNodeContainer>())
             {
-                // TODO: Null checks?
-                var dataInstances = containerNode.PropertyInfo.GetValue(instance) as System.Collections.IList;
-
-                foreach (var containerDataNode in containerNode.Nodes.OfType<DataNode>())
+                if(containerNode.SignleObjectList)
                 {
-                    var dataInstance = containerDataNode.GetInstanceValues();
+                    var containerDataNode = containerNode.Nodes.OfType<DataNode>().FirstOrDefault();
+                    var dataInstance = containerDataNode?.GetInstanceValues();
 
-                    dataInstances.Add(dataInstance);
+                    containerNode.PropertyInfo.SetValue(instance, dataInstance);
+                }
+                else
+                {
+                    var dataInstances = containerNode.PropertyInfo.GetValue(instance) as System.Collections.IList;
+
+                    foreach (var containerDataNode in containerNode.Nodes.OfType<DataNode>())
+                    {
+                        var dataInstance = containerDataNode.GetInstanceValues();
+
+                        dataInstances.Add(dataInstance);
+                    }
                 }
             }
 
@@ -111,10 +133,13 @@ namespace TreeEditorControl.DataNodes
                 if (property is ObjectProperty objectProperty)
                 {
                     // Special handling for sub node container
-                    var listItemType = GetListItemType(objectProperty.PropertyInfo.PropertyType);
-                    if(listItemType != null)
+                    var listItemType = objectProperty.SingleObjectList
+                        ? objectProperty.PropertyInfo.PropertyType
+                        : GetListItemType(objectProperty.PropertyInfo.PropertyType);
+
+                    if(listItemType != null || objectProperty.SingleObjectList)
                     {
-                        AddContainerNode(objectProperty.PropertyInfo, listItemType, property.Name);
+                        AddContainerNode(objectProperty.PropertyInfo, listItemType, property.Name, objectProperty.SingleObjectList);
                         continue;
                     }
                 }
@@ -153,11 +178,11 @@ namespace TreeEditorControl.DataNodes
             nodeProperty.PropertyChanged += NodeProperty_PropertyChanged;
         }
 
-        private TreeNodeContainer<DataNode> AddContainerNode(PropertyInfo propertyInfo, Type listItemType, string propertyName = null)
+        private TreeNodeContainer<DataNode> AddContainerNode(PropertyInfo propertyInfo, Type listItemType, string propertyName, bool signleObjectList)
         {
             var containerName = propertyName ?? propertyInfo.Name;
 
-            var groupContianer = new PropertyNodeContainer(EditorEnvironment, containerName, propertyInfo, listItemType);
+            var groupContianer = new PropertyNodeContainer(EditorEnvironment, containerName, propertyInfo, listItemType, signleObjectList);
 
             InsertChild(groupContianer);
 
@@ -200,18 +225,26 @@ namespace TreeEditorControl.DataNodes
 
         private class PropertyNodeContainer : TreeNodeContainer<DataNode>
         {
-            public PropertyNodeContainer(IEditorEnvironment editorEnvironment, string header, PropertyInfo propertyInfo, Type listeItemType) : base(editorEnvironment, header)
+            public PropertyNodeContainer(IEditorEnvironment editorEnvironment, string header, PropertyInfo propertyInfo, Type listeItemType, bool signleObjectList) : base(editorEnvironment, header)
             {
                 PropertyInfo = propertyInfo;
                 ListItemType = listeItemType;
+                SignleObjectList = signleObjectList;
             }
 
             public PropertyInfo PropertyInfo { get; }
 
             public Type ListItemType { get; }
 
+            public bool SignleObjectList { get; }
+
             public override bool CanInsertNode(Type nodeType)
             {
+                if(SignleObjectList && Nodes.Count > 0)
+                {
+                    return false;
+                }
+
                  return ListItemType.IsAssignableFrom(nodeType);
             }
         }
