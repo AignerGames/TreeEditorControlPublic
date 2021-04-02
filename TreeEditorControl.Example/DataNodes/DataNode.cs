@@ -209,9 +209,9 @@ namespace TreeEditorControl.Example.DataNodes
 
             public Type ListItemType { get; }
 
-            public override bool IsNodeTypeSupported(Type nodeType)
+            public override bool CanInsertNode(Type nodeType)
             {
-                return ListItemType.IsAssignableFrom(nodeType);
+                 return ListItemType.IsAssignableFrom(nodeType);
             }
         }
     }

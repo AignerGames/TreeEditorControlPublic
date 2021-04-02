@@ -10,14 +10,19 @@ namespace TreeEditorControl.Nodes.Implementation
         {
         }
 
-        public virtual bool IsNodeTypeSupported(Type nodeType)
+        public virtual bool CanInsertNode(Type nodeType)
         {
             return typeof(T).IsAssignableFrom(nodeType);
         }
 
+        public virtual bool CanRemoveNode()
+        {
+            return true;
+        }
+
         public bool TryInsertNode(int index, ITreeNode node)
         {
-            if(node == null || !IsNodeTypeSupported(node.GetNodeType()))
+            if(node == null || !CanInsertNode(node.GetNodeType()))
             {
                 return false;
             }
@@ -45,6 +50,18 @@ namespace TreeEditorControl.Nodes.Implementation
         public void Insert(int index, T node)
         {
             InsertChild(node, index);
+        }
+
+        public bool TryRemoveNodeAt(int index)
+        {
+            if(!CanRemoveNode())
+            {
+                return false;
+            }
+
+            RemoveNodeAt(index);
+
+            return true;
         }
 
 

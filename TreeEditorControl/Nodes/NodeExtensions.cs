@@ -45,8 +45,7 @@ namespace TreeEditorControl.Nodes
                 return false;
             }
 
-            container.RemoveNodeAt(index);
-            return true;
+            return container.TryRemoveNodeAt(index);
         }
 
         public static bool IsDescendantOf(this ITreeNode node, ITreeNode possibleParent)

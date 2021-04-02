@@ -4,10 +4,12 @@ namespace TreeEditorControl.Nodes
 {
     public interface ITreeNodeContainer : IReadableNodeContainer
     {
-        bool IsNodeTypeSupported(Type nodeType);
+        bool CanInsertNode(Type nodeType);
+
+        bool CanRemoveNode();
 
         bool TryInsertNode(int index, ITreeNode node);
 
-        void RemoveNodeAt(int index);
+        bool TryRemoveNodeAt(int index);
     }
 }

@@ -168,6 +168,7 @@ namespace TreeEditorControl.ViewModel
             ContextMenuCommands.Add(new ContextMenuCommand("Cut", CutNode, CanCutNode));
             ContextMenuCommands.Add(new ContextMenuCommand("Copy", CopyNode, CanCopyNode));
             ContextMenuCommands.Add(new ContextMenuCommand("Paste", PasteNode, CanPasteNode));
+            ContextMenuCommands.Add(new ContextMenuCommand("Duplicate", DuplicateNode, CanDuplicateNode));
 
             ContextMenuCommands.Add(ContextMenuCommand.Seperator);
 
@@ -244,7 +245,8 @@ namespace TreeEditorControl.ViewModel
 
         public bool CanReplaceCatalogNode()
         {
-            return VerifyCatalogNodeContainerType(SelectedNode?.Parent);
+            return VerifyCatalogNodeContainerType(SelectedNode?.Parent) && 
+                SelectedNode?.Parent is ITreeNodeContainer parentContainer && parentContainer.CanRemoveNode();
         }
 
         public void ReplaceCatalogNode()
@@ -264,16 +266,17 @@ namespace TreeEditorControl.ViewModel
 
             var undoRedoId = UndoRedoStack.StartSequence();
 
-            container.RemoveNodeAt(selectedNodeIndex);
-
-            CreateAndInsertSelectedItem(container, selectedNodeIndex);
+            if(container.TryRemoveNodeAt(selectedNodeIndex))
+            {
+                CreateAndInsertSelectedItem(container, selectedNodeIndex);
+            }
 
             UndoRedoStack.EndSequence(undoRedoId);
         }
 
         public bool CanDeletedSelectedNode()
         {
-            return SelectedNode?.Parent is ITreeNodeContainer;
+            return SelectedNode?.Parent is ITreeNodeContainer parentContainer && parentContainer.CanRemoveNode();
         }
 
         public void DeleteSelectedNode()
@@ -306,14 +309,15 @@ namespace TreeEditorControl.ViewModel
 
             AddChangeNodeSelectionUndoRedoCommand(newSelection);
 
-            container.RemoveNodeAt(selectedNodeIndex);
+            container.TryRemoveNodeAt(selectedNodeIndex);
 
             UndoRedoStack.EndSequence(undoRedoId);
         }
 
         public bool CanMove(int indexOffset)
         {
-            if(!(SelectedNode?.Parent is ITreeNodeContainer parentContainer))
+            if(!(SelectedNode?.Parent is ITreeNodeContainer parentContainer) ||
+                !parentContainer.CanInsertNode(SelectedNode.GetNodeType()) || !parentContainer.CanRemoveNode())
             {
                 return false;
             }
@@ -346,8 +350,8 @@ namespace TreeEditorControl.ViewModel
 
             parentContainer.IsSelected = true;
 
-            parentContainer.RemoveNodeAt(currentIndex);
-            if(parentContainer.TryInsertNode(newIndex, movingNode))
+            var wasRemoved = parentContainer.TryRemoveNodeAt(currentIndex);
+            if(wasRemoved && parentContainer.TryInsertNode(newIndex, movingNode))
             {
                 AddChangeNodeSelectionUndoRedoCommand(movingNode);
             }
@@ -392,7 +396,12 @@ namespace TreeEditorControl.ViewModel
                 return false;
             }
 
-            return targetNode is ITreeNodeContainer targetContainer && targetContainer.IsNodeTypeSupported(sourceNode.GetNodeType());
+            if(!(sourceNode is ITreeNodeContainer sourceContainer && sourceContainer.CanRemoveNode()))
+            {
+                return false;
+            }
+
+            return targetNode is ITreeNodeContainer targetContainer && targetContainer.CanInsertNode(sourceNode.GetNodeType());
         }
 
         public void Drop(ITreeNode sourceNode, ITreeNode targetNode)
@@ -416,9 +425,8 @@ namespace TreeEditorControl.ViewModel
 
             var undoRedoId = UndoRedoStack.StartSequence();
 
-            sourceContainer.RemoveNodeAt(sourceNodeIndex);
-
-            if (targetContainer.TryAddNode(sourceNode))
+            var wasRemoved = sourceContainer.TryRemoveNodeAt(sourceNodeIndex);
+            if (wasRemoved && targetContainer.TryAddNode(sourceNode))
             {
                 AddChangeNodeSelectionUndoRedoCommand(sourceNode);
             }
@@ -434,7 +442,7 @@ namespace TreeEditorControl.ViewModel
         public bool CanDrop(NodeCatalogItem dragItem, ITreeNode targetNode)
         {
             return dragItem?.NodeType != null && targetNode is ITreeNodeContainer targetContainer 
-                && targetContainer.IsNodeTypeSupported(dragItem.NodeType);
+                && targetContainer.CanInsertNode(dragItem.NodeType);
         }
 
         public void Drop(NodeCatalogItem dragItem, ITreeNode targetNode)
@@ -458,7 +466,7 @@ namespace TreeEditorControl.ViewModel
 
         public bool CanCutNode()
         {
-            return SelectedNode is ICopyableNode<ITreeNode> && SelectedNode?.Parent is ITreeNodeContainer;
+            return SelectedNode is ICopyableNode<ITreeNode> && SelectedNode?.Parent is ITreeNodeContainer parentContainer && parentContainer.CanRemoveNode();
         }
 
         public void CutNode()
@@ -481,7 +489,7 @@ namespace TreeEditorControl.ViewModel
 
             AddChangeNodeSelectionUndoRedoCommand(container);
 
-            container.RemoveNodeAt(selectedNodeIndex);
+            container.TryRemoveNodeAt(selectedNodeIndex);
 
             UndoRedoStack.EndSequence(undoRedoId);
 
@@ -589,7 +597,7 @@ namespace TreeEditorControl.ViewModel
                 return false;
             }
 
-            return node is ITreeNodeContainer container && container.IsNodeTypeSupported(nodeType);
+            return node is ITreeNodeContainer container && container.CanInsertNode(nodeType);
         }
 
         private ITreeNode CreateCatalogNode(NodeCatalogItem catalogItem)
