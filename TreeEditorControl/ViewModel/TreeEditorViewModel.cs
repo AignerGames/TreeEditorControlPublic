@@ -388,31 +388,38 @@ namespace TreeEditorControl.ViewModel
             return dragNode?.Parent is ITreeNodeContainer;
         }
 
-        public bool CanDrop(ITreeNode sourceNode, ITreeNode targetNode)
+        public bool CanDrop(ITreeNode sourceNode, ITreeNode targetNode, DropLocation dropLocation)
         {
-            if (sourceNode == null || targetNode == null || ReferenceEquals(sourceNode.Parent, targetNode)
-                 || targetNode.IsDescendantOf(sourceNode))
+            var actualDropContainer = GetDropContainerByLocation(targetNode, dropLocation);
+
+            if (sourceNode == null || actualDropContainer == null || ReferenceEquals(sourceNode.Parent, actualDropContainer)
+                 || actualDropContainer.IsDescendantOf(sourceNode))
             {
                 return false;
             }
 
-            if(!(sourceNode is ITreeNodeContainer sourceContainer && sourceContainer.CanRemoveNode()))
+            if(!(sourceNode?.Parent is ITreeNodeContainer sourceContainer && sourceContainer.CanRemoveNode()))
             {
                 return false;
             }
 
-            return targetNode is ITreeNodeContainer targetContainer && targetContainer.CanInsertNode(sourceNode.GetNodeType());
+            return actualDropContainer.CanInsertNode(sourceNode.GetNodeType());
         }
 
-        public void Drop(ITreeNode sourceNode, ITreeNode targetNode)
+        public void Drop(ITreeNode sourceNode, ITreeNode targetNode, DropLocation dropLocation)
         {
-            if (!CanDrop(sourceNode, targetNode))
+            if (!CanDrop(sourceNode, targetNode, dropLocation))
             {
                 return;
             }
 
-            if (!(sourceNode?.Parent is ITreeNodeContainer sourceContainer) ||
-                !(targetNode is ITreeNodeContainer targetContainer))
+            if (!(sourceNode?.Parent is ITreeNodeContainer sourceContainer))
+            {
+                return;
+            }
+
+            var (dropTargetContainer, insertIndex) = GetDropInserInfoByLocation(targetNode, dropLocation);
+            if (dropTargetContainer == null)
             {
                 return;
             }
@@ -426,7 +433,7 @@ namespace TreeEditorControl.ViewModel
             var undoRedoId = UndoRedoStack.StartSequence();
 
             var wasRemoved = sourceContainer.TryRemoveNodeAt(sourceNodeIndex);
-            if (wasRemoved && targetContainer.TryAddNode(sourceNode))
+            if (wasRemoved && dropTargetContainer.TryInsertNode(insertIndex, sourceNode))
             {
                 AddChangeNodeSelectionUndoRedoCommand(sourceNode);
             }
@@ -439,27 +446,31 @@ namespace TreeEditorControl.ViewModel
             return dragItem?.NodeType != null;
         }
 
-        public bool CanDrop(NodeCatalogItem dragItem, ITreeNode targetNode)
+        public bool CanDrop(NodeCatalogItem dragItem, ITreeNode targetNode, DropLocation dropLocation)
         {
-            return dragItem?.NodeType != null && targetNode is ITreeNodeContainer targetContainer 
-                && targetContainer.CanInsertNode(dragItem.NodeType);
+            var actualDropContainer = GetDropContainerByLocation(targetNode, dropLocation);
+            return dragItem?.NodeType != null && actualDropContainer != null && actualDropContainer.CanInsertNode(dragItem.NodeType);
         }
 
-        public void Drop(NodeCatalogItem dragItem, ITreeNode targetNode)
+        public void Drop(NodeCatalogItem dragItem, ITreeNode targetNode, DropLocation dropLocation)
         {
-            if(!CanDrop(dragItem, targetNode))
+            if(!CanDrop(dragItem, targetNode, dropLocation))
             {
                 return;
             }
 
-            var container = (ITreeNodeContainer)targetNode;
+            var (dropTargetContainer, insertIndex) = GetDropInserInfoByLocation(targetNode, dropLocation);
+            if(dropTargetContainer == null)
+            {
+                return;
+            }
 
             // Select the container for undo/redo, so the container will be selected after undo
-            container.IsSelected = true;
+            dropTargetContainer.IsSelected = true;
 
             var undoRedoId = UndoRedoStack.StartSequence();
 
-            CreateAndInsertNodeCatalogItem(container, container.Nodes.Count, dragItem);
+            CreateAndInsertNodeCatalogItem(dropTargetContainer, insertIndex, dragItem);
 
             UndoRedoStack.EndSequence(undoRedoId);
         }
@@ -681,6 +692,34 @@ namespace TreeEditorControl.ViewModel
             UndoRedoStack.IsEnabled = wasUndoRedoEnabled;
 
             return copy;
+        }
+
+        private ITreeNodeContainer GetDropContainerByLocation(ITreeNode treeNode, DropLocation dropLocation)
+        {
+            return dropLocation == DropLocation.Inside
+                ? treeNode as ITreeNodeContainer
+                : treeNode?.Parent as ITreeNodeContainer;
+        }
+
+        private (ITreeNodeContainer Container, int Index) GetDropInserInfoByLocation(ITreeNode targetNode, DropLocation dropLocation)
+        {
+            if (dropLocation == DropLocation.Inside)
+            {
+                return targetNode is ITreeNodeContainer container
+                    ? (container, container.Nodes.Count)
+                    : (null, -1);
+            }
+
+            if (!(targetNode?.Parent is ITreeNodeContainer parentContainer))
+            {
+                return (null, -1);
+            }
+
+            var nodeIndex = parentContainer.IndexOf(targetNode);
+
+            var indexOffset = dropLocation == DropLocation.Above ? 0 : 1;
+
+            return (parentContainer, nodeIndex + indexOffset);
         }
 
         bool IContextMenuOpeningHandler.HandleContextMenuOpening()

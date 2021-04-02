@@ -1,5 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Threading;
 
 namespace TreeEditorControl.Controls
@@ -11,6 +13,15 @@ namespace TreeEditorControl.Controls
             Loaded += CustomTreeViewItem_Loaded;
             Selected += CustomTreeViewItem_Selected;
         }
+
+        public bool IsMouseInside
+        {
+            get { return (bool)GetValue(IsMouseInsideProperty); }
+            set { SetValue(IsMouseInsideProperty, value); }
+        }
+
+        public static readonly DependencyProperty IsMouseInsideProperty = DependencyProperty.Register(
+          nameof(IsMouseInside), typeof(bool), typeof(CustomTreeViewItem), new PropertyMetadata());
 
         private void CustomTreeViewItem_Loaded(object sender, RoutedEventArgs e)
         {

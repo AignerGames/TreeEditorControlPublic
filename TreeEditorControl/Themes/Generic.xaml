@@ -61,12 +61,12 @@
                 <controls:TreeViewItemTemplateSelector>
                     <controls:TreeViewItemTemplateSelector.NodeTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding Header}" />
+                            <TextBlock Text="{Binding Header}" Margin="3" Background="Transparent" />
                         </DataTemplate>
                     </controls:TreeViewItemTemplateSelector.NodeTemplate>
                     <controls:TreeViewItemTemplateSelector.ContainerTemplate>
                         <HierarchicalDataTemplate ItemsSource="{Binding Nodes}">
-                            <TextBlock Text="{Binding Header}" />
+                            <TextBlock Text="{Binding Header}" Margin="3" Background="Transparent" />
                         </HierarchicalDataTemplate>
                     </controls:TreeViewItemTemplateSelector.ContainerTemplate>
                 </controls:TreeViewItemTemplateSelector>
@@ -80,6 +80,7 @@
                         <Style TargetType="{x:Type controls:CustomTreeViewItem}">
                             <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
                             <Setter Property="FontWeight" Value="Normal" />
+                            <Setter Property="Background" Value="Transparent"/>
                             <Style.Triggers>
                                 <Trigger Property="IsSelected" Value="True">
                                     <Setter Property="FontWeight" Value="Bold" />
@@ -92,6 +93,13 @@
                                     </DataTrigger.Binding>
                                     <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
                                 </DataTrigger>
+
+                                <Trigger Property="IsMouseInside" Value="True">
+                                    <Trigger.Setters>
+                                        <Setter Property="Background" Value="LightGreen"/>
+                                    </Trigger.Setters>
+                                </Trigger>
+
                             </Style.Triggers>
                         </Style>
                     </controls:ExplicitStyleSelector.Style>

@@ -58,6 +58,7 @@
     <Compile Include="Controls\DragDropHandling\DataContextDragDropHandler.cs" />
     <Compile Include="Controls\DragDropHandling\DataContextDragHandler.cs" />
     <Compile Include="Controls\DragDropHandling\DataContextDropHandler.cs" />
+    <Compile Include="ViewModel\DropLocation.cs" />
     <Compile Include="Controls\ExplicitStyleSelector.cs" />
     <Compile Include="Controls\ExplicitTemplateSelector.cs" />
     <Compile Include="Controls\FallbackTemplateSelector.cs" />

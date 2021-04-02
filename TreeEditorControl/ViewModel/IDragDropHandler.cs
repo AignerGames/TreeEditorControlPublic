@@ -4,8 +4,8 @@
     {
         bool CanDrag(TDrag drag);
 
-        bool CanDrop(TDrag drag, TDrop drop);
+        bool CanDrop(TDrag drag, TDrop drop, DropLocation dropLocation);
 
-        void Drop(TDrag drag, TDrop drop);
+        void Drop(TDrag drag, TDrop drop, DropLocation dropLocation);
     }
 }

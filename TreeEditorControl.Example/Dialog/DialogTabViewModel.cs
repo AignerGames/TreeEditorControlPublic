@@ -83,6 +83,8 @@ namespace TreeEditorControl.Example.Dialog
 
             rootNode.SetInstanceValues(sourceNode);
 
+            rootNode.ExpandRecursive();
+
 
 
             var testDeserialize = rootNode.GetInstanceValues();
