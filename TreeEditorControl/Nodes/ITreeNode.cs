@@ -15,5 +15,7 @@ namespace TreeEditorControl.Nodes
         bool IsSelected { get; set; }
 
         ITreeNode Parent { get; }
+
+        Type GetNodeType();
     }
 }

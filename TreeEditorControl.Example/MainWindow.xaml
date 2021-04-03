@@ -6,9 +6,19 @@
         xmlns:default="clr-namespace:TreeEditorControl.Example.Default"
         xmlns:dialog="clr-namespace:TreeEditorControl.Example.Dialog"
         xmlns:directory="clr-namespace:TreeEditorControl.Example.Directory"
+        xmlns:datanode="clr-namespace:TreeEditorControl.Example.DataNodes"
         xmlns:treeEditor="clr-namespace:TreeEditorControl.Controls;assembly=TreeEditorControl"
         mc:Ignorable="d"
         Title="TreeEditorControl Examples" Height="600" Width="800">
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary  Source="pack://application:,,,/TreeEditorControl.DataNodes;component/DataNodeTemplates.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    
     <TabControl ItemsSource="{Binding TabViewModels}" SelectedItem="{Binding SelectedTab}">
         <TabControl.Resources>
             <treeEditor:NameToBitmapImageConverter x:Key="NameToBitmapImageConverter">
@@ -179,6 +189,59 @@
                                     </DataTemplate>
 
                                 </treeEditor:TreeEditor.Resources>
+
+                            </treeEditor:TreeEditor>
+                        </DataTemplate>
+                        
+                        <!--Example: DataNodes -->
+                        <DataTemplate DataType="{x:Type datanode:DataNodeTabViewModel}">
+                            <treeEditor:TreeEditor DataContext="{Binding EditorViewModel}">
+
+                                <treeEditor:TreeEditor.ToolbarCommandTemplateSelector>
+                                    <treeEditor:ExplicitTemplateSelector>
+                                        <treeEditor:ExplicitTemplateSelector.Template>
+                                            <DataTemplate>
+                                                <Button ToolTip="{Binding Tooltip}" Command="{Binding}" Margin="3">
+                                                    <Image Width="24" Height="24" Stretch="UniformToFill"
+                                                           Source="{Binding Name, Converter={StaticResource NameToBitmapImageConverter}}"/>
+                                                </Button>
+                                            </DataTemplate>
+                                        </treeEditor:ExplicitTemplateSelector.Template>
+                                    </treeEditor:ExplicitTemplateSelector>
+                                </treeEditor:TreeEditor.ToolbarCommandTemplateSelector>
+
+                                <treeEditor:TreeEditor.SelectedNodeInfoTemplateSelector>
+                                    <treeEditor:ExplicitTemplateSelector>
+                                        <treeEditor:ExplicitTemplateSelector.NullTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="No node selected."/>
+                                            </DataTemplate>
+                                        </treeEditor:ExplicitTemplateSelector.NullTemplate>
+
+                                        <treeEditor:ExplicitTemplateSelector.Template>
+                                            <DataTemplate>
+                                                <GroupBox>
+                                                    <GroupBox.Header>
+                                                        <TextBlock Text="{Binding Header}" FontWeight="Bold" FontSize="16"/>
+                                                    </GroupBox.Header>
+                                                    <ScrollViewer Margin="10">
+                                                        <ContentControl Content="{Binding}">
+                                                            <ContentControl.ContentTemplateSelector>
+                                                                <treeEditor:FallbackTemplateSelector>
+                                                                    <treeEditor:FallbackTemplateSelector.FallbackTemplate>
+                                                                        <DataTemplate>
+                                                                            <!-- Empty control -->
+                                                                        </DataTemplate>
+                                                                    </treeEditor:FallbackTemplateSelector.FallbackTemplate>
+                                                                </treeEditor:FallbackTemplateSelector>
+                                                            </ContentControl.ContentTemplateSelector>
+                                                        </ContentControl>
+                                                    </ScrollViewer>
+                                                </GroupBox>
+                                            </DataTemplate>
+                                        </treeEditor:ExplicitTemplateSelector.Template>
+                                    </treeEditor:ExplicitTemplateSelector>
+                                </treeEditor:TreeEditor.SelectedNodeInfoTemplateSelector>
 
                             </treeEditor:TreeEditor>
                         </DataTemplate>

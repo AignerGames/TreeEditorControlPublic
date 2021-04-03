@@ -1,4 +1,7 @@
-﻿using System.Windows;
+﻿using System.ComponentModel;
+using System.Globalization;
+using System.Threading;
+using System.Windows;
 using System.Windows.Input;
 
 namespace TreeEditorControl.Example
@@ -10,6 +13,9 @@ namespace TreeEditorControl.Example
     {
         public MainWindow()
         {
+            Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
+            Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
+
             InitializeComponent();
 
             DataContext = new ViewModel();
@@ -27,6 +33,13 @@ namespace TreeEditorControl.Example
                 inputElement.Focusable = true;
                 inputElement.Focus();
             }
+        }
+
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            (DataContext as ViewModel)?.HandleClosing(e);
+
+            base.OnClosing(e);
         }
 
     }

@@ -37,6 +37,11 @@ namespace TreeEditorControl.Nodes.Implementation
 
         ITreeNode ITreeNode.Parent => Parent;
 
+        public virtual Type GetNodeType()
+        {
+            return GetType();
+        }
+
         protected void SetChildParent(TreeNode child)
         {
             if (child.Parent != null)

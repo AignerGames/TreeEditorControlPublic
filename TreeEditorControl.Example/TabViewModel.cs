@@ -1,7 +1,9 @@
-﻿using TreeEditorControl.Utility;
+﻿using System;
+using System.ComponentModel;
+
+using TreeEditorControl.Utility;
 using TreeEditorControl.ViewModel;
 using TreeEditorControl.Environment.Implementation;
-using System;
 
 namespace TreeEditorControl.Example
 {
@@ -36,6 +38,11 @@ namespace TreeEditorControl.Example
                     _editorViewModel.NodeChanged += EditorViewModel_NodeChanged;
                 }
             }
+        }
+
+        public virtual void HandleClosing(CancelEventArgs args)
+        {
+
         }
 
         protected EditorEnvironment EditorEnvironment { get; }

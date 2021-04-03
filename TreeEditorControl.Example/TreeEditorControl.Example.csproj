@@ -55,6 +55,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="DataNodes\DataNodeTabViewModel.cs" />
     <Compile Include="Default\DefaultContainer.cs" />
     <Compile Include="Default\DefaultNode.cs" />
     <Compile Include="Default\DefaultTabViewModel.cs" />
@@ -114,6 +115,14 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\TreeEditorControl.DataNodeAttributes\TreeEditorControl.DataNodeAttributes.csproj">
+      <Project>{7f4fe819-d05e-49f3-995d-762e90576059}</Project>
+      <Name>TreeEditorControl.DataNodeAttributes</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TreeEditorControl.DataNodes\TreeEditorControl.DataNodes.csproj">
+      <Project>{b21b89bd-7aff-444f-b98a-22013aeacc25}</Project>
+      <Name>TreeEditorControl.DataNodes</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TreeEditorControl\TreeEditorControl.csproj">
       <Project>{0998af8d-d44c-4ef7-ae00-7417ccfb06b2}</Project>
       <Name>TreeEditorControl</Name>

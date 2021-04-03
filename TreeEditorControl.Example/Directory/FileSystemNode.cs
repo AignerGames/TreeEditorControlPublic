@@ -48,6 +48,8 @@ namespace TreeEditorControl.Example.Directory
 
         public IReadOnlyList<ITreeNode> Nodes => _nodes;
 
+        public Type GetNodeType() => GetType();
+
         protected override void NotifyPropertyChange(string propertyName)
         {
             if (propertyName == nameof(IsExpanded))

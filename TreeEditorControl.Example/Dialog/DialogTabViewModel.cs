@@ -14,8 +14,9 @@ namespace TreeEditorControl.Example.Dialog
         public DialogTabViewModel(EditorEnvironment editorEnvironment) : base("Dialog", editorEnvironment)
         {
             var nodeFactory = new CustomNodeFactory(editorEnvironment);
+            editorEnvironment.NodeFactory = nodeFactory;
 
-            EditorViewModel = new TreeEditorViewModel(editorEnvironment, nodeFactory);
+            EditorViewModel = new TreeEditorViewModel(editorEnvironment);
 
             EditorViewModel.AddDefaultCommands();
             EditorViewModel.AddDefaultContextMenuCommands();

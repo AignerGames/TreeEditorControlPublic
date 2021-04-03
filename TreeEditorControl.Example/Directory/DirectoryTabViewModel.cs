@@ -11,9 +11,9 @@ namespace TreeEditorControl.Example.Directory
     {
         public DirectoryTabViewModel(EditorEnvironment editorEnvironment) : base("Directory", editorEnvironment)
         {
-            var nodeFactory = new TreeNodeFactory(editorEnvironment);
+            editorEnvironment.NodeFactory = new TreeNodeFactory(editorEnvironment);
 
-            EditorViewModel = new TreeEditorViewModel(editorEnvironment, nodeFactory);
+            EditorViewModel = new TreeEditorViewModel(editorEnvironment);
 
             EditorViewModel.AddRootNodes(GetDriveNodes());
 

@@ -21,8 +21,6 @@ namespace TreeEditorControl.ViewModel
     {
         private readonly ObservableCollection<ITreeNode> _rootNodes = new ObservableCollection<ITreeNode>();
 
-        private readonly ITreeNodeFactory _nodeFactory;
-
         private NodeCatalogItem _selectedCatalogItem;
 
         private ITreeNode _selectedNode;
@@ -37,10 +35,8 @@ namespace TreeEditorControl.ViewModel
         /// </summary>
         private ITreeNode _clipboardNode;
 
-        public TreeEditorViewModel(IEditorEnvironment editorEnvironment, ITreeNodeFactory nodeFactory) : base(editorEnvironment)
+        public TreeEditorViewModel(IEditorEnvironment editorEnvironment) : base(editorEnvironment)
         {
-            _nodeFactory = nodeFactory;
-
             RootNodes = new ReadOnlyObservableCollection<ITreeNode>(_rootNodes);
 
             // These commands are used for keyboard shortcuts
@@ -48,6 +44,7 @@ namespace TreeEditorControl.ViewModel
             CutNodeCommand = new ActionCommand(CutNode, CanCutNode);
             CopyNodeCommand = new ActionCommand(CopyNode, CanCopyNode);
             PasteNodeCommand = new ActionCommand(PasteNode, CanPasteNode);
+            DuplicateNodeCommand = new ActionCommand(DuplicateNode, CanDuplicateNode);
             UndoCommand = new ActionCommand(Undo, CanUndo);
             RedoCommand = new ActionCommand(Redo, CanRedo);
 
@@ -86,18 +83,25 @@ namespace TreeEditorControl.ViewModel
 
         public ActionCommand PasteNodeCommand { get; }
 
+        public ActionCommand DuplicateNodeCommand { get; }
+
         public ActionCommand UndoCommand { get; }
 
         public ActionCommand RedoCommand { get; }
 
-        public void AddRootNode(ITreeNode node)
+        public void AddRootNode(ITreeNode node, int index = -1)
         {
             if (node == null)
             {
                 return;
             }
 
-            _rootNodes.Add(node);
+            if(index == -1)
+            {
+                index = _rootNodes.Count;
+            }
+
+            _rootNodes.Insert(index, node);
             node.NodeChanged += Node_NodeChanged;
         }
 
@@ -128,6 +132,8 @@ namespace TreeEditorControl.ViewModel
             }
 
             _rootNodes.Clear();
+
+            SelectedNode = null;
         }
 
         /// <summary>
@@ -162,6 +168,7 @@ namespace TreeEditorControl.ViewModel
             ContextMenuCommands.Add(new ContextMenuCommand("Cut", CutNode, CanCutNode));
             ContextMenuCommands.Add(new ContextMenuCommand("Copy", CopyNode, CanCopyNode));
             ContextMenuCommands.Add(new ContextMenuCommand("Paste", PasteNode, CanPasteNode));
+            ContextMenuCommands.Add(new ContextMenuCommand("Duplicate", DuplicateNode, CanDuplicateNode));
 
             ContextMenuCommands.Add(ContextMenuCommand.Seperator);
 
@@ -238,7 +245,8 @@ namespace TreeEditorControl.ViewModel
 
         public bool CanReplaceCatalogNode()
         {
-            return VerifyCatalogNodeContainerType(SelectedNode?.Parent);
+            return VerifyCatalogNodeContainerType(SelectedNode?.Parent) && 
+                SelectedNode?.Parent is ITreeNodeContainer parentContainer && parentContainer.CanRemoveNode();
         }
 
         public void ReplaceCatalogNode()
@@ -258,16 +266,17 @@ namespace TreeEditorControl.ViewModel
 
             var undoRedoId = UndoRedoStack.StartSequence();
 
-            container.RemoveNodeAt(selectedNodeIndex);
-
-            CreateAndInsertSelectedItem(container, selectedNodeIndex);
+            if(container.TryRemoveNodeAt(selectedNodeIndex))
+            {
+                CreateAndInsertSelectedItem(container, selectedNodeIndex);
+            }
 
             UndoRedoStack.EndSequence(undoRedoId);
         }
 
         public bool CanDeletedSelectedNode()
         {
-            return SelectedNode?.Parent is ITreeNodeContainer;
+            return SelectedNode?.Parent is ITreeNodeContainer parentContainer && parentContainer.CanRemoveNode();
         }
 
         public void DeleteSelectedNode()
@@ -300,14 +309,15 @@ namespace TreeEditorControl.ViewModel
 
             AddChangeNodeSelectionUndoRedoCommand(newSelection);
 
-            container.RemoveNodeAt(selectedNodeIndex);
+            container.TryRemoveNodeAt(selectedNodeIndex);
 
             UndoRedoStack.EndSequence(undoRedoId);
         }
 
         public bool CanMove(int indexOffset)
         {
-            if(!(SelectedNode?.Parent is ITreeNodeContainer parentContainer))
+            if(!(SelectedNode?.Parent is ITreeNodeContainer parentContainer) ||
+                !parentContainer.CanInsertNode(SelectedNode.GetNodeType()) || !parentContainer.CanRemoveNode())
             {
                 return false;
             }
@@ -331,15 +341,17 @@ namespace TreeEditorControl.ViewModel
                 return;
             }
 
-            var movingNode = SelectedNode;
+            var movingNode = SelectedNode;     
             var parentContainer = (ITreeNodeContainer)movingNode.Parent;
-            var currentIndex = parentContainer.IndexOf(SelectedNode);
+            var currentIndex = parentContainer.IndexOf(movingNode);
             var newIndex = currentIndex  + indexOffset;
 
             var undoRedoId = UndoRedoStack.StartSequence();
 
-            parentContainer.RemoveNodeAt(currentIndex);
-            if(parentContainer.TryInsertNode(newIndex, movingNode))
+            parentContainer.IsSelected = true;
+
+            var wasRemoved = parentContainer.TryRemoveNodeAt(currentIndex);
+            if(wasRemoved && parentContainer.TryInsertNode(newIndex, movingNode))
             {
                 AddChangeNodeSelectionUndoRedoCommand(movingNode);
             }
@@ -376,26 +388,38 @@ namespace TreeEditorControl.ViewModel
             return dragNode?.Parent is ITreeNodeContainer;
         }
 
-        public bool CanDrop(ITreeNode sourceNode, ITreeNode targetNode)
+        public bool CanDrop(ITreeNode sourceNode, ITreeNode targetNode, DropLocation dropLocation)
         {
-            if (sourceNode == null || targetNode == null || ReferenceEquals(sourceNode.Parent, targetNode)
-                 || targetNode.IsDescendantOf(sourceNode))
+            var actualDropContainer = GetDropContainerByLocation(targetNode, dropLocation);
+
+            if (sourceNode == null || actualDropContainer == null || ReferenceEquals(sourceNode.Parent, actualDropContainer)
+                 || actualDropContainer.IsDescendantOf(sourceNode))
             {
                 return false;
             }
 
-            return targetNode is ITreeNodeContainer targetContainer && targetContainer.IsNodeTypeSupported(sourceNode.GetType());
+            if(!(sourceNode?.Parent is ITreeNodeContainer sourceContainer && sourceContainer.CanRemoveNode()))
+            {
+                return false;
+            }
+
+            return actualDropContainer.CanInsertNode(sourceNode.GetNodeType());
         }
 
-        public void Drop(ITreeNode sourceNode, ITreeNode targetNode)
+        public void Drop(ITreeNode sourceNode, ITreeNode targetNode, DropLocation dropLocation)
         {
-            if (!CanDrop(sourceNode, targetNode))
+            if (!CanDrop(sourceNode, targetNode, dropLocation))
             {
                 return;
             }
 
-            if (!(sourceNode?.Parent is ITreeNodeContainer sourceContainer) ||
-                !(targetNode is ITreeNodeContainer targetContainer))
+            if (!(sourceNode?.Parent is ITreeNodeContainer sourceContainer))
+            {
+                return;
+            }
+
+            var (dropTargetContainer, insertIndex) = GetDropInserInfoByLocation(targetNode, dropLocation);
+            if (dropTargetContainer == null)
             {
                 return;
             }
@@ -408,9 +432,8 @@ namespace TreeEditorControl.ViewModel
 
             var undoRedoId = UndoRedoStack.StartSequence();
 
-            sourceContainer.RemoveNodeAt(sourceNodeIndex);
-
-            if (targetContainer.TryAddNode(sourceNode))
+            var wasRemoved = sourceContainer.TryRemoveNodeAt(sourceNodeIndex);
+            if (wasRemoved && dropTargetContainer.TryInsertNode(insertIndex, sourceNode))
             {
                 AddChangeNodeSelectionUndoRedoCommand(sourceNode);
             }
@@ -423,34 +446,38 @@ namespace TreeEditorControl.ViewModel
             return dragItem?.NodeType != null;
         }
 
-        public bool CanDrop(NodeCatalogItem dragItem, ITreeNode targetNode)
+        public bool CanDrop(NodeCatalogItem dragItem, ITreeNode targetNode, DropLocation dropLocation)
         {
-            return dragItem?.NodeType != null && targetNode is ITreeNodeContainer targetContainer 
-                && targetContainer.IsNodeTypeSupported(dragItem.NodeType);
+            var actualDropContainer = GetDropContainerByLocation(targetNode, dropLocation);
+            return dragItem?.NodeType != null && actualDropContainer != null && actualDropContainer.CanInsertNode(dragItem.NodeType);
         }
 
-        public void Drop(NodeCatalogItem dragItem, ITreeNode targetNode)
+        public void Drop(NodeCatalogItem dragItem, ITreeNode targetNode, DropLocation dropLocation)
         {
-            if(!CanDrop(dragItem, targetNode))
+            if(!CanDrop(dragItem, targetNode, dropLocation))
             {
                 return;
             }
 
-            var container = (ITreeNodeContainer)targetNode;
+            var (dropTargetContainer, insertIndex) = GetDropInserInfoByLocation(targetNode, dropLocation);
+            if(dropTargetContainer == null)
+            {
+                return;
+            }
 
             // Select the container for undo/redo, so the container will be selected after undo
-            container.IsSelected = true;
+            dropTargetContainer.IsSelected = true;
 
             var undoRedoId = UndoRedoStack.StartSequence();
 
-            CreateAndInsertNodeCatalogItem(container, container.Nodes.Count, dragItem);
+            CreateAndInsertNodeCatalogItem(dropTargetContainer, insertIndex, dragItem);
 
             UndoRedoStack.EndSequence(undoRedoId);
         }
 
         public bool CanCutNode()
         {
-            return SelectedNode is ICopyableNode<ITreeNode> && SelectedNode?.Parent is ITreeNodeContainer;
+            return SelectedNode is ICopyableNode<ITreeNode> && SelectedNode?.Parent is ITreeNodeContainer parentContainer && parentContainer.CanRemoveNode();
         }
 
         public void CutNode()
@@ -473,7 +500,7 @@ namespace TreeEditorControl.ViewModel
 
             AddChangeNodeSelectionUndoRedoCommand(container);
 
-            container.RemoveNodeAt(selectedNodeIndex);
+            container.TryRemoveNodeAt(selectedNodeIndex);
 
             UndoRedoStack.EndSequence(undoRedoId);
 
@@ -522,6 +549,39 @@ namespace TreeEditorControl.ViewModel
             _clipboardNode = CreateNodeCopy(_clipboardNode as ICopyableNode<ITreeNode>);
         }
 
+        public bool CanDuplicateNode()
+        {
+            return SelectedNode is ICopyableNode<ITreeNode> && SelectedNode?.Parent is ITreeNodeContainer;
+        }
+
+        public void DuplicateNode()
+        {
+            if(!CanDuplicateNode())
+            {
+                return;
+            }
+
+            var copyable = (ICopyableNode<ITreeNode>)SelectedNode;
+            var container = (ITreeNodeContainer)SelectedNode.Parent;
+
+            var selectedNodeIndex = container.IndexOf(SelectedNode);
+            if (selectedNodeIndex < 0)
+            {
+                return;
+            }
+
+            var undoRedoId = UndoRedoStack.StartSequence();
+
+            var duplicateNode = CreateNodeCopy(copyable);
+
+            if(container.TryInsertNode(selectedNodeIndex + 1, duplicateNode))
+            {
+                AddChangeNodeSelectionUndoRedoCommand(duplicateNode);
+            }
+
+            UndoRedoStack.EndSequence(undoRedoId);
+        }
+
         private void Node_NodeChanged(object sender, NodeChangedArgs e)
         {
             // Update the selection, only one node can be selected
@@ -548,7 +608,7 @@ namespace TreeEditorControl.ViewModel
                 return false;
             }
 
-            return node is ITreeNodeContainer container && container.IsNodeTypeSupported(nodeType);
+            return node is ITreeNodeContainer container && container.CanInsertNode(nodeType);
         }
 
         private ITreeNode CreateCatalogNode(NodeCatalogItem catalogItem)
@@ -563,7 +623,12 @@ namespace TreeEditorControl.ViewModel
             // Disabled undo redo during the node initialization
             UndoRedoStack.IsEnabled = false;
 
-            var node = _nodeFactory.CreateNode(catalogItem);
+            var node = EditorEnvironment.NodeFactory.CreateNode(catalogItem);
+
+            if(node is IInitializeFromCatalogItem initializeFromCatalogItem)
+            {
+                initializeFromCatalogItem.Initialize(catalogItem);
+            }
 
             UndoRedoStack.IsEnabled = previousUndoRedoEnabled;
 
@@ -575,6 +640,11 @@ namespace TreeEditorControl.ViewModel
             if (node != null && container.TryInsertNode(index, node))
             {
                 AddChangeNodeSelectionUndoRedoCommand(node);
+
+                if(node is IReadableNodeContainer containerNode)
+                {
+                    containerNode.ExpandRecursive();
+                }
             }
         }
 
@@ -622,6 +692,34 @@ namespace TreeEditorControl.ViewModel
             UndoRedoStack.IsEnabled = wasUndoRedoEnabled;
 
             return copy;
+        }
+
+        private ITreeNodeContainer GetDropContainerByLocation(ITreeNode treeNode, DropLocation dropLocation)
+        {
+            return dropLocation == DropLocation.Inside
+                ? treeNode as ITreeNodeContainer
+                : treeNode?.Parent as ITreeNodeContainer;
+        }
+
+        private (ITreeNodeContainer Container, int Index) GetDropInserInfoByLocation(ITreeNode targetNode, DropLocation dropLocation)
+        {
+            if (dropLocation == DropLocation.Inside)
+            {
+                return targetNode is ITreeNodeContainer container
+                    ? (container, container.Nodes.Count)
+                    : (null, -1);
+            }
+
+            if (!(targetNode?.Parent is ITreeNodeContainer parentContainer))
+            {
+                return (null, -1);
+            }
+
+            var nodeIndex = parentContainer.IndexOf(targetNode);
+
+            var indexOffset = dropLocation == DropLocation.Above ? 0 : 1;
+
+            return (parentContainer, nodeIndex + indexOffset);
         }
 
         bool IContextMenuOpeningHandler.HandleContextMenuOpening()

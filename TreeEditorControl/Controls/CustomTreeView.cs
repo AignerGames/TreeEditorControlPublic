@@ -11,9 +11,11 @@ namespace TreeEditorControl.Controls
 {
     public class CustomTreeViewControl : TreeView
     {
-        private DataContextDragHandler<ITreeNode, ITreeNode> _nodeDragHandler;
-        private DataContextDropHandler<ITreeNode, ITreeNode> _nodeDropHandler;
-        private DataContextDropHandler<NodeCatalogItem, ITreeNode> _catalogItemDropHandler;
+        private readonly DataContextDragHandler<ITreeNode, ITreeNode> _nodeDragHandler;
+        private readonly DataContextDropHandler<ITreeNode, ITreeNode> _nodeDropHandler;
+        private readonly DataContextDropHandler<NodeCatalogItem, ITreeNode> _catalogItemDropHandler;
+
+        private CustomTreeViewItem _currentTargetItem;
 
         public CustomTreeViewControl()
         {
@@ -28,6 +30,7 @@ namespace TreeEditorControl.Controls
             ContextMenuOpening += CustomTreeViewControl_ContextMenuOpening;
             MouseLeftButtonDown += CustomTreeViewControl_MouseLeftButtonDown;
             DragOver += CustomTreeViewControl_DragOver;
+            DragLeave += CustomTreeViewControl_DragLeave;
         }
 
         private void CustomTreeViewControl_Loaded(object sender, RoutedEventArgs e)
@@ -42,6 +45,37 @@ namespace TreeEditorControl.Controls
             _nodeDragHandler.DeregisterEvents();
             _nodeDropHandler.DeregisterEvents();
             _catalogItemDropHandler.DeregisterEvents();
+        }
+
+        protected override void OnMouseEnter(MouseEventArgs e)
+        {
+            base.OnMouseEnter(e);
+
+            UpdateIsMouseInsideState();
+        }
+
+        protected override void OnMouseMove(MouseEventArgs e)
+        {
+            base.OnMouseMove(e);
+
+            UpdateIsMouseInsideState();
+        }
+
+        protected override void OnMouseLeave(MouseEventArgs e)
+        {
+            base.OnMouseLeave(e);
+
+            UpdateIsMouseInsideState();
+        }
+
+        private void UpdateIsMouseInsideState()
+        {
+            // Can't use the normal mouse enter/leave logic, because the events are also called on the parent
+            // items, so check if the mouse is really over this item
+            var mouseTarget = Mouse.DirectlyOver;
+            var mouseItem = mouseTarget.GetParentObject<CustomTreeViewItem>();
+
+            UpdateTargetItem(mouseItem);
         }
 
         private void CustomTreeViewControl_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -66,12 +100,45 @@ namespace TreeEditorControl.Controls
 
         private void CustomTreeViewControl_DragOver(object sender, DragEventArgs e)
         {
-            // This handles drag over at the tree itself, the other drag/drop handlers are for the nodes
+            // This handles drag over at the tree outside a tree node, before the other drop handlers are called
+
+            var dragTargetItem = e.GetSourceParent<CustomTreeViewItem>();
+            UpdateTargetItem(dragTargetItem);
+
             if(!e.TryGetDataContext<ITreeNode>(out _))
             {
                 e.Handled = true;
 
                 e.Effects = DragDropEffects.None;
+            }
+        }
+
+        private void CustomTreeViewControl_DragLeave(object sender, DragEventArgs e)
+        {
+            var leaveTarget = e.GetSourceParent<CustomTreeViewItem>();
+            if(leaveTarget == null || leaveTarget == _currentTargetItem)
+            {
+                UpdateTargetItem(null);
+            }
+        }
+
+        private void UpdateTargetItem(CustomTreeViewItem targetItem)
+        {
+            if (_currentTargetItem == targetItem)
+            {
+                return;
+            }
+
+            if (_currentTargetItem != null)
+            {
+                _currentTargetItem.IsMouseInside = false;
+            }
+
+            _currentTargetItem = targetItem;
+
+            if (_currentTargetItem != null)
+            {
+                _currentTargetItem.IsMouseInside = true;
             }
         }
 

@@ -19,6 +19,8 @@ namespace TreeEditorControl.Controls.DragDropHandling
             Control.PreviewMouseLeftButtonDown += Control_PreviewMouseLeftButtonDown;
             Control.PreviewMouseLeftButtonUp += Control_PreviewMouseLeftButtonUp;
             Control.PreviewMouseMove += Control_PreviewMouseMove;
+
+            Control.GiveFeedback += Control_GiveFeedback;
         }
 
         public override void DeregisterEvents()
@@ -26,6 +28,8 @@ namespace TreeEditorControl.Controls.DragDropHandling
             Control.PreviewMouseLeftButtonDown -= Control_PreviewMouseLeftButtonDown;
             Control.PreviewMouseLeftButtonUp -= Control_PreviewMouseLeftButtonUp;
             Control.PreviewMouseMove -= Control_PreviewMouseMove;
+
+            Control.GiveFeedback -= Control_GiveFeedback;
         }
 
         private void Control_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -61,6 +65,15 @@ namespace TreeEditorControl.Controls.DragDropHandling
                 DragDrop.DoDragDrop(Control, data, DragDropEffects.Move | DragDropEffects.Copy);
 
                 _dragDataContext = null;
+            }
+        }
+
+        private void Control_GiveFeedback(object sender, GiveFeedbackEventArgs e)
+        {
+            // Disable the default cursor if the cursor was set by DragOver
+            if(e.Effects == (DragDropEffects.Move | DragDropEffects.Copy))
+            {
+                e.Handled = true;
             }
         }
     }

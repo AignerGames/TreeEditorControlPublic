@@ -5,7 +5,7 @@ namespace TreeEditorControl.Catalog
     [AttributeUsage(AttributeTargets.Class)]
     public class NodeCatalogInfoAttribute : Attribute
     {
-        public NodeCatalogInfoAttribute(string name, string category, string description)
+        public NodeCatalogInfoAttribute(string name = null, string category = null, string description = null)
         {
             Name = name;
             Category = category;

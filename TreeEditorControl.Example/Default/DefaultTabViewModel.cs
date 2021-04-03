@@ -13,16 +13,16 @@ namespace TreeEditorControl.Example.Default
     {
         public DefaultTabViewModel(EditorEnvironment editorEnvironment) : base("Default", editorEnvironment)
         {
-            var nodeFactory = new TreeNodeFactory(editorEnvironment);
+            editorEnvironment.NodeFactory = new TreeNodeFactory(editorEnvironment);
 
-            EditorViewModel = new TreeEditorViewModel(editorEnvironment, nodeFactory);
+            EditorViewModel = new TreeEditorViewModel(editorEnvironment);
 
             EditorViewModel.AddDefaultCommands();
             EditorViewModel.AddDefaultContextMenuCommands();
 
             EditorViewModel.CatalogItems.AddItems(NodeCatalogItem.CreateItemsForAssignableTypes(typeof(IDefaultNode), Assembly.GetExecutingAssembly()));
 
-            var containerNode = nodeFactory.CreateNode<DefaultContainer>();
+            var containerNode = editorEnvironment.NodeFactory.CreateNode<DefaultContainer>();
 
             EditorViewModel.AddRootNode(containerNode);
         }

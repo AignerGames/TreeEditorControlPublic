@@ -3,6 +3,7 @@ using TreeEditorControl.Catalog;
 using TreeEditorControl.Nodes;
 using TreeEditorControl.Nodes.Implementation;
 using TreeEditorControl.Environment;
+using System;
 
 namespace TreeEditorControl.Example.Dialog
 {
@@ -28,6 +29,11 @@ namespace TreeEditorControl.Example.Dialog
             }
 
             return _defaultNodeFactory.CreateNode(catalogItem);
+        }
+
+        public ITreeNode CreateNode(Type nodeType)
+        {
+            return _defaultNodeFactory.CreateNode(nodeType);
         }
 
         public ShowTextAction CreateShowTextHelloWorld()
