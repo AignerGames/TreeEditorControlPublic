@@ -14,6 +14,9 @@ The nodes must implement a specific node interface,
 but a default implementation (which can be used as a base class) 
 is included. 
 
+Added "DataNodes" to automatically map tree nodes from/to serializable data class properties.
+Currently supports properties of: simple data types (strings, numbers, enums) and list of other serializable data classes
+(See example projects)
 
 <img src="https://github.com/AignerGames/TreeEditorControl/blob/master/ExampleScreenshots/Dialog.PNG">
 
