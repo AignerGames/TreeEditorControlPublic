@@ -2,7 +2,7 @@
 {
     internal static class DialogHelper
     {
-        public static string GetHeaderString(string header, string headerInfo, int maxChar = 150)
+        public static string GetHeaderString(string header, string headerInfo, int maxChar = 50)
         {
             if(string.IsNullOrWhiteSpace(headerInfo))
             {

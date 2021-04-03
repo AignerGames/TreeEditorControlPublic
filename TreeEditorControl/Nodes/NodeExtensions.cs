@@ -74,7 +74,7 @@ namespace TreeEditorControl.Nodes
             }
         }
 
-        public static T CreateNode<T>(this TreeNodeFactory nodeFactory) where T : class, ITreeNode
+        public static T CreateNode<T>(this ITreeNodeFactory nodeFactory) where T : class, ITreeNode
         {
             return nodeFactory.CreateNode(typeof(T)) as T;
         }

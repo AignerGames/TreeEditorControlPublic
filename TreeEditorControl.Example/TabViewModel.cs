@@ -1,8 +1,9 @@
-﻿using TreeEditorControl.Utility;
+﻿using System;
+using System.ComponentModel;
+
+using TreeEditorControl.Utility;
 using TreeEditorControl.ViewModel;
 using TreeEditorControl.Environment.Implementation;
-using System;
-using System.ComponentModel;
 
 namespace TreeEditorControl.Example
 {

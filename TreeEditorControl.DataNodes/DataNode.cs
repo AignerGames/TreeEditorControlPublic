@@ -53,6 +53,12 @@ namespace TreeEditorControl.DataNodes
             return copyNode;
         }
 
+        public void SetDefaultInstanceValues()
+        {
+            var defaultInstance = Activator.CreateInstance(DataType);
+            SetInstanceValues(defaultInstance);
+        }
+
         public void SetInstanceValues(object instance)
         {
             foreach(var property in Properties)

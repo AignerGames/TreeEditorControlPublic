@@ -4,21 +4,9 @@
              xmlns:local="clr-namespace:TreeEditorControl.Example"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-        <!--<Style TargetType="TextBlock">
-            <Setter Property="Foreground" Value="#B3FFFFFF"/>
-            <Style.Triggers>
-                <DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType=ComboBox}}" Value="True">
-                    <Setter Property="Foreground" Value="Black"/>
-                </DataTrigger>
-                <DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType=ContextMenu}}" Value="True">
-                    <Setter Property="Foreground" Value="Black"/>
-                </DataTrigger>
-            </Style.Triggers>
-        </Style>-->
-
         <Style TargetType="TextBlock">
             <Setter Property="FontSize" Value="14"/>
         </Style>
-        
+
     </Application.Resources>
 </Application>

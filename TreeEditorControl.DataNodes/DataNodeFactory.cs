@@ -36,21 +36,22 @@ namespace TreeEditorControl.DataNodes
             return CreateDataNode(nodeType);
         }
 
-        public DataNode CreatePrototypeNode()
-        {
-            return CreateDataNode(typeof(TestData));
-        }
-
         public DataNode CreateDataNode(Type dataType)
         {
             var nodeProperties = GetNodeProperties(dataType);
 
+            DataNode dataNode;
+
             if(CustomDataNodeFactories.TryGetValue(dataType, out var factory))
             {
-                return factory.Invoke(dataType, nodeProperties);
+                dataNode = factory.Invoke(dataType, nodeProperties);
+            }
+            else
+            {
+                dataNode = new DataNode(_editorEnvironment, dataType, nodeProperties);
             }
 
-            var dataNode = new DataNode(_editorEnvironment, dataType, nodeProperties);
+            dataNode?.SetDefaultInstanceValues();
 
             return dataNode;
         }
@@ -126,70 +127,6 @@ namespace TreeEditorControl.DataNodes
         private ObjectProperty CreateObjectProperty(ObjectPropertyAttribute objectPropertyAttribute, PropertyInfo propertyInfo)
         {
             return new ObjectProperty(_editorEnvironment, propertyInfo, objectPropertyAttribute.PropertyName, objectPropertyAttribute.SingleObjectList);
-        }
-
-        public enum MyEnum
-        {
-            Test,
-            Other,
-            Last
-        }
-
-        [Serializable]
-        [NodeHeaderFormat("{0} with {1}")]
-        public class TestData
-        {
-            [TextBoxProperty]
-            [NodeHeaderFormatIndex(0)]
-            public string Name { get; set; }
-
-            [TextBoxProperty(true, "Epic Text")]
-            public string EpicText { get; set; }
-
-            [ComboBoxProperty("Test")]
-            [NodeHeaderFormatIndex(1)]
-            public string Selection { get; set; }
-
-            [TextBoxProperty]
-            public int Number { get; set; }
-
-            [ComboBoxProperty]
-            public MyEnum EnumValue { get; set; }
-
-            [CheckBoxProperty]
-            public bool CheckBoxValue { get; set; }
-
-            [CheckBoxProperty]
-            public string CheckBoxString { get; set; }
-
-            [ObjectProperty]
-            public List<SubNodeData> SubNodes { get; } = new List<SubNodeData>();
-
-            [ObjectProperty("Epic SubNodes")]
-            public List<SubNodeData> EpicSubNodes { get; } = new List<SubNodeData>();
-
-            [ObjectProperty]
-            public SubNodeData ObjectData { get; set; } = new SubNodeData(); // Support null values and auto create them?
-
-            [ObjectProperty(singleObjectList: true)]
-            public SubNodeData ObjectDataAsList { get; set; } = new SubNodeData();
-        }
-
-        [Serializable]
-        [NodeCatalogInfo]
-        public class SubNodeData
-        {
-            [TextBoxProperty]
-            public string SubNodeText { get; set; }
-
-            [ObjectProperty]
-            public NestingData NestingData { get; set; } = new NestingData();
-        }
-
-        public class NestingData
-        {
-            [TextBoxProperty]
-            public string NestingText { get; set; }
         }
     }
 }

@@ -53,5 +53,10 @@ namespace TreeEditorControl.DataNodes
         {
             PropertyInfo.SetValue(instance, Value);
         }
+
+        public override string ToString()
+        {
+            return $"{base.ToString()} {Name}";
+        }
     }
 }

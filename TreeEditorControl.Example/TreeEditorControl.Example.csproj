@@ -24,7 +24,6 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -34,13 +33,8 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="StoryGameShared">
-      <HintPath>D:\UnityProjectsVR\StoryGameVR\Library\ScriptAssemblies\StoryGameShared.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -52,9 +46,6 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
-    <Reference Include="UnityEngine">
-      <HintPath>..\..\..\..\..\..\Program Files\Unity\Hub\Editor\2019.4.1f1\Editor\Data\Managed\UnityEngine.dll</HintPath>
-    </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -64,20 +55,25 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Data\EditorData.cs" />
+    <Compile Include="DataNodes\DataNodeTabViewModel.cs" />
+    <Compile Include="Default\DefaultContainer.cs" />
+    <Compile Include="Default\DefaultNode.cs" />
+    <Compile Include="Default\DefaultTabViewModel.cs" />
+    <Compile Include="Default\IDefaultNode.cs" />
+    <Compile Include="Dialog\ChoiceGroup.cs" />
+    <Compile Include="Dialog\ChoiceItem.cs" />
+    <Compile Include="Dialog\CustomNodeFactory.cs" />
     <Compile Include="Dialog\DialogHelper.cs" />
+    <Compile Include="Dialog\DialogRootNode.cs" />
     <Compile Include="Dialog\DialogTabViewModel.cs" />
-    <Compile Include="Vector\VectorEditControl.xaml.cs">
-      <DependentUpon>VectorEditControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Vector\SelectVectorDialog.xaml.cs">
-      <DependentUpon>SelectVectorDialog.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="StaticEnumCollections.cs" />
-    <Compile Include="StringViewModel.cs" />
+    <Compile Include="Dialog\DialogAction.cs" />
+    <Compile Include="Dialog\DialogCondition.cs" />
+    <Compile Include="Dialog\DialogNode.cs" />
+    <Compile Include="Dialog\ShowTextAction.cs" />
+    <Compile Include="Dialog\VariableCondition.cs" />
+    <Compile Include="Directory\DirectoryTabViewModel.cs" />
+    <Compile Include="Directory\FileSystemNode.cs" />
     <Compile Include="TabViewModel.cs" />
-    <Compile Include="Vector\NamedVector.cs" />
-    <Compile Include="Vector\Vector.cs" />
     <Compile Include="ViewModel.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -91,14 +87,6 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Vector\VectorEditControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Vector\SelectVectorDialog.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">

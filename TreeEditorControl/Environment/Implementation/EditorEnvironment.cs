@@ -17,6 +17,12 @@ namespace TreeEditorControl.Environment.Implementation
             UndoRedoStack = new UndoRedoStack();
         }
 
+        public EditorEnvironment(IEditorEnvironment editorEnvironment)
+        {
+            NodeFactory = editorEnvironment.NodeFactory;
+            UndoRedoStack = editorEnvironment.UndoRedoStack;
+        }
+
         public ITreeNodeFactory NodeFactory { get; set; }
 
         public IUndoRedoStack UndoRedoStack { get; set; }
